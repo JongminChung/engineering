@@ -1,4 +1,4 @@
-package io.github.jongminchung.algorithm.codility.binaryGap;
+package io.github.jongminchung.algorithm.codility.binary_gap;
 
 /**
  * <a href="https://app.codility.com/programmers/lessons/1-iterations/binary_gap">Binary Gap</a>

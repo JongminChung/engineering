@@ -1,4 +1,4 @@
-package io.github.jongminchung.algorithm.codility.binaryGap;
+package io.github.jongminchung.algorithm.codility.binary_gap;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

@@ -1,4 +1,4 @@
-package io.github.jongminchung.algorithm.codility.cyclicRotation;
+package io.github.jongminchung.algorithm.codility.cyclic_rotation;
 
 /**
  * <a href="https://app.codility.com/programmers/lessons/2-arrays/cyclic_rotation/">CyclicRotation</a>
