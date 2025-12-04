@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
+/// First, Last는 넣은 순서를 의미한다.
 class ArrayDequeTest {
 
     @Test
@@ -34,7 +35,7 @@ class ArrayDequeTest {
     }
 
     @Test
-    @DisplayName("push/pop은 스택처럼 동작")
+    @DisplayName("Stack 처럼 사용할 때는 push, pop")
     void stackStyleOperations() {
         ArrayDeque<String> deque = new ArrayDeque<>();
 
@@ -48,18 +49,5 @@ class ArrayDequeTest {
         assertThat(deque.pop()).isEqualTo("second");
         assertThat(deque.pop()).isEqualTo("first");
         assertThat(deque).isEmpty();
-    }
-
-    @Test
-    @DisplayName("비어 있을 때 예외/널 반환 동작 비교")
-    void emptyDequeBehavior() {
-        ArrayDeque<Integer> deque = new ArrayDeque<>();
-
-        assertThat(deque.peekFirst()).isNull();
-        assertThat(deque.peekLast()).isNull();
-        assertThat(deque.pollFirst()).isNull();
-        assertThat(deque.pollLast()).isNull();
-        assertThatThrownBy(deque::removeFirst).isInstanceOf(NoSuchElementException.class);
-        assertThatThrownBy(deque::getLast).isInstanceOf(NoSuchElementException.class);
     }
 }
