@@ -17,5 +17,4 @@ plugins {
 }
 
 rootProject.name = "java-platform"
-include("app", "list", "utilities")
-include("algorithm")
+include("app", "list", "utilities", "algorithm", "kafka")
