@@ -18,3 +18,15 @@ plugins {
 
 rootProject.name = "java-platform"
 include("app", "list", "utilities", "algorithm", "kafka")
+
+includeModule("odata", "odata-core", "odata-spring")
+
+fun includeModule(
+    subdir: String,
+    vararg projectPath: String,
+) {
+    for (project in projectPath) {
+        include(project)
+        project(":$project").projectDir = file("$rootDir/$subdir/$project")
+    }
+}
