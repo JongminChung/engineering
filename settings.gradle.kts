@@ -8,16 +8,13 @@ plugins {
 
 rootProject.name = "engineering"
 
-includeModule("odata", "odata-core", "odata-spring")
+include(
+    "odata:odata-core",
+    "odata:odata-spring",
+)
 
-includeModule("study", "kafka", "postgresql", "coding-test")
-
-fun includeModule(
-    subdir: String,
-    vararg projectPath: String,
-) {
-    for (project in projectPath) {
-        include(project)
-        project(":$project").projectDir = file("$rootDir/$subdir/$project")
-    }
-}
+include(
+    "study:kafka",
+    "study:postgresql",
+    "study:coding-test"
+)
