@@ -1,0 +1,23 @@
+{
+  "default": true,
+
+  "MD046": { "style": "fenced" },
+  "MD048": { "style": "backtick" },
+  "MD035": { "style": "---" },
+  "MD029": { "style": "one_or_ordered" },
+
+  "MD013": false,
+  "MD024": false,
+  "MD032": false,
+  "MD012": false,
+  "MD036": false,
+  "MD047": false,
+  "MD022": false,
+  "MD001": false,
+  "MD033": false,
+  "MD010": false,
+  "MD040": false,
+  "MD007": false,
+  "MD041": false,
+  "MD034": false
+}

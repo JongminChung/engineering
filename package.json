@@ -1,0 +1,26 @@
+{
+  "name": "engineering",
+  "type": "module",
+  "scripts": {
+    "prepare": "husky",
+    "preinstall": "node .scripts/preinstall.ts",
+    "check": "biome check --write --unsafe",
+    "check:markdown": "markdownlint-cli2 --fix **/*.md"
+  },
+  "engines": {
+    "pnpm": "^10",
+    "node": "^24"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.8",
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "@types/node": "^24.10.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "markdownlint-cli2": "^0.20.0"
+  },
+  "lint-staged": {
+    "**/*.md": "markdownlint-cli2 --fix"
+  }
+}
