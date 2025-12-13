@@ -4,3 +4,9 @@
 
 - gabiacloud managed k8s 환경
 - local k8s
+
+| 항목 | EKS     | 직접 구성 | 로컬 |
+|----|---------|-------|----|
+| LB | AWS NLB |       |    |
+|    |         |       |    |
+|    |         |       |    |

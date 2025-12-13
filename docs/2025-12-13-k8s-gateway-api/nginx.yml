@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  annotations:
+    loadbalancer.openstack.org/flavor-id: adc12270-f56a-4ef1-bb00-429aad71ef6e
+    loadbalancer.openstack.org/availability-zone: KR1-Zone1-LB
+    loadbalancer.openstack.org/enable-health-monitor: "true"
+    service.beta.kubernetes.io/openstack-internal-load-balancer: "false"
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
