@@ -8,4 +8,7 @@ dependencies {
 
     // Testcontainers PostgreSQL Module
     testImplementation(libs.findLibrary("testcontainers-postgresql").get())
+
+    // Flyway
+    testImplementation("org.springframework.boot:spring-boot-starter-flyway")
 }

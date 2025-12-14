@@ -14,7 +14,6 @@ include(
 )
 
 include(
-    "study:kafka",
-    "study:postgresql",
+    "study:infra",
     "study:coding-test"
 )

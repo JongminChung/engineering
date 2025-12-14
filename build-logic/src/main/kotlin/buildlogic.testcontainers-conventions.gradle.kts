@@ -10,19 +10,30 @@ repositories {
 
 dependencies {
     // Spring Boot Starters (버전은 Spring Boot Plugin이 관리)
-    implementation(libs.findLibrary("spring-boot-starter").get())
-    implementation(libs.findLibrary("spring-boot-starter-data-jpa").get())
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 
     testImplementation(platform(libs.findLibrary("testcontainers-bom").get()))
 
     testImplementation(libs.findBundle("testcontainers").get())
 
     // Spring Boot Test
-    testImplementation(libs.findLibrary("spring-boot-starter-test").get()) {
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+
+    compileOnly("org.projectlombok:lombok")
+    testCompileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
 }
 
+configurations {
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
+}
 
 // 테스트 설정
 tasks.test {
@@ -32,8 +43,7 @@ tasks.test {
     systemProperty("testcontainers.reuse.enable", "true")
     systemProperty("testcontainers.image.substitutor", "org.testcontainers.utility.ImageSubstitutor")
 
-    // 병렬 테스트 실행 (선택 사항)
-    maxParallelForks = Runtime.getRuntime().availableProcessors() / 2
+    maxParallelForks = 1 // testcontainers 1번만 기동을 위함 (JVM 1번)
 
     // 테스트 로깅
     testLogging {
@@ -48,6 +58,14 @@ tasks.test {
     // 메모리 설정
     minHeapSize = "512m"
     maxHeapSize = "2g"
+
+    // JUnit 병렬 실행
+    systemProperty("junit.jupiter.execution.parallel.enabled", "true")
+    systemProperty("junit.jupiter.execution.parallel.mode.default", "same_thread") // same_thread
+    systemProperty("junit.jupiter.execution.parallel.mode.classes.default", "concurrent")
+
+    systemProperty("junit.jupiter.execution.parallel.config.strategy", "fixed")
+    systemProperty("junit.jupiter.execution.parallel.config.fixed.parallelism", "8")
 }
 
 // 테스트 리포트 설정

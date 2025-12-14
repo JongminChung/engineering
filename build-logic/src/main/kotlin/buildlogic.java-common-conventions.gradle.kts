@@ -10,14 +10,18 @@ repositories {
 
 testing {
     suites {
-        // Configure the built-in test suite
         val test by getting(JvmTestSuite::class) {
-            // Use JUnit Jupiter test framework
             useJUnitJupiter(libs.findVersion("junit").get().requiredVersion)
 
-            // Shared assertion library for all projects
             dependencies {
                 implementation(libs.findLibrary("assertj-core").get())
+            }
+
+            // Ensure every Spring test task activates the "test" profile
+            targets.all {
+                testTask.configure {
+                    systemProperty("spring.profiles.active", "test")
+                }
             }
         }
     }
