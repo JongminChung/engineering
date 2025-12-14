@@ -15,5 +15,6 @@ include(
 
 include(
     "study:infra",
-    "study:coding-test"
+    "study:coding-test",
+    "study:api-communication"
 )
