@@ -28,11 +28,13 @@ metadata:
     loadbalancer.openstack.org/availability-zone: KR1-Zone1-LB
     loadbalancer.openstack.org/enable-health-monitor: "true"
     service.beta.kubernetes.io/openstack-internal-load-balancer: "false"
+    # admission webhook "validate-service.k8s-webhook-server.svc" denied the request: invalid annotation values: [loadbalancer.openstack.org/default-tls-container-ref (value: default/cloudflare-tls, allowed: [^https://[^/]+/v1/secrets/[0-9a-fA-F-]{36}$])]
+    loadbalancer.openstack.org/default-tls-container-ref: "default/cloudflare-tls"
 spec:
   type: LoadBalancer
   selector:
     app: nginx
   ports:
-    - port: 80
+    - port: 443
       protocol: TCP
       targetPort: 80
