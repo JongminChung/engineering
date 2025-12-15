@@ -11,6 +11,11 @@ public final class Unary implements FilterExpr {
         this.expr = Objects.requireNonNull(expr, "expr");
     }
 
-    public UnaryOp op() { return op; }
-    public FilterExpr expr() { return expr; }
+    public UnaryOp op() {
+        return op;
+    }
+
+    public FilterExpr expr() {
+        return expr;
+    }
 }

@@ -2,15 +2,12 @@ package io.github.jongminchung.study.apicommunication.context;
 
 import java.util.Optional;
 
-/**
- * ThreadLocal holder for propagating the request context across layers in the REST stack.
- */
+/** ThreadLocal holder for propagating the request context across layers in the REST stack. */
 public final class ApiRequestContextHolder {
 
     private static final ThreadLocal<ApiRequestContext> CONTEXT = new ThreadLocal<>();
 
-    private ApiRequestContextHolder() {
-    }
+    private ApiRequestContextHolder() {}
 
     public static void set(ApiRequestContext context) {
         CONTEXT.set(context);

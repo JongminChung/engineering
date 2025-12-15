@@ -13,7 +13,15 @@ public final class Binary implements FilterExpr {
         this.right = Objects.requireNonNull(right, "right");
     }
 
-    public FilterExpr left() { return left; }
-    public BinaryOp op() { return op; }
-    public FilterExpr right() { return right; }
+    public FilterExpr left() {
+        return left;
+    }
+
+    public BinaryOp op() {
+        return op;
+    }
+
+    public FilterExpr right() {
+        return right;
+    }
 }

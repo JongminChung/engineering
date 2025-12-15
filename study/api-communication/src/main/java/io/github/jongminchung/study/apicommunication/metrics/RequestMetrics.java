@@ -46,9 +46,9 @@ public class RequestMetrics {
         long success = successfulRequests.sum();
         long failure = failedRequests.sum();
         long totalSamples = success + failure;
-        Duration averageLatency = totalSamples == 0
-            ? Duration.ZERO
-            : Duration.ofNanos(totalLatencyNanos.sum() / totalSamples);
-        return new RequestMetricsSnapshot(success, failure, cacheHits.sum(), cacheMisses.sum(), averageLatency, lastUpdated.get());
+        Duration averageLatency =
+                totalSamples == 0 ? Duration.ZERO : Duration.ofNanos(totalLatencyNanos.sum() / totalSamples);
+        return new RequestMetricsSnapshot(
+                success, failure, cacheHits.sum(), cacheMisses.sum(), averageLatency, lastUpdated.get());
     }
 }

@@ -1,11 +1,12 @@
 package io.github.jongminchung.odata.spring;
 
-import io.github.jongminchung.odata.query.OrderBy;
+import java.util.Collections;
+import java.util.Set;
+
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 
-import java.util.Collections;
-import java.util.Set;
+import io.github.jongminchung.odata.query.OrderBy;
 
 public final class StringToOrderByConverter implements GenericConverter {
     @Override

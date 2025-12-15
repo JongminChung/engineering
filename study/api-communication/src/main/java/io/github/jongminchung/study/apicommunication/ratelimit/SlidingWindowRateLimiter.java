@@ -1,7 +1,5 @@
 package io.github.jongminchung.study.apicommunication.ratelimit;
 
-import io.github.jongminchung.study.apicommunication.context.ApiRequestContext;
-
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -9,6 +7,8 @@ import java.util.Deque;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
+
+import io.github.jongminchung.study.apicommunication.context.ApiRequestContext;
 
 public class SlidingWindowRateLimiter implements RateLimiter {
 

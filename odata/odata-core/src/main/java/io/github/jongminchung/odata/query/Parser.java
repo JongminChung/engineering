@@ -1,8 +1,6 @@
 package io.github.jongminchung.odata.query;
 
-/**
- * Recursive-descent parser for a subset of OData $filter grammar.
- */
+/** Recursive-descent parser for a subset of OData $filter grammar. */
 final class Parser {
     private final Tokenizer tz;
     private Token lookahead;
@@ -14,7 +12,9 @@ final class Parser {
 
     FilterExpr parseExpression() {
         FilterExpr expr = parseOr();
-        if (lookahead.type != TokenType.EOF && lookahead.type != TokenType.RPAREN && lookahead.type != TokenType.COMMA) {
+        if (lookahead.type != TokenType.EOF
+                && lookahead.type != TokenType.RPAREN
+                && lookahead.type != TokenType.COMMA) {
             throw error("Unexpected token '" + lookahead.text + "'");
         }
         return expr;
@@ -79,21 +79,37 @@ final class Parser {
             consume(TokenType.RPAREN);
             String fn = ident.toLowerCase();
             switch (fn) {
-                case "startswith": return FunctionCall.startswith(arg1, arg2);
-                case "endswith": return FunctionCall.endswith(arg1, arg2);
-                case "contains": return FunctionCall.contains(arg1, arg2);
-                default: throw error("Unknown function '" + ident + "'");
+                case "startswith":
+                    return FunctionCall.startswith(arg1, arg2);
+                case "endswith":
+                    return FunctionCall.endswith(arg1, arg2);
+                case "contains":
+                    return FunctionCall.contains(arg1, arg2);
+                default:
+                    throw error("Unknown function '" + ident + "'");
             }
         }
         // otherwise it's a property; maybe binary comparison follows
         Property prop = new Property(ident);
         switch (lookahead.type) {
-            case OP_EQ: consume(TokenType.OP_EQ); return new Binary(prop, BinaryOp.EQ, parsePrimary());
-            case OP_NE: consume(TokenType.OP_NE); return new Binary(prop, BinaryOp.NE, parsePrimary());
-            case OP_GT: consume(TokenType.OP_GT); return new Binary(prop, BinaryOp.GT, parsePrimary());
-            case OP_GE: consume(TokenType.OP_GE); return new Binary(prop, BinaryOp.GE, parsePrimary());
-            case OP_LT: consume(TokenType.OP_LT); return new Binary(prop, BinaryOp.LT, parsePrimary());
-            case OP_LE: consume(TokenType.OP_LE); return new Binary(prop, BinaryOp.LE, parsePrimary());
+            case OP_EQ:
+                consume(TokenType.OP_EQ);
+                return new Binary(prop, BinaryOp.EQ, parsePrimary());
+            case OP_NE:
+                consume(TokenType.OP_NE);
+                return new Binary(prop, BinaryOp.NE, parsePrimary());
+            case OP_GT:
+                consume(TokenType.OP_GT);
+                return new Binary(prop, BinaryOp.GT, parsePrimary());
+            case OP_GE:
+                consume(TokenType.OP_GE);
+                return new Binary(prop, BinaryOp.GE, parsePrimary());
+            case OP_LT:
+                consume(TokenType.OP_LT);
+                return new Binary(prop, BinaryOp.LT, parsePrimary());
+            case OP_LE:
+                consume(TokenType.OP_LE);
+                return new Binary(prop, BinaryOp.LE, parsePrimary());
             default:
                 // single identifier not allowed as expression in our subset
                 throw error("Missing operator after property '" + ident + "'");
@@ -103,18 +119,28 @@ final class Parser {
     private Literal parseLiteral() {
         switch (lookahead.type) {
             case STRING: {
-                String v = lookahead.text; consume(TokenType.STRING); return Literal.of(v);
+                String v = lookahead.text;
+                consume(TokenType.STRING);
+                return Literal.of(v);
             }
             case NUMBER: {
-                String n = lookahead.text; consume(TokenType.NUMBER);
+                String n = lookahead.text;
+                consume(TokenType.NUMBER);
                 if (n.contains(".")) return Literal.of(Double.parseDouble(n));
-                try { return Literal.of(Long.parseLong(n)); } catch (NumberFormatException ex) { return Literal.of(Double.parseDouble(n)); }
+                try {
+                    return Literal.of(Long.parseLong(n));
+                } catch (NumberFormatException ex) {
+                    return Literal.of(Double.parseDouble(n));
+                }
             }
             case BOOLEAN: {
-                boolean b = Boolean.parseBoolean(lookahead.text); consume(TokenType.BOOLEAN); return Literal.of(b);
+                boolean b = Boolean.parseBoolean(lookahead.text);
+                consume(TokenType.BOOLEAN);
+                return Literal.of(b);
             }
             case NULL: {
-                consume(TokenType.NULL); return Literal.of(null);
+                consume(TokenType.NULL);
+                return Literal.of(null);
             }
             default:
                 throw error("Expected literal");

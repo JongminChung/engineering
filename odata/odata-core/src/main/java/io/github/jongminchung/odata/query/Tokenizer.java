@@ -4,7 +4,9 @@ final class Tokenizer {
     private final String s;
     private int i = 0;
 
-    Tokenizer(String s) { this.s = s; }
+    Tokenizer(String s) {
+        this.s = s;
+    }
 
     Token next() {
         skipWs();
@@ -12,30 +14,54 @@ final class Tokenizer {
         char c = s.charAt(i);
         int start = i;
         // punctuation
-        if (c == '(') { i++; return new Token(TokenType.LPAREN, "(", start); }
-        if (c == ')') { i++; return new Token(TokenType.RPAREN, ")", start); }
-        if (c == ',') { i++; return new Token(TokenType.COMMA, ",", start); }
+        if (c == '(') {
+            i++;
+            return new Token(TokenType.LPAREN, "(", start);
+        }
+        if (c == ')') {
+            i++;
+            return new Token(TokenType.RPAREN, ")", start);
+        }
+        if (c == ',') {
+            i++;
+            return new Token(TokenType.COMMA, ",", start);
+        }
         // operators by text (ge, le, ne)
         if (isAlpha(c)) {
             String ident = readIdent();
             String low = ident.toLowerCase();
             switch (low) {
-                case "and": return new Token(TokenType.AND, ident, start);
-                case "or": return new Token(TokenType.OR, ident, start);
-                case "not": return new Token(TokenType.NOT, ident, start);
-                case "eq": return new Token(TokenType.OP_EQ, ident, start);
-                case "ne": return new Token(TokenType.OP_NE, ident, start);
-                case "gt": return new Token(TokenType.OP_GT, ident, start);
-                case "ge": return new Token(TokenType.OP_GE, ident, start);
-                case "lt": return new Token(TokenType.OP_LT, ident, start);
-                case "le": return new Token(TokenType.OP_LE, ident, start);
-                case "true": case "false": return new Token(TokenType.BOOLEAN, low, start);
-                case "null": return new Token(TokenType.NULL, low, start);
-                default: return new Token(TokenType.IDENT, ident, start);
+                case "and":
+                    return new Token(TokenType.AND, ident, start);
+                case "or":
+                    return new Token(TokenType.OR, ident, start);
+                case "not":
+                    return new Token(TokenType.NOT, ident, start);
+                case "eq":
+                    return new Token(TokenType.OP_EQ, ident, start);
+                case "ne":
+                    return new Token(TokenType.OP_NE, ident, start);
+                case "gt":
+                    return new Token(TokenType.OP_GT, ident, start);
+                case "ge":
+                    return new Token(TokenType.OP_GE, ident, start);
+                case "lt":
+                    return new Token(TokenType.OP_LT, ident, start);
+                case "le":
+                    return new Token(TokenType.OP_LE, ident, start);
+                case "true":
+                case "false":
+                    return new Token(TokenType.BOOLEAN, low, start);
+                case "null":
+                    return new Token(TokenType.NULL, low, start);
+                default:
+                    return new Token(TokenType.IDENT, ident, start);
             }
         }
-        if (c == '\'') { return readString(); }
-        if (isDigit(c) || (c == '-' && i+1 < s.length() && isDigit(s.charAt(i+1)))) {
+        if (c == '\'') {
+            return readString();
+        }
+        if (isDigit(c) || (c == '-' && i + 1 < s.length() && isDigit(s.charAt(i + 1)))) {
             return readNumber();
         }
         // unknown
@@ -45,18 +71,25 @@ final class Tokenizer {
     private void skipWs() {
         while (i < s.length()) {
             char c = s.charAt(i);
-            if (c == ' ' || c == '\t' || c == '\n' || c == '\r') i++; else break;
+            if (c == ' ' || c == '\t' || c == '\n' || c == '\r') i++;
+            else break;
         }
     }
 
-    private boolean isAlpha(char c) { return Character.isLetter(c) || c == '_' || c == '$'; }
-    private boolean isDigit(char c) { return c >= '0' && c <= '9'; }
+    private boolean isAlpha(char c) {
+        return Character.isLetter(c) || c == '_' || c == '$';
+    }
+
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
 
     private String readIdent() {
         int start = i;
         while (i < s.length()) {
             char c = s.charAt(i);
-            if (Character.isLetterOrDigit(c) || c == '_' || c == '$' ) i++; else break;
+            if (Character.isLetterOrDigit(c) || c == '_' || c == '$') i++;
+            else break;
         }
         return s.substring(start, i);
     }
@@ -87,7 +120,8 @@ final class Tokenizer {
         if (s.charAt(i) == '-') i++;
         while (i < s.length() && isDigit(s.charAt(i))) i++;
         if (i < s.length() && s.charAt(i) == '.') {
-            i++; while (i < s.length() && isDigit(s.charAt(i))) i++;
+            i++;
+            while (i < s.length() && isDigit(s.charAt(i))) i++;
         }
         return new Token(TokenType.NUMBER, s.substring(start, i), start);
     }

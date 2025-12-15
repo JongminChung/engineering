@@ -12,8 +12,13 @@ public final class OrderCriterion {
         this.direction = Objects.requireNonNull(direction, "direction");
     }
 
-    public String field() { return field; }
-    public Direction direction() { return direction; }
+    public String field() {
+        return field;
+    }
+
+    public Direction direction() {
+        return direction;
+    }
 
     @Override
     public String toString() {

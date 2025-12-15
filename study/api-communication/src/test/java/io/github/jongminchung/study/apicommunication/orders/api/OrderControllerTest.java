@@ -1,6 +1,13 @@
 package io.github.jongminchung.study.apicommunication.orders.api;
 
-import io.github.jongminchung.study.apicommunication.context.ApiHeaders;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,15 +18,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import io.github.jongminchung.study.apicommunication.context.ApiHeaders;
+
 import tools.jackson.databind.ObjectMapper;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -57,13 +59,19 @@ class OrderControllerTest {
     void rateLimitIsEnforced() throws Exception {
         String payload = objectMapper.writeValueAsString(sampleRequest());
 
-        mockMvc.perform(authorized(post("/api/v1/orders").contentType(MediaType.APPLICATION_JSON).content(payload)))
+        mockMvc.perform(authorized(post("/api/v1/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload)))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(authorized(post("/api/v1/orders").contentType(MediaType.APPLICATION_JSON).content(payload)))
+        mockMvc.perform(authorized(post("/api/v1/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload)))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(authorized(post("/api/v1/orders").contentType(MediaType.APPLICATION_JSON).content(payload)))
+        mockMvc.perform(authorized(post("/api/v1/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload)))
                 .andExpect(status().isTooManyRequests());
     }
 
@@ -100,8 +108,7 @@ class OrderControllerTest {
     }
 
     private MockHttpServletRequestBuilder authorized(MockHttpServletRequestBuilder builder) {
-        return builder
-                .header(ApiHeaders.API_KEY, "local-api-key")
+        return builder.header(ApiHeaders.API_KEY, "local-api-key")
                 .header(ApiHeaders.TENANT_ID, "tenant-alpha")
                 .header(ApiHeaders.CLIENT_ID, "web-client");
     }

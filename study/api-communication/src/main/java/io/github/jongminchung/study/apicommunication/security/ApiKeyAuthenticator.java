@@ -1,14 +1,15 @@
 package io.github.jongminchung.study.apicommunication.security;
 
-import io.github.jongminchung.study.apicommunication.context.ApiRequestContext;
-import org.springframework.stereotype.Component;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 import java.util.Locale;
 import java.util.Optional;
+
+import org.springframework.stereotype.Component;
+
+import io.github.jongminchung.study.apicommunication.context.ApiRequestContext;
 
 @Component
 public class ApiKeyAuthenticator {
@@ -25,9 +26,10 @@ public class ApiKeyAuthenticator {
             return Optional.empty();
         }
 
-        return properties.findClient(tenantId, clientId)
-            .filter(client -> matches(client.getHashedApiKey(), apiKey))
-            .map(_ -> new ApiRequestContext(tenantId, clientId, traceId));
+        return properties
+                .findClient(tenantId, clientId)
+                .filter(client -> matches(client.getHashedApiKey(), apiKey))
+                .map(_ -> new ApiRequestContext(tenantId, clientId, traceId));
     }
 
     private boolean matches(String expectedHash, String candidateApiKey) {

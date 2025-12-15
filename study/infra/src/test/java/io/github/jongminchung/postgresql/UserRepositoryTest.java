@@ -1,15 +1,16 @@
 package io.github.jongminchung.postgresql.repository;
 
-import io.github.jongminchung.postgresql.domain.User;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import io.github.jongminchung.postgresql.domain.User;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

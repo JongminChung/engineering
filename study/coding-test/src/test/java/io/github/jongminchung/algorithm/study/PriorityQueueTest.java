@@ -1,14 +1,14 @@
 package io.github.jongminchung.algorithm.study;
 
-import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.PriorityQueue;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.jspecify.annotations.NonNull;
+import org.junit.jupiter.api.Test;
 
 class PriorityQueueTest {
 
@@ -39,7 +39,6 @@ class PriorityQueueTest {
 
         assertThat(pq.poll()).isNull();
     }
-
 
     static class Node implements Comparable<Node> {
         int index;

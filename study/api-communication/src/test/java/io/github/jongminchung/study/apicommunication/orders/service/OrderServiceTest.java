@@ -1,5 +1,22 @@
 package io.github.jongminchung.study.apicommunication.orders.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import io.github.jongminchung.study.apicommunication.context.ApiRequestContext;
 import io.github.jongminchung.study.apicommunication.metrics.RequestMetrics;
 import io.github.jongminchung.study.apicommunication.metrics.RequestMetricsSnapshot;
@@ -10,25 +27,7 @@ import io.github.jongminchung.study.apicommunication.orders.domain.OrderNotFound
 import io.github.jongminchung.study.apicommunication.orders.domain.OrderRepository;
 import io.github.jongminchung.study.apicommunication.ratelimit.RateLimitExceededException;
 import io.github.jongminchung.study.apicommunication.ratelimit.RateLimiter;
-import io.github.jongminchung.study.apicommunication.ratelimit.RateLimitedOperation;
 import io.github.jongminchung.study.apicommunication.ratelimit.SlidingWindowRateLimiter;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.time.Clock;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class OrderServiceTest {
 
@@ -69,7 +68,7 @@ class OrderServiceTest {
         orderService.createOrder(sampleCommand("beta"), context);
 
         assertThatThrownBy(() -> orderService.createOrder(sampleCommand("gamma"), context))
-            .isInstanceOf(RateLimitExceededException.class);
+                .isInstanceOf(RateLimitExceededException.class);
     }
 
     @Test
@@ -77,7 +76,7 @@ class OrderServiceTest {
         orderService.createOrder(sampleCommand("alpha"), context);
 
         assertThatThrownBy(() -> orderService.getOrder(UUID.randomUUID(), context))
-            .isInstanceOf(OrderNotFoundException.class);
+                .isInstanceOf(OrderNotFoundException.class);
 
         RequestMetricsSnapshot snapshot = metrics.snapshot();
         assertThat(snapshot.successfulRequests()).isEqualTo(1);

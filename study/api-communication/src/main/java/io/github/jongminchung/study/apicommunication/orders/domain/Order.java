@@ -8,15 +8,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public record Order(UUID id,
-                    String tenantId,
-                    String clientId,
-                    String customerId,
-                    List<String> productCodes,
-                    BigDecimal totalAmount,
-                    Instant createdAt,
-                    Instant updatedAt,
-                    long version) {
+public record Order(
+        UUID id,
+        String tenantId,
+        String clientId,
+        String customerId,
+        List<String> productCodes,
+        BigDecimal totalAmount,
+        Instant createdAt,
+        Instant updatedAt,
+        long version) {
 
     public Order {
         Objects.requireNonNull(id, "id must be provided");
@@ -31,6 +32,7 @@ public record Order(UUID id,
     }
 
     public Order withUpdatedMetadata(Instant newUpdatedAt) {
-        return new Order(id, tenantId, clientId, customerId, productCodes, totalAmount, createdAt, newUpdatedAt, version + 1);
+        return new Order(
+                id, tenantId, clientId, customerId, productCodes, totalAmount, createdAt, newUpdatedAt, version + 1);
     }
 }

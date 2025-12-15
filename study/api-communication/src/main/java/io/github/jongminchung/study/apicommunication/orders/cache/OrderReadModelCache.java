@@ -1,7 +1,5 @@
 package io.github.jongminchung.study.apicommunication.orders.cache;
 
-import io.github.jongminchung.study.apicommunication.orders.domain.Order;
-
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -9,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import io.github.jongminchung.study.apicommunication.orders.domain.Order;
 
 public class OrderReadModelCache {
 

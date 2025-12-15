@@ -1,13 +1,11 @@
 package io.github.jongminchung.study.apicommunication.context;
 
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Resolves the response language according to the Accept-Language header.
- */
+import org.springframework.stereotype.Component;
+
+/** Resolves the response language according to the Accept-Language header. */
 @Component
 public class ResponseLanguageResolver {
 

@@ -1,9 +1,9 @@
 package io.github.jongminchung.study.apicommunication.orders.api;
 
-import io.github.jongminchung.study.apicommunication.context.ApiHeaders;
-import io.github.jongminchung.study.apicommunication.ratelimit.RateLimitExceededException;
-import io.github.jongminchung.study.apicommunication.orders.domain.OrderNotFoundException;
+import java.util.stream.Collectors;
+
 import jakarta.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.stream.Collectors;
+import io.github.jongminchung.study.apicommunication.context.ApiHeaders;
+import io.github.jongminchung.study.apicommunication.orders.domain.OrderNotFoundException;
+import io.github.jongminchung.study.apicommunication.ratelimit.RateLimitExceededException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -21,20 +23,25 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleOrderNotFound(OrderNotFoundException exception, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiErrorResponse.of(exception.getMessage(), traceId(request)));
+    public ResponseEntity<ApiErrorResponse> handleOrderNotFound(
+            OrderNotFoundException exception, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiErrorResponse.of(exception.getMessage(), traceId(request)));
     }
 
     @ExceptionHandler(RateLimitExceededException.class)
-    public ResponseEntity<ApiErrorResponse> handleRateLimit(RateLimitExceededException exception, HttpServletRequest request) {
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ApiErrorResponse.of(exception.getMessage(), traceId(request)));
+    public ResponseEntity<ApiErrorResponse> handleRateLimit(
+            RateLimitExceededException exception, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(ApiErrorResponse.of(exception.getMessage(), traceId(request)));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiErrorResponse> handleValidation(MethodArgumentNotValidException exception, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleValidation(
+            MethodArgumentNotValidException exception, HttpServletRequest request) {
         String message = exception.getBindingResult().getFieldErrors().stream()
-            .map(this::formatFieldError)
-            .collect(Collectors.joining(", "));
+                .map(this::formatFieldError)
+                .collect(Collectors.joining(", "));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiErrorResponse.of(message, traceId(request)));
     }
 
@@ -42,7 +49,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleGeneric(Exception exception, HttpServletRequest request) {
         log.error("Unexpected error while serving request", exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ApiErrorResponse.of("Unexpected error", traceId(request)));
+                .body(ApiErrorResponse.of("Unexpected error", traceId(request)));
     }
 
     private String traceId(HttpServletRequest request) {

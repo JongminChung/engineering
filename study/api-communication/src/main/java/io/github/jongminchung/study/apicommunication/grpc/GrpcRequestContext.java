@@ -7,8 +7,7 @@ public final class GrpcRequestContext {
 
     private static final Context.Key<ApiRequestContext> CONTEXT_KEY = Context.key("api-request-context");
 
-    private GrpcRequestContext() {
-    }
+    private GrpcRequestContext() {}
 
     public static Context withContext(ApiRequestContext context) {
         return Context.current().withValue(CONTEXT_KEY, context);

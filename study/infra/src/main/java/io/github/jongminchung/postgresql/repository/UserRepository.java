@@ -1,14 +1,13 @@
 package io.github.jongminchung.postgresql.repository;
 
-import io.github.jongminchung.postgresql.domain.User;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import io.github.jongminchung.postgresql.domain.User;
 
-/**
- * User Repository
- */
+/** User Repository */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 

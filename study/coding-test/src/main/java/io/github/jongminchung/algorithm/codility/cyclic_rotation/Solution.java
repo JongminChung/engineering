@@ -1,8 +1,6 @@
 package io.github.jongminchung.algorithm.codility.cyclic_rotation;
 
-/**
- * <a href="https://app.codility.com/programmers/lessons/2-arrays/cyclic_rotation/">CyclicRotation</a>
- */
+/** <a href="https://app.codility.com/programmers/lessons/2-arrays/cyclic_rotation/">CyclicRotation</a> */
 class Solution {
 
     int[] solution(int[] A, int K) {
@@ -20,4 +18,3 @@ class Solution {
         return result;
     }
 }
-

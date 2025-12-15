@@ -1,5 +1,14 @@
 package io.github.jongminchung.study.apicommunication.orders.service;
 
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.function.Supplier;
+
+import org.springframework.stereotype.Service;
+
 import io.github.jongminchung.study.apicommunication.context.ApiRequestContext;
 import io.github.jongminchung.study.apicommunication.metrics.RequestMetrics;
 import io.github.jongminchung.study.apicommunication.orders.cache.OrderReadModelCache;
@@ -8,16 +17,8 @@ import io.github.jongminchung.study.apicommunication.orders.domain.Order;
 import io.github.jongminchung.study.apicommunication.orders.domain.OrderNotFoundException;
 import io.github.jongminchung.study.apicommunication.orders.domain.OrderRepository;
 import io.github.jongminchung.study.apicommunication.ratelimit.RateLimitExceededException;
-import io.github.jongminchung.study.apicommunication.ratelimit.RateLimiter;
 import io.github.jongminchung.study.apicommunication.ratelimit.RateLimitedOperation;
-import org.springframework.stereotype.Service;
-
-import java.time.Clock;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.function.Supplier;
+import io.github.jongminchung.study.apicommunication.ratelimit.RateLimiter;
 
 @Service
 public class OrderService {
@@ -29,12 +30,13 @@ public class OrderService {
     private final Clock clock;
     private final Supplier<UUID> idGenerator;
 
-    public OrderService(OrderRepository repository,
-                        RateLimiter rateLimiter,
-                        OrderReadModelCache cache,
-                        RequestMetrics metrics,
-                        Clock clock,
-                        Supplier<UUID> idGenerator) {
+    public OrderService(
+            OrderRepository repository,
+            RateLimiter rateLimiter,
+            OrderReadModelCache cache,
+            RequestMetrics metrics,
+            Clock clock,
+            Supplier<UUID> idGenerator) {
         this.repository = Objects.requireNonNull(repository);
         this.rateLimiter = Objects.requireNonNull(rateLimiter);
         this.cache = Objects.requireNonNull(cache);
@@ -49,16 +51,15 @@ public class OrderService {
         try {
             Instant now = clock.instant();
             Order order = new Order(
-                idGenerator.get(),
-                context.tenantId(),
-                context.clientId(),
-                command.getCustomerId(),
-                command.getProductCodes(),
-                command.getTotalAmount(),
-                now,
-                now,
-                1L
-            );
+                    idGenerator.get(),
+                    context.tenantId(),
+                    context.clientId(),
+                    command.getCustomerId(),
+                    command.getProductCodes(),
+                    command.getTotalAmount(),
+                    now,
+                    now,
+                    1L);
             repository.save(order);
             cache.cache(order);
             metrics.recordSuccess(Duration.between(start, clock.instant()));
@@ -74,18 +75,19 @@ public class OrderService {
         Instant start = clock.instant();
         try {
             return cache.get(orderId)
-                .map(order -> {
-                    metrics.recordCacheHit();
-                    metrics.recordSuccess(Duration.between(start, clock.instant()));
-                    return order;
-                })
-                .orElseGet(() -> {
-                    metrics.recordCacheMiss();
-                    Order order = repository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-                    cache.cache(order);
-                    metrics.recordSuccess(Duration.between(start, clock.instant()));
-                    return order;
-                });
+                    .map(order -> {
+                        metrics.recordCacheHit();
+                        metrics.recordSuccess(Duration.between(start, clock.instant()));
+                        return order;
+                    })
+                    .orElseGet(() -> {
+                        metrics.recordCacheMiss();
+                        Order order =
+                                repository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+                        cache.cache(order);
+                        metrics.recordSuccess(Duration.between(start, clock.instant()));
+                        return order;
+                    });
         } catch (RuntimeException ex) {
             metrics.recordFailure(Duration.between(start, clock.instant()));
             throw ex;

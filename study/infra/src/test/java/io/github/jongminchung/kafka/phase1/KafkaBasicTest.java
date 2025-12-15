@@ -1,6 +1,10 @@
 package io.github.jongminchung.kafka.phase1;
 
-import io.github.jongminchung.kafka.KafkaTestBase;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.Duration;
+import java.util.Collections;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -9,15 +13,10 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.Duration;
-import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import io.github.jongminchung.kafka.KafkaTestBase;
 
 /**
- * Phase 1: 기본 개념 및 환경 구성
- * - Kafka 아키텍처 이해 (Broker, Topic, Partition, Replica)
- * - Producer, Consumer, Consumer Group 개념
+ * Phase 1: 기본 개념 및 환경 구성 - Kafka 아키텍처 이해 (Broker, Topic, Partition, Replica) - Producer, Consumer, Consumer Group 개념
  */
 @DisplayName("Phase 1: Kafka 기본 개념 학습")
 class KafkaBasicTest extends KafkaTestBase {
@@ -56,11 +55,7 @@ class KafkaBasicTest extends KafkaTestBase {
         // 여러 메시지 전송
         try (KafkaProducer<String, String> producer = new KafkaProducer<>(createProducerProperties())) {
             for (int i = 0; i < 5; i++) {
-                ProducerRecord<String, String> record = new ProducerRecord<>(
-                        topic,
-                        "key" + i,
-                        "message-" + i
-                );
+                ProducerRecord<String, String> record = new ProducerRecord<>(topic, "key" + i, "message-" + i);
                 producer.send(record).get();
             }
         }
@@ -91,17 +86,14 @@ class KafkaBasicTest extends KafkaTestBase {
         // 동일한 Key로 여러 메시지 전송
         try (KafkaProducer<String, String> producer = new KafkaProducer<>(createProducerProperties())) {
             for (int i = 0; i < 10; i++) {
-                ProducerRecord<String, String> record = new ProducerRecord<>(
-                        topic,
-                        sameKey,
-                        "message-" + i
-                );
+                ProducerRecord<String, String> record = new ProducerRecord<>(topic, sameKey, "message-" + i);
                 producer.send(record).get();
             }
         }
 
         // 메시지 수신 및 Partition 확인
-        try (KafkaConsumer<String, String> consumer = new KafkaConsumer<>(createConsumerProperties("partition-group"))) {
+        try (KafkaConsumer<String, String> consumer =
+                new KafkaConsumer<>(createConsumerProperties("partition-group"))) {
             consumer.subscribe(Collections.singletonList(topic));
 
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(10));

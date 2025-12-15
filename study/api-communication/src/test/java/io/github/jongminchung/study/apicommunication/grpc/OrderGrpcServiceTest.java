@@ -1,5 +1,16 @@
 package io.github.jongminchung.study.apicommunication.grpc;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.time.Clock;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import io.github.jongminchung.study.apicommunication.context.ApiHeaders;
 import io.github.jongminchung.study.apicommunication.metrics.RequestMetrics;
 import io.github.jongminchung.study.apicommunication.orders.api.OrderProtoMapper;
@@ -22,16 +33,6 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.MetadataUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.time.Clock;
-import java.time.Duration;
-import java.util.concurrent.TimeUnit;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class OrderGrpcServiceTest {
 
@@ -45,7 +46,8 @@ class OrderGrpcServiceTest {
         RateLimiter rateLimiter = new SlidingWindowRateLimiter(5, Duration.ofMinutes(1), clock);
         OrderReadModelCache cache = new OrderReadModelCache(Duration.ofMinutes(5), clock);
         RequestMetrics metrics = new RequestMetrics(clock);
-        OrderService orderService = new OrderService(new InMemoryOrderRepository(), rateLimiter, cache, metrics, clock, java.util.UUID::randomUUID);
+        OrderService orderService = new OrderService(
+                new InMemoryOrderRepository(), rateLimiter, cache, metrics, clock, java.util.UUID::randomUUID);
         var protoMapper = new OrderProtoMapper();
         OrderGrpcService grpcService = new OrderGrpcService(orderService, protoMapper);
 
@@ -59,13 +61,11 @@ class OrderGrpcServiceTest {
 
         String serverName = InProcessServerBuilder.generateName();
         server = InProcessServerBuilder.forName(serverName)
-            .directExecutor()
-            .addService(ServerInterceptors.intercept(grpcService, new GrpcApiKeyServerInterceptor(authenticator)))
-            .build()
-            .start();
-        channel = InProcessChannelBuilder.forName(serverName)
-            .directExecutor()
-            .build();
+                .directExecutor()
+                .addService(ServerInterceptors.intercept(grpcService, new GrpcApiKeyServerInterceptor(authenticator)))
+                .build()
+                .start();
+        channel = InProcessChannelBuilder.forName(serverName).directExecutor().build();
         stub = OrderServiceGrpc.newBlockingStub(channel);
     }
 
@@ -81,18 +81,18 @@ class OrderGrpcServiceTest {
 
     @Test
     void createAndFetchOrder() {
-        OrderServiceGrpc.OrderServiceBlockingStub authorizedStub = stub.withInterceptors(
-            MetadataUtils.newAttachHeadersInterceptor(metadata())
-        );
+        OrderServiceGrpc.OrderServiceBlockingStub authorizedStub =
+                stub.withInterceptors(MetadataUtils.newAttachHeadersInterceptor(metadata()));
 
         OrderMessage created = authorizedStub.createOrder(CreateOrderRequest.newBuilder()
-            .setCustomerId("alpha")
-            .addProductCodes("async")
-            .addProductCodes("grpc")
-            .setTotalAmount(42.25)
-            .build());
+                .setCustomerId("alpha")
+                .addProductCodes("async")
+                .addProductCodes("grpc")
+                .setTotalAmount(42.25)
+                .build());
 
-        OrderMessage fetched = authorizedStub.getOrder(GetOrderRequest.newBuilder().setOrderId(created.getOrderId()).build());
+        OrderMessage fetched = authorizedStub.getOrder(
+                GetOrderRequest.newBuilder().setOrderId(created.getOrderId()).build());
 
         assertThat(fetched.getCustomerId()).isEqualTo("alpha");
         assertThat(fetched.getProductCodesList()).containsExactly("async", "grpc");
@@ -102,12 +102,12 @@ class OrderGrpcServiceTest {
     @Test
     void rejectsMissingMetadata() {
         assertThatThrownBy(() -> stub.createOrder(CreateOrderRequest.newBuilder()
-                .setCustomerId("alpha")
-                .addProductCodes("grpc")
-                .setTotalAmount(1)
-                .build()))
-            .isInstanceOf(StatusRuntimeException.class)
-            .hasMessageContaining("UNAUTHENTICATED");
+                        .setCustomerId("alpha")
+                        .addProductCodes("grpc")
+                        .setTotalAmount(1)
+                        .build()))
+                .isInstanceOf(StatusRuntimeException.class)
+                .hasMessageContaining("UNAUTHENTICATED");
     }
 
     private Metadata metadata() {

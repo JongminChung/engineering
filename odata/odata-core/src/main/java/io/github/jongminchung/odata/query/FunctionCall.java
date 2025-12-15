@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Objects;
 
 public final class FunctionCall implements FilterExpr {
-    public enum Name { STARTSWITH, ENDSWITH, CONTAINS }
+    public enum Name {
+        STARTSWITH,
+        ENDSWITH,
+        CONTAINS
+    }
 
     private final Name name;
     private final List<FilterExpr> args;
@@ -19,13 +23,20 @@ public final class FunctionCall implements FilterExpr {
     public static FunctionCall startswith(FilterExpr a, FilterExpr b) {
         return new FunctionCall(Name.STARTSWITH, Arrays.asList(a, b));
     }
+
     public static FunctionCall endswith(FilterExpr a, FilterExpr b) {
         return new FunctionCall(Name.ENDSWITH, Arrays.asList(a, b));
     }
+
     public static FunctionCall contains(FilterExpr a, FilterExpr b) {
         return new FunctionCall(Name.CONTAINS, Arrays.asList(a, b));
     }
 
-    public Name name() { return name; }
-    public List<FilterExpr> args() { return args; }
+    public Name name() {
+        return name;
+    }
+
+    public List<FilterExpr> args() {
+        return args;
+    }
 }

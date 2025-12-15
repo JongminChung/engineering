@@ -7,7 +7,7 @@ PRD: OData Library — v1 초점(Filtering, Ordering) & Spring RestController �
   쿼리 문자열을 컨트롤러 시그니처의 `Filter<T>`, `OrderBy<T>` 타입으로 자동 파싱/바인딩하는 것이다.
 - 이후 확장(OSS 전환 포함)을 고려한 모듈형/확장 가능한 설계를 유지한다.
 
-2. 범위
+1. 범위
 
 - v0: 스캐폴드(모듈/빌드/컨벤션), PRD/설계 문서 정리(코드 구현 전 단계)
 - v1: 읽기 전용 쿼리 중심 기능
@@ -15,7 +15,7 @@ PRD: OData Library — v1 초점(Filtering, Ordering) & Spring RestController �
     - 비지원(차기): `$select`, `$expand`, `$top`, `$skip`, CRUD, 리트라이/회로차단기, 고급 메타데이터 기능
 - v2+: `$select/$expand/$top/$skip`, CRUD, 배치/대량 연산, 변경 추적(delta), 캐싱, 고급 회복력, 공개 확장 포인트
 
-3. 사용/가정(현 단계)
+1. 사용/가정(현 단계)
 
 - 사용 맥락: Spring `@RestController`에서 HTTP 쿼리 파라미터를 받아 OData 서비스로 위임하는 BFF/프록시 형태
     - 쿼리 파라미터 키: `filter`, `orderBy` (케이스 고정)
@@ -23,7 +23,7 @@ PRD: OData Library — v1 초점(Filtering, Ordering) & Spring RestController �
     - 페이징: 서버별 제약 상이하므로 v1에서는 라이브러리 차원의 강제 미적용(컨트롤러에서 별도 처리)
 - 보안: v1은 간단한 Bearer 토큰/고정 헤더 주입 정도만 지원(확장 포인트로 노출)
 
-4. 요구사항(상세)
+1. 요구사항(상세)
 
 - 구성
     - `ODataClientConfig`: `baseUrl`, 인증 헤더 전략, 연결/읽기 타임아웃, 기본 헤더, 로깅 레벨
@@ -42,7 +42,7 @@ PRD: OData Library — v1 초점(Filtering, Ordering) & Spring RestController �
 - 성능/안정성
     - 단순 GET 전송, 커넥션 풀/타임아웃 설정 가능
 
-5. 아키텍처(경량)
+1. 아키텍처(경량)
 
 - 모듈 구성(설계):
     - v1 개발 시 실제 구현은 두 레이어로 분리
@@ -59,7 +59,7 @@ PRD: OData Library — v1 초점(Filtering, Ordering) & Spring RestController �
     - `String -> Filter<T>` / `String -> OrderBy<T>` `GenericConverter`
     - `PropertyWhitelist`로 필드 검증(선택)
 
-6. 공개 API 스케치(컨트롤러 친화)
+1. 공개 API 스케치(컨트롤러 친화)
 
 ```java
 // Controller 내부 예시 — 문자열이 자동으로 파싱되어 바인딩됨
@@ -86,7 +86,7 @@ OrderBy<Product> ob = OrderBy.of(
 );
 ```
 
-7. 테스트 전략
+1. 테스트 전략
 
 - 단위 테스트
     - 파서/토크나이저: 리터럴, 이스케이프, 괄호/우선순위(`not`>`and`>`or`), 함수 호출(`startswith/endswith/contains`)
@@ -96,19 +96,19 @@ OrderBy<Product> ob = OrderBy.of(
 - 통합 테스트
     - 공개 OData v4 데모(예: OData v4 Demo Service) 대상 read-only 호출로 필터/정렬 검증
 
-8. 수용 기준(AC)
+1. 수용 기준(AC)
 
 - PRD/README 공개 및 빌드 성공
 - `$filter`, `$orderby` 표현을 정확히 생성하고 URL 인코딩 처리를 상위 레이어에 위임(직렬화 문자열은 스펙에 맞음)
 - Spring Controller 예제에서 `Filter<T>`, `OrderBy<T>` 자동 바인딩이 동작(컨버터 테스트로 검증)
 - 통합 테스트에서 필터/정렬 결과가 기대와 일치
 
-9. 버저닝/배포
+1. 버저닝/배포
 
 - SemVer: v0.x(내부), v1.0.0(안정)
 - 내부 배포 이후 OSS 전환(라이선스/문서/예제 포함)
 
-10. 마일스톤
+1. 마일스톤
 
 - M1: PRD 업데이트(본 문서) 및 리뷰 승인
 - M2: 코어 구현(`odata-core`): 파서/AST/직렬화 + 빌더 + 단위 테스트
@@ -116,13 +116,13 @@ OrderBy<Product> ob = OrderBy.of(
 - M4: `ODataClient`/`EntitySetQuery` 최소 기능 + 공개 데모 서비스 연동 통합 테스트(읽기 전용)
 - M5: README(컨트롤러 예제, 지원 문법, 화이트리스트 가이드)
 
-11. 리스크
+1. 리스크
 
 - 공급사별 OData 방언 및 구현 차이: v1 범위 내에서 표준 중심 최소 표현만 지원
 - 필터 문자열 인젝션 위험: 빌더 사용 권장, raw 문자열 사용 시 밸리데이션/화이트리스트 옵션 제공(차기 강화)
 - Olingo 의존성 변경 리스크: 버전 고정 및 릴리스 모니터링
 
-12. 승인 요청
+1. 승인 요청
 
 - 본 PRD는 v1 범위(Filtering/Ordering, Spring RestController 가정)에 맞춰 업데이트되었음.
 - 승인 시, 설계에 따라 최소 기능 구현을 진행한다.

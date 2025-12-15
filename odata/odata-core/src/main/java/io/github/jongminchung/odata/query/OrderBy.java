@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.StringJoiner;
 
 public final class OrderBy<T> {
@@ -25,8 +24,13 @@ public final class OrderBy<T> {
         return new OrderBy<>(list);
     }
 
-    public static OrderCriterion asc(String field) { return new OrderCriterion(field, Direction.ASC); }
-    public static OrderCriterion desc(String field) { return new OrderCriterion(field, Direction.DESC); }
+    public static OrderCriterion asc(String field) {
+        return new OrderCriterion(field, Direction.ASC);
+    }
+
+    public static OrderCriterion desc(String field) {
+        return new OrderCriterion(field, Direction.DESC);
+    }
 
     public static <T> OrderBy<T> parse(String input) {
         if (input == null || input.isBlank()) return null;
@@ -41,7 +45,8 @@ public final class OrderBy<T> {
             if (bits.length > 1) {
                 String d = bits[1].toLowerCase(Locale.ROOT);
                 if (d.equals("desc")) dir = Direction.DESC;
-                else if (!d.equals("asc")) throw new ODataParseException("Invalid order direction '" + bits[1] + "'", pos);
+                else if (!d.equals("asc"))
+                    throw new ODataParseException("Invalid order direction '" + bits[1] + "'", pos);
             }
             list.add(new OrderCriterion(field, dir));
             pos += part.length() + 1;
@@ -49,7 +54,9 @@ public final class OrderBy<T> {
         return new OrderBy<>(list);
     }
 
-    public List<OrderCriterion> criteria() { return criteria; }
+    public List<OrderCriterion> criteria() {
+        return criteria;
+    }
 
     @Override
     public String toString() {

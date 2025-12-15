@@ -1,5 +1,9 @@
 package io.github.jongminchung.study.apicommunication.grpc;
 
+import java.util.UUID;
+
+import org.springframework.stereotype.Component;
+
 import io.github.jongminchung.study.apicommunication.context.ApiRequestContext;
 import io.github.jongminchung.study.apicommunication.orders.api.OrderProtoMapper;
 import io.github.jongminchung.study.apicommunication.orders.domain.Order;
@@ -12,9 +16,6 @@ import io.github.jongminchung.study.apicommunication.proto.OrderServiceGrpc;
 import io.github.jongminchung.study.apicommunication.ratelimit.RateLimitExceededException;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Component
 public class OrderGrpcService extends OrderServiceGrpc.OrderServiceImplBase {
@@ -35,11 +36,16 @@ public class OrderGrpcService extends OrderServiceGrpc.OrderServiceImplBase {
             responseObserver.onNext(mapper.toMessage(order));
             responseObserver.onCompleted();
         } catch (RateLimitExceededException ex) {
-            responseObserver.onError(Status.RESOURCE_EXHAUSTED.withDescription(ex.getMessage()).asRuntimeException());
+            responseObserver.onError(
+                    Status.RESOURCE_EXHAUSTED.withDescription(ex.getMessage()).asRuntimeException());
         } catch (IllegalArgumentException ex) {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription(ex.getMessage()).asRuntimeException());
+            responseObserver.onError(
+                    Status.INVALID_ARGUMENT.withDescription(ex.getMessage()).asRuntimeException());
         } catch (Exception ex) {
-            responseObserver.onError(Status.INTERNAL.withDescription("Unable to create order").withCause(ex).asRuntimeException());
+            responseObserver.onError(Status.INTERNAL
+                    .withDescription("Unable to create order")
+                    .withCause(ex)
+                    .asRuntimeException());
         }
     }
 
@@ -52,13 +58,21 @@ public class OrderGrpcService extends OrderServiceGrpc.OrderServiceImplBase {
             responseObserver.onNext(mapper.toMessage(order));
             responseObserver.onCompleted();
         } catch (IllegalArgumentException ex) {
-            responseObserver.onError(Status.INVALID_ARGUMENT.withDescription("order_id must be a valid UUID").withCause(ex).asRuntimeException());
+            responseObserver.onError(Status.INVALID_ARGUMENT
+                    .withDescription("order_id must be a valid UUID")
+                    .withCause(ex)
+                    .asRuntimeException());
         } catch (OrderNotFoundException ex) {
-            responseObserver.onError(Status.NOT_FOUND.withDescription(ex.getMessage()).asRuntimeException());
+            responseObserver.onError(
+                    Status.NOT_FOUND.withDescription(ex.getMessage()).asRuntimeException());
         } catch (RateLimitExceededException ex) {
-            responseObserver.onError(Status.RESOURCE_EXHAUSTED.withDescription(ex.getMessage()).asRuntimeException());
+            responseObserver.onError(
+                    Status.RESOURCE_EXHAUSTED.withDescription(ex.getMessage()).asRuntimeException());
         } catch (Exception ex) {
-            responseObserver.onError(Status.INTERNAL.withDescription("Unable to fetch order").withCause(ex).asRuntimeException());
+            responseObserver.onError(Status.INTERNAL
+                    .withDescription("Unable to fetch order")
+                    .withCause(ex)
+                    .asRuntimeException());
         }
     }
 }

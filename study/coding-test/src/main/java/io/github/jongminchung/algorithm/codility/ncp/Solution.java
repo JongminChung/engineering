@@ -31,7 +31,6 @@ class Solution {
         return max;
     }
 
-
     int solution2(String s) {
         int n = s.length();
         // dp[c] : 마지막 문자가 (char)('a' + c) 인
@@ -67,7 +66,6 @@ class Solution {
         // 최소 삭제 개수 = 전체 길이 - 남길 수 있는 최대 길이
         return n - lnds;
     }
-
 
     public int solution3(int[] A, int[] B) {
         int n = A.length;

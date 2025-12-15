@@ -2,6 +2,9 @@
 
 plugins {
     java
+
+    id("com.diffplug.spotless")
+    id("io.github.jongminchung.spotless.convention")
 }
 
 repositories {

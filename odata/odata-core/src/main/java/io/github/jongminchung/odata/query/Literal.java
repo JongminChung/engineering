@@ -1,10 +1,15 @@
 package io.github.jongminchung.odata.query;
 
 import java.time.OffsetDateTime;
-import java.util.Objects;
 
 public final class Literal implements FilterExpr {
-    public enum Kind { STRING, NUMBER, BOOLEAN, NULL, DATETIME }
+    public enum Kind {
+        STRING,
+        NUMBER,
+        BOOLEAN,
+        NULL,
+        DATETIME
+    }
 
     private final Kind kind;
     private final Object value;
@@ -24,6 +29,11 @@ public final class Literal implements FilterExpr {
         return new Literal(Kind.STRING, String.valueOf(value));
     }
 
-    public Kind kind() { return kind; }
-    public Object value() { return value; }
+    public Kind kind() {
+        return kind;
+    }
+
+    public Object value() {
+        return value;
+    }
 }

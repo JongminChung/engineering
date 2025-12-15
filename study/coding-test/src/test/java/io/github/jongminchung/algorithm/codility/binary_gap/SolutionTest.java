@@ -1,9 +1,9 @@
 package io.github.jongminchung.algorithm.codility.binary_gap;
 
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
-import static org.assertj.core.api.Assertions.*;
 
 class SolutionTest {
 

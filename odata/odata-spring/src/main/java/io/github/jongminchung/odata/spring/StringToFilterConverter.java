@@ -1,15 +1,14 @@
 package io.github.jongminchung.odata.spring;
 
-import io.github.jongminchung.odata.query.Filter;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.core.convert.converter.GenericConverter;
-
 import java.util.Collections;
 import java.util.Set;
 
-/**
- * GenericConverter that parses a query-string into Filter<T>.
- */
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.core.convert.converter.GenericConverter;
+
+import io.github.jongminchung.odata.query.Filter;
+
+/** GenericConverter that parses a query-string into Filter<T>. */
 public final class StringToFilterConverter implements GenericConverter {
 
     @Override

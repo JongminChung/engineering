@@ -18,4 +18,6 @@ repositories {
 dependencies {
     implementation(libs.spring.boot.gradle.plugin)
     implementation(libs.spring.dependency.management.plugin)
+    implementation(libs.spotless.plugin)
+    implementation(libs.spotless.convention.plugin)
 }

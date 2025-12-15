@@ -1,10 +1,11 @@
 package io.github.jongminchung.study.apicommunication.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.time.Duration;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.time.Duration;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @ConfigurationProperties(prefix = "app.study")

@@ -1,8 +1,5 @@
 package io.github.jongminchung.odata.query;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 final class Serializer {
     static String serialize(FilterExpr expr) {
         StringBuilder sb = new StringBuilder();
@@ -40,11 +37,12 @@ final class Serializer {
             writeLiteral((Literal) e, sb);
         } else if (e instanceof FunctionCall) {
             FunctionCall f = (FunctionCall) e;
-            String fn = switch (f.name()) {
-                case STARTSWITH -> "startswith";
-                case ENDSWITH -> "endswith";
-                case CONTAINS -> "contains";
-            };
+            String fn =
+                    switch (f.name()) {
+                        case STARTSWITH -> "startswith";
+                        case ENDSWITH -> "endswith";
+                        case CONTAINS -> "contains";
+                    };
             sb.append(fn).append('(');
             write(f.args().get(0), sb, 0);
             sb.append(',');
@@ -69,11 +67,15 @@ final class Serializer {
                 return;
             case DATETIME:
                 // v1 simple ISO-8601 string literal
-                sb.append('\'').append(lit.value().toString().replace("'", "''")).append('\'');
+                sb.append('\'')
+                        .append(lit.value().toString().replace("'", "''"))
+                        .append('\'');
                 return;
             case STRING:
             default:
-                sb.append('\'').append(String.valueOf(lit.value()).replace("'", "''")).append('\'');
+                sb.append('\'')
+                        .append(String.valueOf(lit.value()).replace("'", "''"))
+                        .append('\'');
         }
     }
 }

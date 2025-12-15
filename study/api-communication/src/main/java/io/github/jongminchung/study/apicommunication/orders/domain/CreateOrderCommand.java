@@ -14,7 +14,8 @@ public final class CreateOrderCommand {
 
     public CreateOrderCommand(String customerId, List<String> productCodes, BigDecimal totalAmount) {
         this.customerId = Objects.requireNonNull(customerId, "customerId must be provided");
-        this.productCodes = Collections.unmodifiableList(new ArrayList<>(Objects.requireNonNull(productCodes, "productCodes must be provided")));
+        this.productCodes = Collections.unmodifiableList(
+                new ArrayList<>(Objects.requireNonNull(productCodes, "productCodes must be provided")));
         this.totalAmount = Objects.requireNonNull(totalAmount, "totalAmount must be provided");
     }
 
