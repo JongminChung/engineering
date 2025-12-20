@@ -8,16 +8,12 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.testcontainers.containers.KafkaContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 /** Kafka 학습을 위한 Base Test 클래스 - TestContainers를 이용한 Kafka 통합 테스트 환경 제공 - Producer/Consumer 설정을 위한 유틸리티 메서드 제공 */
-@Testcontainers
 public abstract class KafkaTestBase {
 
-    @Container
     protected static final KafkaContainer kafka =
             new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.0")).withReuse(false);
 

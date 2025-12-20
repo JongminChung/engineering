@@ -28,7 +28,7 @@ class UserRepositoryTest extends BaseIntegrationTest {
 
     @Test
     void testContainerIsRunning() {
-        assertThat(postgres.isRunning()).isTrue();
+        assertThat(mysql.isRunning()).isTrue();
     }
 
     @Test
