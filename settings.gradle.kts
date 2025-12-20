@@ -30,9 +30,13 @@ include(
 include(
     "distributed-lock:core",
     "distributed-lock:provider-redis",
+    "distributed-lock:provider-jdbc",
     "distributed-lock:spring",
     "distributed-lock:spring-boot-autoconfigure",
     "distributed-lock:spring-boot-starter",
+    "distributed-lock:spring-boot-starter-redis",
+    "distributed-lock:spring-boot-starter-jdbc",
+    "distributed-lock:dependencies",
     "distributed-lock:test"
 )
 

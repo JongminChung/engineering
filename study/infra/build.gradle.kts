@@ -1,6 +1,6 @@
 plugins {
     id("buildlogic.kafka-study-conventions")
-    id("buildlogic.postgresql-study-conventions")
+    id("buildlogic.mysql-study-conventions")
 }
 
-description = "Kafka, Postgresql study module with TestContainers"
+description = "Kafka, MySQL study module with TestContainers"

@@ -4,10 +4,10 @@ plugins {
 
 dependencies {
     // PostgreSQL Driver
-    runtimeOnly(libs.findLibrary("postgresql").get())
+    runtimeOnly(rootProjectLibs.findLibrary("mysql").get())
 
     // Testcontainers PostgreSQL Module
-    testImplementation(libs.findLibrary("testcontainers-postgresql").get())
+    testImplementation(rootProjectLibs.findLibrary("testcontainers-kafka").get())
 
     // Flyway
     testImplementation("org.springframework.boot:spring-boot-starter-flyway")

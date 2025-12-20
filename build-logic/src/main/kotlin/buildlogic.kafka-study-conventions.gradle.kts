@@ -5,10 +5,10 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.findLibrary("spring-kafka").get())
+    implementation(rootProjectLibs.findLibrary("spring-kafka").get())
 
-    testImplementation(libs.findLibrary("testcontainers-kafka").get())
-    testImplementation(libs.findLibrary("awaitility").get())
+    testImplementation(rootProjectLibs.findLibrary("testcontainers-kafka").get())
+    testImplementation(rootProjectLibs.findLibrary("awaitility").get())
 }
 
 // 테스트 설정

@@ -11,10 +11,14 @@ springDependencyManagement = "1.1.7"
 # Testing
 junit = "6.0.1"
 assertj = "3.27.6"
-testcontainers = "1.21.4"
+testcontainers = "2.0.3"
+
+# Redis
+redisson = "4.0.0"
 
 # Infra
 postgresql = "42.7.4"
+mysql = "8.4.0"
 
 [libraries]
 spring-boot-gradle-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "springBoot" }
@@ -29,14 +33,12 @@ awaitility = { module = "org.awaitility:awaitility", version = "4.2.0" }
 
 testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
 testcontainers-core = { module = "org.testcontainers:testcontainers" }
-testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter" }
+testcontainers-mysql = { module = "org.testcontainers:testcontainers-mysql" }
+testcontainers-kafka = { module = "org.testcontainers:testcontainers-kafka" }
 
-testcontainers-postgresql = { module = "org.testcontainers:postgresql" }
-testcontainers-kafka = { module = "org.testcontainers:kafka" }
-
-# DB
-postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+# Infra
+mysql = { module = "com.mysql:mysql-connector-j", version.ref = "mysql" }
 spring-kafka = { module = "org.springframework.kafka:spring-kafka", version = "3.1.1" }
 
-[bundles]
-testcontainers = ["testcontainers-core", "testcontainers-junit-jupiter"]
+# Redis
+redisson = { module = "org.redisson:redisson", version.ref = "redisson" }

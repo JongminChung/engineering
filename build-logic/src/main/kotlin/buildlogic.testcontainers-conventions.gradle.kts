@@ -6,8 +6,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 
-    testImplementation(platform(libs.findLibrary("testcontainers-bom").get()))
-    testImplementation(libs.findBundle("testcontainers").get())
+    testImplementation(platform(rootProjectLibs.findLibrary("testcontainers-bom").get()))
+    testImplementation(rootProjectLibs.findLibrary("testcontainers-core").get())
 }
 
 // 테스트 설정
