@@ -1,9 +1,12 @@
 {
   "name": "engineering",
   "type": "module",
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
     "prepare": "husky",
-    "preinstall": "node .scripts/preinstall.ts",
+    "preinstall": "npx only-allow pnpm",
     "check": "biome check --write --unsafe",
     "check:markdown": "markdownlint-cli2 --fix **/*.md"
   },

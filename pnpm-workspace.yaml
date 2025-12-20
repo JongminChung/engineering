@@ -1,0 +1,5 @@
+packageManagerStrict: true
+packageManagerStrictVersion: false
+
+packages:
+  - "apps/*"
