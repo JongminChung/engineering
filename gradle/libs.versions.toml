@@ -5,19 +5,18 @@ java = "25"
 spotless = "8.1.0"
 
 # Spring Boot
-springBoot = "4.0.0"
+springBoot = "4.0.1"
 springDependencyManagement = "1.1.7"
 
 # Testing
 junit = "6.0.1"
 assertj = "3.27.6"
-testcontainers = "1.20.4"
+testcontainers = "1.21.4"
 
 # Infra
 postgresql = "42.7.4"
 
 [libraries]
-# Spring Boot Gradle Plugin (for build-logic/build.gradle.kts)
 spring-boot-gradle-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "springBoot" }
 spring-dependency-management-plugin = { module = "io.spring.gradle:dependency-management-plugin", version.ref = "springDependencyManagement" }
 
@@ -37,8 +36,6 @@ testcontainers-kafka = { module = "org.testcontainers:kafka" }
 
 # DB
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
-
-# Kafka
 spring-kafka = { module = "org.springframework.kafka:spring-kafka", version = "3.1.1" }
 
 [bundles]
