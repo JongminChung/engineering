@@ -1,0 +1,22 @@
+# READ/WRITE 일반 트래픽 → mycluster-router.mysql.svc:6450
+# 강일관성 트랜잭션 → mycluster-router.mysql.svc:6446
+apiVersion: v1
+kind: Service
+metadata:
+  name: mycluster-router
+  namespace: mysql
+spec:
+  type: ClusterIP
+  selector:
+    component: mysqlrouter
+    mysql.oracle.com/cluster: mycluster
+    tier: mysql
+  ports:
+    - name: mysql-primary
+      port: 6446
+      targetPort: 6446
+      protocol: TCP
+    - name: mysql-rw-split
+      port: 6450
+      targetPort: 6450
+      protocol: TCP

@@ -1,0 +1,42 @@
+apiVersion: mysql.oracle.com/v2
+kind: InnoDBCluster
+metadata:
+  name: mycluster
+  namespace: mysql
+spec:
+  secretName: mycluster-root
+
+  # 1) MySQL 서버 quorum
+  instances: 3
+
+  # 2) 데이터 디렉터리 PVC (운영 필수)
+  datadirVolumeClaimTemplate:
+    accessModes: [ "ReadWriteOnce" ]
+    storageClassName: standard
+    resources:
+      requests:
+        storage: 200Gi
+
+  # 3) MySQL Router (stateless)
+  router:
+    instances: 2
+
+  # 4) Prometheus metrics
+  metrics:
+    enable: true
+    monitor: true
+
+  # 5) 기본 서비스는 RW-splitting으로 사용
+  service:
+    type: ClusterIP
+    defaultPort: mysql-rw-split
+
+  # 6) DB Pod 분산 배치
+  podSpec:
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                mysql.oracle.com/cluster: mycluster
+            topologyKey: kubernetes.io/hostname

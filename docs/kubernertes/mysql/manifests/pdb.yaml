@@ -1,0 +1,24 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: mycluster-mysql-pdb
+  namespace: mysql
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      mysql.oracle.com/cluster: mycluster
+      tier: mysql
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: mycluster-router-pdb
+  namespace: mysql
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      mysql.oracle.com/cluster: mycluster
+      component: mysqlrouter
+      tier: mysql
