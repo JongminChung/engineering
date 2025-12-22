@@ -9,6 +9,6 @@
 - [결과 도출 (Deliver Results, Bias for Action, Drive for Results)](./결과-도출.md)
 - [영향력 (Insist on the Highest Standards, Influencing for Implact)](./영향력.md)
 - [적응력 (Disagree and Commit, Dive Deep, Adaptibility)](./적응력.md)
-- 판단력 (Think Big, Are Right, A Lot, Judgement)
-- 협업 (Earn Trust, Collaboration)
+- [판단력 (Think Big, Are Right, A Lot, Judgement)](./판단력.md)
+- [협업 (Earn Trust, Collaboration)](./협업.md)
 
