@@ -5,10 +5,10 @@
 
 **6가지 주요 소프트 스킬**
 
-- 고객 중심 (Customer Obsession, Customer Focus)
-- 결과 도출 (Deliver Results, Bias for Action, Drive for Results)
-- 영향력 (Insist on the Highest Standards, Influencing for Implact)
-- 적응력 (Disagree and Commit, Dive Deep, Adaptibility)
+- [고객 중심 (Customer Obsession, Customer Focus)](./고객-중심.md)
+- [결과 도출 (Deliver Results, Bias for Action, Drive for Results)](./결과-도출.md)
+- [영향력 (Insist on the Highest Standards, Influencing for Implact)](./영향력.md)
+- [적응력 (Disagree and Commit, Dive Deep, Adaptibility)](./적응력.md)
 - 판단력 (Think Big, Are Right, A Lot, Judgement)
 - 협업 (Earn Trust, Collaboration)
 
