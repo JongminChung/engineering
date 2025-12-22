@@ -1,0 +1,8 @@
+include:
+  - project: cloud/devops/gitlab-cicd
+    ref: feat/v1
+    file:
+      - workflow.gitlab-ci.yml
+  - local: .gitlab/ci-common.yml
+  - local: .gitlab/ci-distributed-lock.yml
+  - local: .gitlab/ci-study.yml

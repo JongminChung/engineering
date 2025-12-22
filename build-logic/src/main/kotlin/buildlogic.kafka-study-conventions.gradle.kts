@@ -1,7 +1,6 @@
 plugins {
-    id("buildlogic.testcontainers-conventions")
-
     `java-library`
+    id("buildlogic.testcontainers-conventions")
 }
 
 dependencies {

@@ -1,0 +1,66 @@
+default:
+  image: repo.gabia.com/gabiacloud/temurin:jdk25-ubi9-node24-minimal
+  interruptible: true # 동일한 파이프라인에 대해 새로운 파이프라인 작업이 시작되면 기존 파이프라인 작업은 종료됩니다.
+
+stages:
+  - test
+
+variables:
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+  GIT_DEPTH: "0"
+
+cache:
+  key: "${CI_PROJECT_PATH_SLUG}"
+  policy: pull-push
+  paths:
+    - .gradle/caches/
+    - .gradle/wrapper/
+
+.run_module_tests: &run_module_tests
+  - |
+    set -euo pipefail
+    module="$MODULE_PATH"
+    has_task() {
+      ./gradlew -q "${module}:tasks" --all | grep -q "^$1 -"
+    }
+    run_task() {
+      task="$1"
+      if has_task "$task"; then
+        ./gradlew "${module}:${task}"
+      else
+        echo "Skip ${module}:${task} (task not found)"
+      fi
+    }
+    run_task test
+    run_task integrationTest
+    ./gradlew "${module}:jacocoMergeTestExec" "${module}:jacocoMergedCoverageReport"
+
+.report_after_script: &report_after_script
+  - mkdir -p public/html-report
+  - |
+    find . -type d -path "*/build/reports/jacoco/*/html" | while read -r dir; do
+      rel="${dir#./}"
+      dest="public/html-report/${rel}"
+      mkdir -p "$(dirname "$dest")"
+      cp -r "$dir" "$dest"
+    done
+  - |
+    {
+      echo "<!doctype html><meta charset=\"utf-8\"><title>JaCoCo Reports</title><h1>JaCoCo Reports</h1><ul>";
+      find public/html-report -type f -path "*/build/reports/jacoco/*/html/index.html" | while read -r file; do
+        rel="${file#public/html-report/}"
+        echo "<li><a href=\"$rel\">$rel</a></li>";
+      done;
+      echo "</ul>";
+    } > public/html-report/report.html
+
+.report_env_url: &report_env_url "https://${CI_PROJECT_ROOT_NAMESPACE}.gabia.app/-/orgcloud/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts/public/html-report/report.html"
+
+.test_and_integration_artifacts: &test_and_integration_artifacts
+  when: always
+  reports:
+    junit:
+      - "**/build/test-results/test/*.xml"
+      - "**/build/test-results/integrationTest/*.xml"
+  paths:
+    - public/html-report

@@ -1,4 +1,4 @@
-package io.github.jongminchung.study.infra.postgresql.phase1;
+package io.github.jongminchung.study.infra;
 
 import java.time.LocalDateTime;
 
@@ -31,7 +31,7 @@ public class User {
 
     protected User() {}
 
-    User(String username, String email) {
+    public User(String username, String email) {
         this.username = username;
         this.email = email;
         this.createdAt = LocalDateTime.now();

@@ -4,6 +4,7 @@ plugins {
     java
     id("com.diffplug.spotless")
     id("io.github.jongminchung.spotless.convention")
+    id("buildlogic.java-test-conventions")
 }
 
 repositories {
@@ -12,24 +13,6 @@ repositories {
 
 dependencies {
     implementation(rootProjectLibs.findLibrary("jspecify").get())
-}
-
-testing {
-    suites {
-        val test by getting(JvmTestSuite::class) {
-            useJUnitJupiter(rootProjectLibs.findVersion("junit").get().requiredVersion)
-
-            dependencies {
-                implementation(rootProjectLibs.findLibrary("assertj-core").get())
-            }
-
-            targets.all {
-                testTask.configure {
-                    systemProperty("spring.profiles.active", "test")
-                }
-            }
-        }
-    }
 }
 
 java {

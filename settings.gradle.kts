@@ -39,7 +39,6 @@ include(
     "distributed-lock:dependencies",
     "distributed-lock:test",
     "distributed-lock:redis-integration-test",
-    "distributed-lock:bom-verifier",
     "distributed-lock:jdbc-integration-test"
 )
 

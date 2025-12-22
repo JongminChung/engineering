@@ -42,11 +42,3 @@ tasks.test {
     systemProperty("junit.jupiter.execution.parallel.config.strategy", "fixed")
     systemProperty("junit.jupiter.execution.parallel.config.fixed.parallelism", "8")
 }
-
-// 테스트 리포트 설정
-tasks.withType<Test> {
-    reports {
-        html.required.set(true)
-        junitXml.required.set(true)
-    }
-}

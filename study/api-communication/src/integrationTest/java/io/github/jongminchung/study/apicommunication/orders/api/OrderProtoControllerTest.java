@@ -6,14 +6,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -21,17 +23,25 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import io.github.jongminchung.study.apicommunication.context.ApiHeaders;
 import io.github.jongminchung.study.apicommunication.proto.CreateOrderRequest;
 import io.github.jongminchung.study.apicommunication.proto.OrderMessage;
+import io.github.jongminchung.study.apicommunication.ratelimit.RateLimiter;
 
-@SpringBootTest
+@SpringBootTest(properties = "test.context=OrderProtoControllerTest")
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class OrderProtoControllerTest {
 
     private static final MediaType PROTOBUF = MediaType.parseMediaType("application/x-protobuf");
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockitoBean
+    private RateLimiter rateLimiter;
+
+    @BeforeEach
+    void setUpRateLimiter() {
+        Mockito.when(rateLimiter.tryAcquire(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(true);
+    }
 
     @Test
     void createOrderViaRestProto() throws Exception {

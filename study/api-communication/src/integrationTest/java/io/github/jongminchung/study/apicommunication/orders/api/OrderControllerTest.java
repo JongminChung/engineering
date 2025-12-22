@@ -1,32 +1,31 @@
 package io.github.jongminchung.study.apicommunication.orders.api;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import io.github.jongminchung.study.apicommunication.context.ApiHeaders;
+import io.github.jongminchung.study.apicommunication.ratelimit.RateLimiter;
 
 import tools.jackson.databind.ObjectMapper;
 
-@SpringBootTest
+@SpringBootTest(properties = "test.context=OrderControllerTest")
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class OrderControllerTest {
 
     @Autowired
@@ -34,6 +33,15 @@ class OrderControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private RateLimiter rateLimiter;
+
+    @BeforeEach
+    void setUpRateLimiter() {
+        Mockito.when(rateLimiter.tryAcquire(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(true);
+    }
 
     @Test
     void createOrderThroughRestApi() throws Exception {
@@ -57,6 +65,8 @@ class OrderControllerTest {
 
     @Test
     void rateLimitIsEnforced() throws Exception {
+        org.mockito.Mockito.when(rateLimiter.tryAcquire(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(true, true, false);
         String payload = objectMapper.writeValueAsString(sampleRequest());
 
         mockMvc.perform(authorized(post("/api/v1/orders")

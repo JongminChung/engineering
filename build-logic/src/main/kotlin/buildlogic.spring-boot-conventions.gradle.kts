@@ -7,10 +7,6 @@ plugins {
     id("io.spring.dependency-management")
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     // Spring Boot Starters (버전은 Spring Boot Plugin이 관리)
     implementation("org.springframework.boot:spring-boot-starter")
@@ -21,13 +17,19 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok")
     testCompileOnly("org.projectlombok:lombok")
+
     annotationProcessor("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
+
+    add("integrationTestCompileOnly", "org.projectlombok:lombok")
+    add("integrationTestAnnotationProcessor", "org.projectlombok:lombok")
 }
 
 configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
     }
+    maybeCreate("integrationTestCompileOnly").extendsFrom(configurations.compileOnly.get())
+    maybeCreate("integrationTestAnnotationProcessor").extendsFrom(configurations.annotationProcessor.get())
 }
 
