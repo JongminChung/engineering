@@ -1,15 +1,12 @@
-# study modules (test + integrationTest)
-
 test:study:infra:
   stage: test
   variables:
     MODULE_PATH: ":study:infra"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-study-infra/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - study/**/*
@@ -22,12 +19,11 @@ test:study:coding-test:
   stage: test
   variables:
     MODULE_PATH: ":study:coding-test"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-study-coding-test/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - study/**/*
@@ -40,12 +36,11 @@ test:study:api-communication:
   stage: test
   variables:
     MODULE_PATH: ":study:api-communication"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-study-api-communication/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - study/**/*

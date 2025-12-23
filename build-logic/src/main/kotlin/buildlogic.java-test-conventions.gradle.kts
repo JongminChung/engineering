@@ -86,7 +86,7 @@ plugins.withId("java") {
 
     val jacocoMergeTask = tasks.register<JavaExec>("jacocoMergeTestExec") {
         dependsOn(unitTestTask, integrationTestTask)
-        group = LifecycleBasePlugin.VERIFICATION_GROUP
+
         val testExec = execFileForName("test")
         val integrationExec = execFileForName("integrationTest")
         val mergedExec = jacocoDir.map { it.file("jacocoMerged.exec") }

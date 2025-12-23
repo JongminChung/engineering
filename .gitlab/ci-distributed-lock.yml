@@ -1,15 +1,12 @@
-# distributed-lock modules (test + integrationTest)
-
 test:distributed-lock:core:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:core"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-core/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -22,12 +19,11 @@ test:distributed-lock:provider-redis:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:provider-redis"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-provider-redis/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -40,12 +36,11 @@ test:distributed-lock:provider-jdbc:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:provider-jdbc"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-provider-jdbc/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -58,12 +53,11 @@ test:distributed-lock:spring:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:spring"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-spring/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -76,12 +70,11 @@ test:distributed-lock:spring-boot-autoconfigure:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:spring-boot-autoconfigure"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-spring-boot-autoconfigure/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -94,12 +87,11 @@ test:distributed-lock:spring-boot-starter:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:spring-boot-starter"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-spring-boot-starter/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -112,12 +104,11 @@ test:distributed-lock:spring-boot-starter-redis:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:spring-boot-starter-redis"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-spring-boot-starter-redis/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -130,12 +121,11 @@ test:distributed-lock:spring-boot-starter-jdbc:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:spring-boot-starter-jdbc"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-spring-boot-starter-jdbc/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -148,12 +138,11 @@ test:distributed-lock:dependencies:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:dependencies"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-dependencies/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -166,12 +155,11 @@ test:distributed-lock:test:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:test"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-test/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -184,12 +172,11 @@ test:distributed-lock:redis-integration-test:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:redis-integration-test"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-redis-integration-test/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
@@ -202,12 +189,11 @@ test:distributed-lock:jdbc-integration-test:
   stage: test
   variables:
     MODULE_PATH: ":distributed-lock:jdbc-integration-test"
-  script: *run_module_tests
-  after_script: *report_after_script
-  artifacts: *test_and_integration_artifacts
+  extends:
+    - .run_module_tests
+    - .test_and_integration_artifacts
   environment:
     name: "report/test-distributed-lock-jdbc-integration-test/$CI_PIPELINE_IID"
-    url: *report_env_url
   rules:
     - changes:
         - distributed-lock/**/*
