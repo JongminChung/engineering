@@ -1,11 +1,10 @@
-package io.github.jongminchung.study.infra.postgresql.phase1;
+package io.github.jongminchung.study.infra;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-interface UserRepository extends JpaRepository<User, Long> {
-
+public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
 
     boolean existsByEmail(String email);

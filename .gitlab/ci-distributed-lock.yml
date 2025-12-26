@@ -1,0 +1,131 @@
+test:distributed-lock:core:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/core"
+  rules:
+    - changes:
+        - distributed-lock/core/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:distributed-lock:provider-redis:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/provider-redis"
+  rules:
+    - changes:
+        - distributed-lock/provider-redis/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:distributed-lock:provider-jdbc:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/provider-jdbc"
+  rules:
+    - changes:
+        - distributed-lock/provider-jdbc/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:distributed-lock:spring:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/spring"
+  rules:
+    - changes:
+        - distributed-lock/spring/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:distributed-lock:spring-boot-autoconfigure:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/spring-boot-autoconfigure"
+  rules:
+    - changes:
+        - distributed-lock/spring-boot-autoconfigure/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:distributed-lock:spring-boot-starter:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/spring-boot-starter"
+  rules:
+    - changes:
+        - distributed-lock/spring-boot-starter/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:distributed-lock:spring-boot-starter-redis:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/spring-boot-starter-redis"
+  rules:
+    - changes:
+        - distributed-lock/spring-boot-starter-redis/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:distributed-lock:spring-boot-starter-jdbc:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/spring-boot-starter-jdbc"
+  rules:
+    - changes:
+        - distributed-lock/spring-boot-starter-jdbc/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:distributed-lock:test:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/test"
+  rules:
+    - changes:
+        - distributed-lock/test/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:distributed-lock:redis-integration-test:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/redis-integration-test"
+  rules:
+    - changes:
+        - distributed-lock/redis-integration-test/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:distributed-lock:jdbc-integration-test:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "distributed-lock/jdbc-integration-test"
+  rules:
+    - changes:
+        - distributed-lock/jdbc-integration-test/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never

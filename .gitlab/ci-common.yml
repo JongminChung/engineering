@@ -1,0 +1,61 @@
+default:
+  image: eclipse-temurin:25
+  interruptible: true # 동일한 파이프라인에 대해 새로운 파이프라인 작업이 시작되면 기존 파이프라인 작업은 종료됩니다.
+  tags:
+    - home
+
+stages:
+  - .pre
+  - test
+
+variables:
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+  GIT_DEPTH: "0"
+
+cache:
+  key: "${CI_PROJECT_PATH_SLUG}"
+  policy: pull-push
+  paths:
+    - .gradle/
+
+.rules:common_changes:
+  - build-logic/**/*
+  - gradle/**/*
+
+warmup:gradle-cache:
+  stage: .pre
+  script:
+    - ./gradlew testClasses integrationTestClasses
+  cache:
+    key: $CI_PROJECT_PATH_SLUG
+    policy: pull-push
+    paths:
+      - .gradle/
+
+.gradle_module_test:
+  stage: test
+  cache:
+    key: $CI_PROJECT_PATH_SLUG
+    policy: pull
+    paths:
+      - .gradle/
+  script:
+    - |
+      set -euo pipefail
+      GRADLE_MODULE_PATH=$(echo ":${MODULE_PATH}" | tr '/' ':')
+      ./gradlew "${GRADLE_MODULE_PATH}:jacocoMergedCoverageReport"
+  artifacts:
+    when: always
+    expire_in: 30 days
+    reports:
+      coverage_report:
+        coverage_format: jacoco
+        path: "${MODULE_PATH}/build/reports/jacoco/merged/*.xml"
+      junit:
+        - "${MODULE_PATH}/build/test-results/test/*.xml"
+        - "${MODULE_PATH}/build/test-results/integrationTest/*.xml"
+    paths:
+      - "${MODULE_PATH}/build/reports/jacoco/merged/html"
+  environment:
+    name: "report/${CI_JOB_NAME_SLUG}/${CI_PIPELINE_IID}"
+    url: "https://${CI_PROJECT_NAMESPACE}.gitlab.io/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts/${MODULE_PATH}/build/reports/jacoco/merged/html/index.html"

@@ -1,0 +1,20 @@
+workflow:
+  rules:
+    # 1) MR 파이프라인은 항상 생성
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+
+    # 2) 브랜치 push 파이프라인은 "해당 브랜치에 오픈 MR이 없을 때만" 생성
+    #    (오픈 MR이 있으면 push 파이프라인은 생성하지 않음 → 중복 방지)
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_OPEN_MERGE_REQUESTS'
+      when: never
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: always
+
+    # 3) 그 외는 기본적으로 생성 안 함(원하면 when: always로 변경)
+    - when: never
+
+include:
+  - local: .gitlab/ci-common.yml
+  - local: .gitlab/ci-distributed-lock.yml
+  - local: .gitlab/ci-study.yml

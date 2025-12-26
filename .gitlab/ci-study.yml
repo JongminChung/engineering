@@ -1,0 +1,35 @@
+test:study:infra:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "study/infra"
+  rules:
+    - changes:
+        - study/infra/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:study:coding-test:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "study/coding-test"
+  rules:
+    - changes:
+        - study/coding-test/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never
+
+test:study:api-communication:
+  extends: .gradle_module_test
+  variables:
+    MODULE_PATH: "study/api-communication"
+  rules:
+    - changes:
+        - study/api-communication/**/*
+        - build-logic/**/*
+        - gradle/**/*
+      when: on_success
+    - when: never

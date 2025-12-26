@@ -6,22 +6,39 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.testcontainers.kafka.KafkaContainer;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 /** Kafka 학습을 위한 Base Test 클래스 - TestContainers를 이용한 Kafka 통합 테스트 환경 제공 - Producer/Consumer 설정을 위한 유틸리티 메서드 제공 */
 public abstract class KafkaTestBase {
 
-    protected static final KafkaContainer kafka =
-            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.0")).withReuse(false);
+    private static final DockerImageName KAFKA_IMAGE = DockerImageName.parse("confluentinc/cp-kafka:7.6.0");
+
+    protected static final ConfluentKafkaContainer kafka = new ConfluentKafkaContainer(KAFKA_IMAGE).withReuse(false);
 
     protected String bootstrapServers;
+
+    @BeforeAll
+    static void startKafka() {
+        if (!kafka.isRunning()) {
+            kafka.start();
+        }
+    }
 
     @BeforeEach
     void setUp() {
         bootstrapServers = kafka.getBootstrapServers();
+    }
+
+    @AfterAll
+    static void stopKafka() {
+        if (kafka.isRunning()) {
+            kafka.stop();
+        }
     }
 
     @AfterEach
