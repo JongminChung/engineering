@@ -1,5 +1,10 @@
 # Repository Guidelines
 
+## Document Rules
+
+- `음슴체`로 작성해야 함.
+    - 예: xx 트레이드 오프가 존재함. 그렇기에 A 기술을 채택함.
+
 ## Project Structure & Module Organization
 
 - The `docs/` tree hosts standalone guides and research notes.
