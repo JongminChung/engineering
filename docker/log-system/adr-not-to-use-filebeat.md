@@ -1,5 +1,32 @@
 # 왜 filebeat를 사용하지 않았나
 
+**_Table of Contents_**
+
+<!-- TOC -->
+
+- [왜 filebeat를 사용하지 않았나](#왜-filebeat를-사용하지-않았나)
+  - [배경](#배경)
+  - [“응답이 안 오면 왜 바로 끊지 않는가?”](#응답이-안-오면-왜-바로-끊지-않는가)
+  - [결론 요약](#결론-요약)
+  - [1. 흔한 오해](#1-흔한-오해)
+  - [2. TCP가 연결 종료를 판단하는 경우 (딱 3가지)](#2-tcp가-연결-종료를-판단하는-경우-딱-3가지)
+    - [1) FIN 수신](#1-fin-수신)
+    - [2) RST 수신](#2-rst-수신)
+    - [3) 커널 타임아웃 초과](#3-커널-타임아웃-초과)
+  - [3. 중간 장비(LB/NAT/FW)의 실제 동작](#3-중간-장비lbnatfw의-실제-동작)
+  - [4. half-open 세션이 만들어지는 과정 (타임라인)](#4-half-open-세션이-만들어지는-과정-타임라인)
+    - [(1) 정상 상태](#1-정상-상태)
+    - [(2) 중간 장비가 세션 삭제](#2-중간-장비가-세션-삭제)
+    - [(3) Filebeat가 데이터 전송](#3-filebeat가-데이터-전송)
+  - [5. ACK가 안 와도 왜 바로 끊지 않는가](#5-ack가-안-와도-왜-바로-끊지-않는가)
+  - [6. 그래서 언제까지 살아있나?](#6-그래서-언제까지-살아있나)
+  - [7. “서로 살아있다고 믿는다”는 표현의 의미](#7-서로-살아있다고-믿는다는-표현의-의미)
+  - [8. 재시작하면 왜 즉시 해결되는가](#8-재시작하면-왜-즉시-해결되는가)
+  - [9. 이 문제가 Filebeat에서 특히 체감되는 이유](#9-이-문제가-filebeat에서-특히-체감되는-이유)
+  - [한 줄 요약](#한-줄-요약)
+
+<!-- TOC -->
+
 ## 배경
 
 HAProxy Session Data 수집 당시에 Filebeat와 Metricbeat를 활용해 데이터를 적재하는 시스템을 구축하였습니다.
@@ -237,3 +264,105 @@ TCP는 신뢰성 프로토콜이기 때문에
 > 양 끝은 `ESTABLISHED` 상태로 남을 수 있다.**
 
 이게 **half-open(blackhole) 세션의 본질**이다.
+
+## 기여 방향
+
+### 1. 문제 요약
+
+- Filebeat는 Logstash와 **long-lived TCP connection**을 유지함
+- 중간 장비(LB / NAT / FW)가 **idle-timeout으로 FIN/RST 없이 세션을 삭제**하는 경우
+  - Filebeat 커널 상태는 `ESTABLISHED`
+  - ACK는 오지 않음
+  - backoff / timeout만 반복
+- 운영 체감상 **Filebeat 재시작 전까지 복구되지 않는 상황**이 발생함
+- 최신 Filebeat 공식 설정에는
+  - half-open 감지
+  - stalled connection 판단
+  - 자동 reconnect
+      를 직접 해결하는 옵션이 없음
+
+### 2. 기존 설정의 한계
+
+#### `output.logstash.ttl`
+
+- 오래된 커넥션을 주기적으로 재수립하는 옵션
+- sticky connection / 로드밸런서 불균형 완화 목적
+- **middlebox idle-timeout이 더 짧아지면 동일 문제 재발**
+- `pipelining` 사용 시 적용 불가
+
+#### `timeout`, `backoff`
+
+- 네트워크 에러 이후 재시도 동작 제어용
+- **FIN/RST 없는 silent drop / half-open 상태를 선제적으로 감지하지는 못함**
+
+---
+
+### 3. 기여 아이디어 (현실적으로 수용 가능)
+
+#### 3.1 Stalled connection 감지 (1차, 가장 유력)
+
+> 기본 동작 변경 없음 / 운영 가시성 개선 중심
+
+##### 감지 조건 예시
+
+- N분 동안 `acked_events == 0`
+- 같은 기간 `queue depth` 증가
+- output connection은 alive 상태
+
+##### 판단
+
+- “stalled connection” 상태로 명시적 분류
+
+##### 동작
+
+- WARN 로그 출력
+- metric 노출 (예: `libbeat.output.stalled = 1`)
+- ❌ 기본 reconnect 없음
+
+##### 장점
+
+- backward compatibility 유지
+- 오탐 리스크 낮음
+- 운영자가 문제를 명확히 인지 가능
+- maintainer 수용 가능성 높음
+
+---
+
+#### 3.2 opt-in reconnect 옵션 (2차 단계)
+
+> 기본 OFF 유지
+
+```yaml
+output.logstash:
+    reconnect_on_stall: true
+    stall_timeout: 2m
+```
+
+**동작**
+
+- stalled 조건 충족 시
+- 해당 output client 소켓 close
+- 다음 flush에서 새 연결 생성
+
+**주의사항**
+
+- queue 증가 조건 포함 필수 (idle과 구분)
+- 기본 OFF 유지가 핵심
+
+---
+
+### 4. 코드
+
+- **libbeat 영역**
+  - publisher/pipeline
+    - ACK 진행 감시
+    - stall 판단 로직
+
+  - publisher/queue
+    - queue depth 정보 제공
+
+- outputs/logstash
+  - opt-in reconnect 시 client close 트리거
+
+> Filebeat 단일 문제가 아니라
+> Beats 공통 output 구조의 개선 포인트
