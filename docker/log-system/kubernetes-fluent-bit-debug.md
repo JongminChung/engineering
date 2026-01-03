@@ -13,8 +13,8 @@ kubectl -n demo get deploy,pod
 
 ## 2) 설정(ConfigMap) 내용 확인
 
-Fluent Bit 설정은 ConfigMap에 저장되어 DaemonSet으로 마운트됩니다. 가장 확실한 확인 방법은 ConfigMap을 직접
-보는 것입니다.
+Fluent Bit 설정은 ConfigMap에 저장되어 DaemonSet으로 마운트됩니다.
+가장 확실한 확인 방법은 ConfigMap을 직접 보는 것입니다.
 
 ```bash
 kubectl -n logging get cm fluent-bit-config -o yaml
@@ -24,21 +24,13 @@ kubectl -n logging get cm fluent-bit-config -o yaml
 
 Fluent Bit 이미지에 `cat`이 없을 수 있으므로, 다음 순서로 확인합니다.
 
-### 3-1. 쉘이 있는지 먼저 확인
-
-```bash
-kubectl -n logging exec -it <fluent-bit-pod> -- /bin/sh -c 'ls -la /fluent-bit/etc'
-```
-
-`/bin/sh` 자체가 없거나 `cat`, `sed` 같은 기본 유틸이 없다면 아래 3-2를 사용합니다.
-
 ### 3-2. Ephemeral Container로 파일 확인 (권장)
 
 BusyBox를 임시 컨테이너로 붙여서 동일 볼륨을 확인합니다.
 
 ```bash
-kubectl -n logging debug -it pod/<fluent-bit-pod> \
-  --image=busybox:1.36 \
+kubectl -n logging debug -it <fluent-bit-pod> \
+  --image=busybox \
   --target=fluent-bit
 ```
 
@@ -168,7 +160,36 @@ kubectl -n logging debug pod/<fluent-bit-pod> --copy-to=fluent-bit-debug \
 
 환경별로 경로가 다를 수 있으므로, 노드에서 실제 파일 경로를 확인하는 것이 가장 확실합니다.
 
-## 10) node-debugger 개념 정리
+## 10) JSON 로그만 구조화, 텍스트는 그대로 통과시키기
+
+앱 로그가 JSON/텍스트가 섞여 있어도 Fluent Bit 수집 자체는 문제 없습니다.
+다만 JSON만 구조화하려면 `parser` 필터를 추가하는 방식이 가장 단순합니다.
+
+```ini
+[FILTER]
+    Name          parser
+    Match         kube.*
+    Key_Name      log
+    Parser        json
+    Reserve_Data  On
+    Preserve_Key  On
+```
+
+이 필터는 `log` 필드가 JSON일 때만 파싱 결과를 추가하고,
+JSON이 아니면 레코드를 변경하지 않습니다.
+
+## 11) 환경별 ConfigMap 선택
+
+`kubernetes-fluent-bit.yml`에는 로컬/운영을 분리한 ConfigMap이 있습니다.
+
+- 로컬 OrbStack(Docker 런타임): `fluent-bit-config`
+- 운영 containerd(CRI 런타임): `fluent-bit-config-containerd`
+
+현재 DaemonSet은 `fluent-bit-config`를 사용합니다.
+운영에서 containerd를 사용한다면 DaemonSet의 ConfigMap 참조를
+`fluent-bit-config-containerd`로 바꿔 적용하세요.
+
+## 12) node-debugger 개념 정리
 
 `kubectl debug node/<node>`를 실행하면 해당 노드에 디버그용 파드가 생성됩니다.
 이 파드는 일반적으로 `node-debugger-<node>-<suffix>` 형태로 보이며, 노드 파일시스템을
@@ -188,7 +209,7 @@ kubectl -n default delete pod node-debugger-<node>-<suffix>
 
 라벨이 없다면 이름으로 삭제하는 방식이 가장 확실합니다.
 
-## 11) 변경 후 실제 동작 검증 절차(상세)
+## 13) 변경 후 실제 동작 검증 절차(상세)
 
 ### 8-1. 변경 적용
 
