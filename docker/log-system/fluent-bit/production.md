@@ -9,6 +9,7 @@
     - [backolog 상한은 "시간 기준"으로 산정](#backolog-상한은-시간-기준으로-산정)
     - [모니터링](#모니터링)
   - [ES 복구 후 ingest가 느린 경우 베스트 프랙티스](#es-복구-후-ingest가-느린-경우-베스트-프랙티스)
+  - [docker json-file rotate](#docker-json-file-rotate)
 
 <!-- TOC -->
 
@@ -107,3 +108,10 @@
 - 큰 bulk → 메모리/timeout 리스크
 
 ## docker json-file rotate
+
+계속 쌓이면 안되니 지속적으로 제거되게 처리해야함.
+
+## kubernetes
+
+Kubernetes 공식 문서에서도 노드 레벨 로깅 에이전트는 DaemonSet
+권장임 ([공식 문서](https://kubernetes.io/docs/concepts/cluster-administration/logging/?utm_source=chatgpt.com#:~:text=Because%20the%20logging%20agent%20must%20run%20on%20every%20node%2C%20it%20is%20recommended%20to%20run%20the%20agent%20as%20a%20DaemonSet.))

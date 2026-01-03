@@ -1,0 +1,230 @@
+# =========================================================
+# (1) Namespace
+# =========================================================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: logging
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo
+
+---
+# =========================================================
+# (2) ServiceAccount
+# =========================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluent-bit
+  namespace: logging
+
+---
+# =========================================================
+# (3) RBAC
+# =========================================================
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: fluent-bit-read
+rules:
+  - apiGroups: [""]
+    resources:
+      - pods
+      - namespaces
+    verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: fluent-bit-read
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: fluent-bit-read
+subjects:
+  - kind: ServiceAccount
+    name: fluent-bit
+    namespace: logging
+
+---
+# =========================================================
+# (4) ConfigMap (OrbStack 기준 핵심 수정)
+# =========================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: logging
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush         1
+        Daemon        Off
+        Log_Level     info
+        Parsers_File  parsers.conf
+
+    # -----------------------------------------------------
+    # INPUT
+    #  - OrbStack Kubernetes는 /var/log/containers 가 비어있는 경우가 많음
+    #  - 실제 로그는 /var/log/pods/<ns>_<pod>_<uid>/<container>/<n>.log
+    # -----------------------------------------------------
+    [INPUT]
+        Name              tail
+        Tag               kube.*
+        Path              /var/log/pods/*/*/*.log
+        Exclude_Path      /var/log/pods/logging_fluent-bit-*/*/*.log
+        Parser            docker
+        Docker_Mode       On
+        Docker_Mode_Parser docker
+        Read_from_Head    On
+        Refresh_Interval  5
+        Rotate_Wait       30
+        Mem_Buf_Limit     50MB
+        Skip_Long_Lines   On
+
+    # -----------------------------------------------------
+    # INPUT (containerd 전용 예시)
+    #  - 운영 환경이 containerd인 경우 보통 CRI 로그 포맷 사용
+    #  - 아래 블록은 예시이며, 사용 시 위 INPUT 블록과 교체
+    # -----------------------------------------------------
+    # [INPUT]
+    #     Name              tail
+    #     Tag               kube.*
+    #     Path              /var/log/pods/*/*/*.log
+    #     Exclude_Path      /var/log/pods/logging_fluent-bit-*/*/*.log
+    #     Parser            cri
+    #     Read_from_Head    On
+    #     Refresh_Interval  5
+    #     Rotate_Wait       30
+    #     Mem_Buf_Limit     50MB
+    #     Skip_Long_Lines   On
+
+    # -----------------------------------------------------
+    # FILTER
+    # -----------------------------------------------------
+    [FILTER]
+        Name                kubernetes
+        Match               kube.*
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
+        Kube_Tag_Prefix     kube.var.log.pods.
+        Regex_Parser        kube_tag
+        Merge_Log           On
+        Keep_Log            Off
+
+    # -----------------------------------------------------
+    # OUTPUT (stdout)
+    # -----------------------------------------------------
+    [OUTPUT]
+        Name   stdout
+        Match  kube.*
+
+  parsers.conf: |
+    [PARSER]
+        Name        cri
+        Format      regex
+        Regex       ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+
+    [PARSER]
+        Name        docker
+        Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+
+    [PARSER]
+        Name        kube_tag
+        Format      regex
+        Regex       ^(?<namespace_name>[^_]+)_(?<pod_name>[^_]+)_(?<pod_id>[^.]+)\.(?<container_name>[^.]+)\.(?<docker_id>[^.]+)\.log$
+
+---
+# =========================================================
+# (5) DaemonSet
+# =========================================================
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluent-bit
+  namespace: logging
+spec:
+  selector:
+    matchLabels:
+      app: fluent-bit
+  template:
+    metadata:
+      labels:
+        app: fluent-bit
+    spec:
+      serviceAccountName: fluent-bit
+      containers:
+        - name: fluent-bit
+          image: cr.fluentbit.io/fluent/fluent-bit:2.2.3
+          volumeMounts:
+            - name: varlog
+              mountPath: /var/log
+              readOnly: true
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
+            - name: config
+              mountPath: /fluent-bit/etc/
+      volumes:
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
+        - name: config
+          configMap:
+            name: fluent-bit-config
+
+---
+# =========================================================
+# (6) 테스트 앱
+# =========================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-logger
+  namespace: demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demo-logger
+  template:
+    metadata:
+      labels:
+        app: demo-logger
+    spec:
+      containers:
+        - name: app
+          image: busybox:1.36
+          command: ["/bin/sh","-c"]
+          args:
+            - |
+              i=0;
+              while true; do
+                echo "$(date -Iseconds) demo-logger hello";
+                sleep 2;
+              done
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-logger
+  namespace: demo
+spec:
+  selector:
+    app: demo-logger
+  ports:
+    - port: 80
+      targetPort: 8080
