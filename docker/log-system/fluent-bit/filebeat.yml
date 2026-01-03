@@ -1,0 +1,69 @@
+# - registry 영속화
+# - disk queue 활성화
+
+# =========================
+# Inputs: Docker json-file logs
+# =========================
+filebeat.inputs:
+  - type: container
+    enabled: true
+    paths:
+      - /var/lib/docker/containers/*/*.log
+
+      # 컨테이너 메타데이터 붙이기(선택)
+    processors:
+      - add_docker_metadata: {}
+
+      # 너무 오래된 파일은 스캔 대상에서 제외(선택)
+      # ignore_older: 72h
+
+
+# =========================
+# Registry: 반드시 영속 경로
+# =========================
+filebeat.registry.path: /var/lib/filebeat/registry
+
+# =========================
+# Queue: disk queue로 출력 단절 흡수 (filesystem buffer 대응)
+#        출력(Output)으로 전송하지 못한 이벤트를 디스크에 쌓아두는 큐
+# =========================
+queue.type: disk
+queue.disk:
+  path: /var/lib/filebeat/diskqueue
+  max_size: 20GB
+  segment_size: 100MB
+
+
+# =========================
+# Output: Logstash (자동복구 핵심 튜닝)
+# - timeout/backoff로 half-open, 긴 대기 체감 줄이기
+# - max_retries -1로 무한 재시도
+# =========================
+output.logstash:
+  hosts:
+    - "logstash1.example.com:5044"
+    # - "logstash2.example.com:5044"
+
+  # 여러 Logstash 쓰면 로드밸런싱(선택)
+  loadbalance: true
+
+  # 연결/응답이 애매하게 걸리는 상태를 오래 붙잡지 않게 함(중요)
+  timeout: 30s
+
+  # 무한 재시도: 출력이 정상화되면 언젠가 다시 밀어넣음(중요)
+  max_retries: -1
+
+  # 배치 크기(너무 크면 timeout/재전송 부담, 너무 작으면 오버헤드)
+  bulk_max_size: 2048
+
+  # 재시도 backoff(복구 체감과 직결)
+  backoff.init: 1s
+  backoff.max: 60s
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
