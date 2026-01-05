@@ -1,3 +1,4 @@
 [tools]
 java = "temurin-25"
 node = "24"
+python = "latest"

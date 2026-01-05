@@ -1,0 +1,107 @@
+services:
+  superset_db:
+    image: postgres:16
+    container_name: superset_db
+    environment:
+      POSTGRES_DB: superset
+      POSTGRES_USER: superset
+      POSTGRES_PASSWORD: superset
+    volumes:
+      - superset_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U superset -d superset"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7
+    container_name: superset_redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  dataset_db:
+    image: postgres:16
+    container_name: superset_dataset_db
+    environment:
+      POSTGRES_DB: analytics
+      POSTGRES_USER: analytics
+      POSTGRES_PASSWORD: analytics
+    volumes:
+      - dataset_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U analytics -d analytics"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  dataset_loader:
+    image: python:3.11-slim
+    container_name: superset_dataset_loader
+    depends_on:
+      dataset_db:
+        condition: service_healthy
+    environment:
+      DATASET_URL: https://raw.githubusercontent.com/vega/vega-datasets/master/data/stocks.csv
+      DATABASE_URL: postgresql+psycopg2://analytics:analytics@dataset_db:5432/analytics
+      TABLE_NAME: stocks
+    volumes:
+      - ./loader:/app
+    working_dir: /app
+    command: >
+      sh -c "pip install --no-cache-dir pandas sqlalchemy psycopg2-binary &&
+      python /app/load_dataset.py"
+
+  superset-init:
+    image: apache/superset:latest
+    container_name: superset_init
+    depends_on:
+      superset_db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SUPERSET_SECRET_KEY: please_change_me
+      SUPERSET_DATABASE_URI: postgresql+psycopg2://superset:superset@superset_db:5432/superset
+      SUPERSET_LOAD_EXAMPLES: "no"
+      SUPERSET_ADMIN_USERNAME: admin
+      SUPERSET_ADMIN_PASSWORD: admin
+      SUPERSET_ADMIN_FIRSTNAME: Superset
+      SUPERSET_ADMIN_LASTNAME: Admin
+      SUPERSET_ADMIN_EMAIL: admin@example.com
+      SUPERSET_HOME: /app/superset_home
+    command: >
+      sh -c "superset db upgrade &&
+      superset fab create-admin --username \"$$SUPERSET_ADMIN_USERNAME\" --firstname \"$$SUPERSET_ADMIN_FIRSTNAME\" \
+      --lastname \"$$SUPERSET_ADMIN_LASTNAME\" --email \"$$SUPERSET_ADMIN_EMAIL\" --password \"$$SUPERSET_ADMIN_PASSWORD\" || true &&
+      superset init"
+    volumes:
+      - superset_home:/app/superset_home
+
+  superset:
+    image: apache/superset:latest
+    container_name: superset_app
+    depends_on:
+      superset_db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      superset-init:
+        condition: service_completed_successfully
+    ports:
+      - "8088:8088"
+    environment:
+      SUPERSET_SECRET_KEY: please_change_me
+      SUPERSET_DATABASE_URI: postgresql+psycopg2://superset:superset@superset_db:5432/superset
+      SUPERSET_LOAD_EXAMPLES: "no"
+    command: ["/bin/sh", "-c", "superset run -h 0.0.0.0 -p 8088"]
+    volumes:
+      - superset_home:/app/superset_home
+
+volumes:
+  superset_db:
+  dataset_db:
+  superset_home:
