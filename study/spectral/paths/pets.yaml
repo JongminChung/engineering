@@ -1,0 +1,30 @@
+get:
+  summary: List pets
+  description: Return a paged list of pets.
+  operationId: listPets
+  tags:
+    - pets
+  parameters:
+    - $ref: ../petstore.yaml#/components/parameters/Limit
+  responses:
+    "200":
+      $ref: ../petstore.yaml#/components/responses/PetsResponse
+    default:
+      $ref: ../petstore.yaml#/components/responses/ErrorResponse
+post:
+  summary: Create a pet
+  description: Create a new pet.
+  operationId: createPet
+  tags:
+    - pets
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../petstore.yaml#/components/schemas/NewPet
+  responses:
+    "201":
+      $ref: ../petstore.yaml#/components/responses/PetResponse
+    default:
+      $ref: ../petstore.yaml#/components/responses/ErrorResponse

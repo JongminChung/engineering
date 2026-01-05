@@ -1,0 +1,5 @@
+description: A single pet.
+content:
+  application/json:
+    schema:
+      $ref: ../../petstore.yaml#/components/schemas/Pet

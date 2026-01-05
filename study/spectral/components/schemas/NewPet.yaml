@@ -1,0 +1,5 @@
+allOf:
+  - $ref: ../../petstore.yaml#/components/schemas/Pet
+  - type: object
+    required:
+      - name

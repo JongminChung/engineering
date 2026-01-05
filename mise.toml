@@ -1,3 +1,4 @@
 [tools]
+codex = "latest"
 java = "temurin-25"
 node = "24"

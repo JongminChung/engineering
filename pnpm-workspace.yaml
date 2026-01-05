@@ -3,3 +3,4 @@ packageManagerStrictVersion: false
 
 packages:
   - "apps/*"
+  - "study/*"

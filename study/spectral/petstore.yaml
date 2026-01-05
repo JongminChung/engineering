@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info:
+  title: PetStore API
+  version: 1.0.0
+  description: Minimal PetStore spec for Spectral PoC.
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: https://api.example.com/v1
+tags:
+  - name: pets
+    description: Operations about pets.
+paths:
+  /pets:
+    $ref: ./paths/pets.yaml
+components:
+  schemas:
+    Pet:
+      $ref: ./components/schemas/Pet.yaml
+    NewPet:
+      $ref: ./components/schemas/NewPet.yaml
+    Category:
+      $ref: ./components/schemas/Category.yaml
+    Tag:
+      $ref: ./components/schemas/Tag.yaml
+    Pets:
+      $ref: ./components/schemas/Pets.yaml
+    Error:
+      $ref: ./components/schemas/Error.yaml
+  parameters:
+    Limit:
+      $ref: ./components/parameters/Limit.yaml
+  responses:
+    PetsResponse:
+      $ref: ./components/responses/PetsResponse.yaml
+    PetResponse:
+      $ref: ./components/responses/PetResponse.yaml
+    ErrorResponse:
+      $ref: ./components/responses/ErrorResponse.yaml

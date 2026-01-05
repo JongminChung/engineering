@@ -1,0 +1,5 @@
+description: A paged array of pets.
+content:
+  application/json:
+    schema:
+      $ref: ../../petstore.yaml#/components/schemas/Pets
