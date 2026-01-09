@@ -351,8 +351,8 @@ echo "$OS_USERNAME / $OS_PASSWORD"
 ## 트러블슈팅
 
 - `kolla-ansible install-deps` 실패
- 	- `requirements.yml`의 브랜치가 사라져서 발생함
- 	- `stable/2024.1`을 `unmaintained/2024.1`로 변경 후 재시도 필요함
+  - `requirements.yml`의 브랜치가 사라져서 발생함
+   	- `stable/2024.1`을 `unmaintained/2024.1`로 변경 후 재시도 필요함
 - `kolla-ansible` 실행 시 PATH 오류
  	- `export PATH=/usr/local/bin:$PATH` 필요함
 - `python3-libselinux` 누락
