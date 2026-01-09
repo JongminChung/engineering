@@ -22,9 +22,9 @@ include(
 )
 
 include(
-    "study:infra",
     "study:coding-test",
-    "study:api-communication"
+    "study:cloud",
+    "study:grpc",
 )
 
 include(

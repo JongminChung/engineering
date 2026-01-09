@@ -1,0 +1,33 @@
+app:
+  security:
+    clients:
+      - tenant-id: tenant-alpha
+        client-id: web-client
+        hashed-api-key: 024f6c9525465fbec0047e2686f02a413c52241fde8af273148c419fa18fb312
+  study:
+    rate-limit:
+      max-requests: 5
+      window: 1m
+    cache:
+      ttl: 45s
+
+spring:
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+
+logging:
+  level:
+    org.testcontainers: INFO
+    com.github.dockerjava: WARN
+    org.hibernate.SQL: DEBUG
+    io.github.jongminchung: DEBUG

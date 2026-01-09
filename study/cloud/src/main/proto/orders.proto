@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package io.github.jongminchung.study.apicommunication.proto;
+
+import "google/protobuf/timestamp.proto";
+
+option java_package = "io.github.jongminchung.study.apicommunication.proto";
+option java_multiple_files = true;
+option java_outer_classname = "OrderServiceDefinitions";
+
+message CreateOrderRequest {
+  string customer_id = 1;
+  repeated string product_codes = 2;
+  double total_amount = 3;
+}
+
+message GetOrderRequest {
+  string order_id = 1;
+}
+
+message OrderMessage {
+  string order_id = 1;
+  string customer_id = 2;
+  repeated string product_codes = 3;
+  double total_amount = 4;
+  string tenant_id = 5;
+  string client_id = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+  int64 version = 9;
+}
+
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (OrderMessage);
+  rpc GetOrder(GetOrderRequest) returns (OrderMessage);
+}

@@ -25,6 +25,7 @@
     "markdownlint-cli2": "^0.20.0"
   },
   "lint-staged": {
-    "**/*.md": "markdownlint-cli2 --fix"
+    "**/*.md": "markdownlint-cli2 --fix",
+    "**/*.java": "bash -lc './gradlew spotlessApply'"
   }
 }
