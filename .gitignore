@@ -6,4 +6,10 @@ build
 
 .idea
 
+### node
 node_modules/
+dist/
+.next/
+
+### application
+logs/
