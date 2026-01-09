@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 
-import io.github.jongminchung.study.infra.User;
-import io.github.jongminchung.study.infra.UserRepository;
 import io.github.jongminchung.study.infra.postgresql.BaseIntegrationTest;
 
 @DataJpaTest

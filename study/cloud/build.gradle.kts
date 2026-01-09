@@ -2,7 +2,7 @@
 plugins {
     id("buildlogic.spring-boot-conventions")
     id("buildlogic.kafka-study-conventions")
-    id("buildlogic.mysql-study-conventions")
+    id("buildlogic.postgresql-study-conventions")
 }
 
 description = "Modulith Cloud"

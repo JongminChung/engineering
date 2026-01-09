@@ -1,4 +1,4 @@
-package io.github.jongminchung.study.infra;
+package io.github.jongminchung.study.infra.postgresql.phase1;
 
 import java.time.LocalDateTime;
 

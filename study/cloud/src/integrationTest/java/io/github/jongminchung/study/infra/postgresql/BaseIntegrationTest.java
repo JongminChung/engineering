@@ -8,7 +8,7 @@ import org.testcontainers.utility.DockerImageName;
 public abstract class BaseIntegrationTest {
 
     protected static final PostgreSQLContainer<?> postgres =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:16.4")).withReuse(true);
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:18")).withReuse(true);
 
     static {
         if (!postgres.isRunning()) {
