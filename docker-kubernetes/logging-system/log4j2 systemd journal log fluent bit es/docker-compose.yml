@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  log4j2-app:
+    build:
+      context: ./poc/app
+    privileged: true
+    cgroup: host
+    tmpfs:
+      - /run
+      - /run/lock
+    volumes:
+      - journal:/var/log/journal
+
+  fluent-bit-edge:
+    image: fluent/fluent-bit:2.2
+    user: "0:0"
+    volumes:
+      - journal:/var/log/journal:ro
+      - ./poc/configs/fluent-bit-edge.conf:/fluent-bit/etc/fluent-bit.conf:ro
+    depends_on:
+      - log4j2-app
+      - proxy
+
+  proxy:
+    image: fluent/fluent-bit:2.2
+    volumes:
+      - ./poc/configs/fluent-bit-proxy.conf:/fluent-bit/etc/fluent-bit.conf:ro
+      - ./poc/data/proxy:/var/log/proxy
+    depends_on:
+      - elasticsearch
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.3
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+
+volumes:
+  journal:

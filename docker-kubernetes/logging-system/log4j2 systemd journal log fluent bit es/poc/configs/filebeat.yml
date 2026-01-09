@@ -1,0 +1,9 @@
+filebeat.inputs:
+  - type: filestream
+    id: log4j2-app
+    paths:
+      - /var/log/log4j2-app/*.log
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  index: "log4j2-poc"

@@ -1,0 +1,14 @@
+[Unit]
+Description=Log4j2 journald appender PoC
+After=systemd-journald.service
+Wants=systemd-journald.service
+
+[Service]
+Type=simple
+ExecStartPre=/bin/sh -c "test -s /etc/machine-id || systemd-machine-id-setup"
+ExecStart=/usr/bin/java -cp "/opt/log4j2-app/classes:/opt/log4j2-app/lib/*" -Dlog4j.configurationFile=/opt/log4j2-app/conf/log4j2.xml Main
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

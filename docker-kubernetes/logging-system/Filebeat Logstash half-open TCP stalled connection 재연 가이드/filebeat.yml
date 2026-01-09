@@ -1,0 +1,22 @@
+filebeat.inputs:
+  - type: log
+    paths:
+      - /logs/*.log
+
+output.logstash:
+  hosts: ["router:5044"]
+  pipelining: 2
+  ttl: 0
+  timeout: 0s
+
+logging.level: info
+logging.selectors: ["output"]
+
+queue.mem:
+  events: 4096
+  flush.min_events: 1
+  flush.timeout: 1s
+
+http.enabled: true
+http.host: 0.0.0.0
+http.port: 5066

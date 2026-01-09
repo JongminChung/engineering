@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  log4j2-app:
+    build:
+      context: ./poc/app
+    privileged: true
+    cgroupns: host
+    tmpfs:
+      - /run
+      - /run/lock
+    volumes:
+      - journal:/var/log/journal
+
+  journal-exporter:
+    build:
+      context: ./poc/journal-exporter
+    volumes:
+      - journal:/var/log/journal:ro
+      - central-storage:/central
+    depends_on:
+      - log4j2-app
+
+volumes:
+  journal:
+  central-storage:

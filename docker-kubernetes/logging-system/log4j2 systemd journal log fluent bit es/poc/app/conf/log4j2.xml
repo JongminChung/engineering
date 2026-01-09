@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" packages="de.bwaldvogel.log4j">
+    <Appenders>
+        <SystemdJournal name="Journald" logThreadName="true" logLoggerName="true" logAppenderName="true" syslogIdentifier="log4j2-poc" />
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Journald" />
+        </Root>
+    </Loggers>
+</Configuration>

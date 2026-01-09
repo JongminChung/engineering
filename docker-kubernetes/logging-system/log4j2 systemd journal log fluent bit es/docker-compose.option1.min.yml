@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  log4j2-app:
+    build:
+      context: ./poc/app
+    privileged: true
+    cgroupns: host
+    tmpfs:
+      - /run
+      - /run/lock
+    volumes:
+      - journal:/var/log/journal
+
+  fluent-bit-edge:
+    image: fluent/fluent-bit:2.2
+    user: "0:0"
+    volumes:
+      - journal:/var/log/journal:ro
+      - ./poc/configs/fluent-bit-edge.conf:/fluent-bit/etc/fluent-bit.conf:ro
+    depends_on:
+      - log4j2-app
+      - proxy
+
+  proxy:
+    image: fluent/fluent-bit:2.2
+    volumes:
+      - ./poc/configs/fluent-bit-proxy-file-only.conf:/fluent-bit/etc/fluent-bit.conf:ro
+      - ./poc/data/proxy:/var/log/proxy
+
+volumes:
+  journal:
