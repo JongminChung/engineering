@@ -43,6 +43,10 @@
 
 ---
 
+## 협업 (Collaboration)
+
+- [RFC (Request for Comments)](docs/rfc/readme.md): 팀 내 의사결정을 위한 제안 문서 작성법
+
 ## 사용하는 툴 (Tools)
 
 - [MISE](https://github.com/jdx/mise): Multiple Runtime Version Manager

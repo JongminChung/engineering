@@ -17,29 +17,27 @@ plugins {
 rootProject.name = "engineering"
 
 include(
-    "odata:odata-core",
-    "odata:odata-spring",
+    "backend:cloud",
+    "backend:grpc",
 )
 
 include(
-    "study:infra",
-    "study:coding-test",
-    "study:api-communication"
+    "backend:distributed-lock:core",
+    "backend:distributed-lock:provider-redis",
+    "backend:distributed-lock:provider-jdbc",
+    "backend:distributed-lock:spring",
+    "backend:distributed-lock:spring-boot-autoconfigure",
+    "backend:distributed-lock:spring-boot-starter",
+    "backend:distributed-lock:spring-boot-starter-redis",
+    "backend:distributed-lock:spring-boot-starter-jdbc",
+    "backend:distributed-lock:dependencies",
+    "backend:distributed-lock:test",
+    "backend:distributed-lock:redis-integration-test",
+    "backend:distributed-lock:jdbc-integration-test"
 )
 
 include(
-    "distributed-lock:core",
-    "distributed-lock:provider-redis",
-    "distributed-lock:provider-jdbc",
-    "distributed-lock:spring",
-    "distributed-lock:spring-boot-autoconfigure",
-    "distributed-lock:spring-boot-starter",
-    "distributed-lock:spring-boot-starter-redis",
-    "distributed-lock:spring-boot-starter-jdbc",
-    "distributed-lock:dependencies",
-    "distributed-lock:test",
-    "distributed-lock:redis-integration-test",
-    "distributed-lock:jdbc-integration-test"
+    "coding-test"
 )
 
 buildCache {

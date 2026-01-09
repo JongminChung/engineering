@@ -2,8 +2,7 @@
   "name": "engineering",
   "type": "module",
   "workspaces": [
-    "apps/*",
-    "study/*"
+    "frontend/*"
   ],
   "scripts": {
     "prepare": "husky",
@@ -25,6 +24,7 @@
     "markdownlint-cli2": "^0.20.0"
   },
   "lint-staged": {
-    "**/*.md": "markdownlint-cli2 --fix"
+    "**/*.md": "markdownlint-cli2 --fix",
+    "**/*.java": "sh -c './gradlew spotlessApply'"
   }
 }
