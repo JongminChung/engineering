@@ -107,8 +107,7 @@ console.log(S3_SECRET_ACCESS_KEY);
 
 const endpointHost = new URL(S3_ENDPOINT).host;
 const bucketEndpoint =
-    endpointHost === S3_BUCKET ||
-    endpointHost.startsWith(`${S3_BUCKET}.`);
+    endpointHost === S3_BUCKET || endpointHost.startsWith(`${S3_BUCKET}.`);
 
 const clientConfig: S3ClientConfig = {
     endpoint: S3_ENDPOINT,

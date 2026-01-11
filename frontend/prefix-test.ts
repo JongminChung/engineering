@@ -76,7 +76,9 @@ const configureClientTls = async (client: S3Client): Promise<void> => {
 
     const httpsAgent = await resolveHttpsAgent(client);
     if (!httpsAgent) {
-        throw new Error("S3 클라이언트의 HTTPS 에이전트를 불러오지 못했습니다.");
+        throw new Error(
+            "S3 클라이언트의 HTTPS 에이전트를 불러오지 못했습니다.",
+        );
     }
 
     if (caFile) {
@@ -127,8 +129,7 @@ const {
 
 const endpointHost = new URL(S3_ENDPOINT).host;
 const bucketEndpoint =
-    endpointHost === S3_BUCKET ||
-    endpointHost.startsWith(`${S3_BUCKET}.`);
+    endpointHost === S3_BUCKET || endpointHost.startsWith(`${S3_BUCKET}.`);
 
 const clientConfig: S3ClientConfig = {
     endpoint: S3_ENDPOINT,

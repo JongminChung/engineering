@@ -2,5 +2,5 @@ packageManagerStrict: true
 packageManagerStrictVersion: false
 
 packages:
-  - "apps/*"
-  - "study/*"
+  - "frontend/*"
+  - "platfrom/*"

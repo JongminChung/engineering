@@ -2,7 +2,8 @@
   "name": "engineering",
   "type": "module",
   "workspaces": [
-    "frontend/*"
+    "frontend/*",
+    "flatform/*"
   ],
   "scripts": {
     "prepare": "husky",
