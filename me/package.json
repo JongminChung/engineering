@@ -1,0 +1,7 @@
+{
+  "name": "@engineering/resume",
+  "private": true,
+  "scripts": {
+    "resume": "bunx @marp-team/marp-cli --theme-set resume.css -- resume.md"
+  }
+}
