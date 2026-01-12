@@ -1,37 +1,31 @@
-# Repository Guidelines
+# AGENTS.md
 
-## Project Structure & Module Organization
+## 구조
 
-- Algorithm solutions live in `study/coding-test/src/main/java`.
-- Tests and study notes are in `study/coding-test/src/test/java`.
-- Markdown notes live under `study/coding-test/docs` (e.g., `docs/graph/README.md`).
-- Build artifacts go to `study/coding-test/build/` and are disposable.
+- 알고리즘 풀이 소스는 `study/coding-test/src/main/java`에 위치합니다.
+- 테스트/스터디 노트는 `study/coding-test/src/test/java`에 둡니다.
+- 마크다운 노트는 `study/coding-test/docs` 아래에 둡니다.
+- 빌드 산출물은 `study/coding-test/build/`에 생성되며 커밋하지 않습니다.
 
-## Build, Test, and Development Commands
+## 명령어
 
-- `./gradlew :study:coding-test:test` — run all algorithm tests with JUnit Jupiter.
-- `./gradlew :study:coding-test:test --tests "...SolutionTest"` — run a specific test class.
-- `./gradlew :study:coding-test:build` — compile and run tests for this module.
+- 전체 테스트: `./gradlew :study:coding-test:test`
+- 단일 테스트: `./gradlew :study:coding-test:test --tests "...SolutionTest"`
+- 빌드: `./gradlew :study:coding-test:build`
 
-## Coding Style & Naming Conventions
+## 코딩 규칙
 
-- Use clear package paths that reflect the source (e.g., `algorithm.codility.binary_gap`).
-- Keep solution classes named `Solution` for coding challenge submissions.
-- Tests should be descriptive and placed beside the topic (e.g., `SolutionTest`, `ArrayTest`).
-- Spotless and `.editorconfig` handle whitespace; keep formatting minimal and consistent.
+- 패키지는 문제 출처/주제를 반영합니다(예: `algorithm.codility.binary_gap`).
+- 풀이 클래스명은 `Solution`을 유지합니다.
+- 테스트는 주제별로 명확한 이름을 사용합니다(예: `SolutionTest`, `ArrayTest`).
+- 포맷은 Spotless와 `.editorconfig`를 따릅니다.
 
-## Testing Guidelines
+## 테스트 규칙
 
-- Tests use JUnit Jupiter.
-- Favor small, focused tests with explicit input/output cases.
-- Keep test names aligned to the concept under study (arrays, queues, simulation, etc.).
+- JUnit Jupiter를 사용합니다.
+- 작은 입력/출력을 명시한 테스트를 선호합니다.
+- 주제(배열/큐/시뮬레이션 등)에 맞춰 케이스를 구성합니다.
 
-## Commit & Pull Request Guidelines
+## 문서
 
-- Use Conventional Commits (`feat:`, `test:`, `chore:`).
-- PRs should describe the problem solved and include sample inputs/outputs if helpful.
-
-## Notes for Contributors
-
-- Add new problem sets under a dedicated package to keep history navigable.
-- Update or add docs in `study/coding-test/docs` when introducing a new category.
+- 새 카테고리 추가 시 `study/coding-test/docs`에 설명을 보강합니다.

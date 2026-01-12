@@ -1,42 +1,31 @@
-# Repository Guidelines
+# AGENTS.md
 
-## Document Rules
+## 문서 규칙
 
-- `음슴체`로 작성해야 함.
-  - 예: xx 트레이드 오프가 존재함. 그렇기에 A 기술을 채택함.
+- 최대한 간결하고 담백하게 작성합니다.
 
-## Project Structure & Module Organization
+## 구조
 
-- The `docs/` tree hosts standalone guides and research notes.
-- Topic folders include `docs/api`, `docs/infra`, and `docs/junit`, with deeper
-  subfolders for focused subjects.
-- Keep related assets (images, diagrams) next to the document that references
-  them.
+- `docs/`는 가이드와 리서치 노트의 모음입니다.
+- `docs/api`, `docs/infra`, `docs/junit`처럼 주제별 폴더를 유지합니다.
+- 자산(이미지/다이어그램)은 참조 문서 옆에 둡니다.
 
-## Authoring & Formatting
+## 작성/포맷
 
-- Write in Markdown and keep sections short and scannable with clear headings.
-- Prefer fenced code blocks with language identifiers (e.g., `bash`, `java`,
-  `yaml`).
-- Use relative links when referencing other docs (e.g., `../infra/README.md`).
-- Maintain existing naming patterns; favor descriptive, kebab-case filenames
-  unless a folder already uses a different style.
-- `.editorconfig` enforces LF endings and trimmed whitespace.
+- Markdown으로 작성하고 섹션은 짧고 스캔 가능하게 구성합니다.
+- 코드 블록에는 언어 식별자(`bash`, `java`, `yaml`)를 붙입니다.
+- 문서 간 링크는 상대 경로를 사용합니다(예: `../infra/README.md`).
+- 기존 네이밍 규칙을 유지합니다(폴더가 다르면 해당 폴더 규칙 우선).
+- `.editorconfig`의 LF/trim 규칙을 따릅니다.
 
-## Documentation Conventions
+## 문서 관례
 
-- Start with a short purpose statement, then list steps or key concepts.
-- Prefer explicit commands and paths over vague guidance.
-- If a doc references a module, include the module path (e.g.,
-  `study/api-communication`).
-- Keep examples runnable; avoid pseudocode unless illustrating a concept.
+- 첫 문단에 목적을 짧게 적고, 이후 단계/개념을 나열합니다.
+- 명령어/경로는 구체적으로 적습니다.
+- 모듈을 참조할 경우 모듈 경로를 함께 적습니다(예: `study/api-communication`).
+- 예시는 실행 가능하게 유지합니다.
 
-## Validation
+## 검증
 
-- Run `bun run check:markdown` before submitting large edits.
-- Spot-check links to ensure they resolve from the document location.
-
-## Commit & Pull Request Guidelines
-
-- Use Conventional Commits (`docs:`, `chore:`) for doc-only changes.
-- PRs should summarize the scope and mention any affected modules or workflows.
+- 큰 수정 전에는 `bun run check:markdown` 실행을 고려합니다.
+- 링크는 문서 위치 기준으로 간단히 점검합니다.

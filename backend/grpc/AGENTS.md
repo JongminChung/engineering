@@ -1,39 +1,34 @@
-# Repository Guidelines
+# AGENTS.md
 
-## Project Structure & Module Organization
+## 구조
 
-- Spring Boot app lives in `study/api-communication/src/main/java/io/github/jongminchung/study/apicommunication`.
-- REST controllers, gRPC services, security, metrics, and rate limiting are organized by package (`orders`, `grpc`, `security`, `metrics`).
-- Protobuf definitions are in `study/api-communication/src/main/proto`.
-- Tests live in `study/api-communication/src/test/java` and cover REST, gRPC, and service logic.
+- Spring Boot 앱은 `study/api-communication/src/main/java/io/github/jongminchung/study/apicommunication`에 있습니다.
+- REST 컨트롤러, gRPC 서비스, 보안, 메트릭, 레이트 리밋은 패키지별(`orders`, `grpc`, `security`, `metrics`)로 분리합니다.
+- Protobuf 정의는 `study/api-communication/src/main/proto`에 둡니다.
+- 테스트는 `study/api-communication/src/test/java`에 두고 REST/gRPC/서비스 로직을 커버합니다.
 
-## Build, Test, and Development Commands
+## 명령어
 
-- `./gradlew :study:api-communication:bootRun` — run the Spring Boot app locally.
-- `./gradlew :study:api-communication:test` — run all module tests.
-- `./gradlew :study:api-communication:test --tests "...OrderControllerTest"` — run a focused test.
-- `./gradlew :study:api-communication:build` — compile, generate proto stubs, and test.
+- 로컬 실행: `./gradlew :study:api-communication:bootRun`
+- 모듈 테스트: `./gradlew :study:api-communication:test`
+- 단일 테스트: `./gradlew :study:api-communication:test --tests "...OrderControllerTest"`
+- 빌드: `./gradlew :study:api-communication:build`
 
-## Coding Style & Naming Conventions
+## 코딩 규칙
 
-- Follow standard Spring naming: `*Controller`, `*Service`, `*Repository`, `*Config`.
-- Keep gRPC classes under `grpc` and REST endpoints under `orders/api`.
-- Configuration properties live under `config` and map to `application.yml` keys.
-- Formatting is enforced by Spotless and `.editorconfig`.
+- Spring 표준 네이밍(`*Controller`, `*Service`, `*Repository`, `*Config`)을 따릅니다.
+- gRPC 코드는 `grpc`, REST 엔드포인트는 `orders/api`에 둡니다.
+- 설정 프로퍼티는 `config` 패키지에 두고 `application.yml` 키와 매핑합니다.
+- 포맷은 Spotless와 `.editorconfig`를 따릅니다.
 
-## Testing Guidelines
+## 테스트 규칙
 
-- Tests use JUnit Jupiter and `spring-boot-starter-test`.
-- REST tests should cover filters, headers, and rate limiting behavior.
-- gRPC tests use in-process servers; verify metadata authentication and error mapping.
-- Keep tests deterministic; avoid real network calls.
+- 테스트는 JUnit Jupiter와 `spring-boot-starter-test`를 사용합니다.
+- REST 테스트는 필터/헤더/레이트 리밋 동작을 포함합니다.
+- gRPC 테스트는 인프로세스 서버를 사용하고 인증 메타데이터/에러 매핑을 검증합니다.
+- 네트워크 호출은 실제 호출 대신 모킹/인프로세스를 우선합니다.
 
-## Commit & Pull Request Guidelines
+## 보안/설정
 
-- Use Conventional Commits per commitlint (`feat:`, `fix:`, `test:`).
-- PRs should link the relevant issue and describe protocol impact (REST, proto REST, gRPC).
-
-## Security & Configuration Tips
-
-- API keys are expected to be hashed in `application.yml`; use the sample values for local runs.
-- When changing headers or auth flow, update both REST and gRPC paths for parity.
+- API 키는 `application.yml`에서 해시로 관리하며 로컬은 샘플 값을 사용합니다.
+- 헤더/인증 흐름 변경 시 REST와 gRPC 경로 모두를 동기화합니다.
