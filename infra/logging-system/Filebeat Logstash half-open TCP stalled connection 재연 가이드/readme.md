@@ -14,7 +14,7 @@
 
 구성도
 
-Filebeat ->  (중간 장비 시뮬레이터)  ->  Logstash
+Filebeat -> (중간 장비 시뮬레이터) -> Logstash
 • 중간 장비 역할
 • idle-timeout 이후 silent drop (FIN/RST 없음) 유도
 • 구현 방식
@@ -25,11 +25,11 @@ Filebeat ->  (중간 장비 시뮬레이터)  ->  Logstash
 ⸻
 
 1. 사전 요구 사항
-  • Linux (Ubuntu 20.04 이상 권장)
-  • Docker
-  • Docker Compose
-  • root 권한 (iptables / tc 조작용)
-  • Filebeat, Logstash 동일 호스트 실행 권장
+   • Linux (Ubuntu 20.04 이상 권장)
+   • Docker
+   • Docker Compose
+   • root 권한 (iptables / tc 조작용)
+   • Filebeat, Logstash 동일 호스트 실행 권장
 
 ⸻
 
@@ -39,35 +39,35 @@ Filebeat ->  (중간 장비 시뮬레이터)  ->  Logstash
 
 ```yaml
 services:
- logstash:
-  image: docker.elastic.co/logstash/logstash:8.12.0
-  container_name: logstash
-  volumes:
-   - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    logstash:
+        image: docker.elastic.co/logstash/logstash:8.12.0
+        container_name: logstash
+        volumes:
+            - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
 
- router:
-  build: ./router
-  container_name: logstash-router
-  cap_add:
-   - NET_ADMIN
-  sysctls:
-   net.ipv4.ip_forward: "1"
-  ports:
-   - "5044:5044"
-  depends_on:
-   - logstash
+    router:
+        build: ./router
+        container_name: logstash-router
+        cap_add:
+            - NET_ADMIN
+        sysctls:
+            net.ipv4.ip_forward: "1"
+        ports:
+            - "5044:5044"
+        depends_on:
+            - logstash
 
- filebeat:
-  image: docker.elastic.co/beats/filebeat:8.12.0
-  container_name: filebeat
-  user: root
-  ports:
-   - "5066:5066"
-  volumes:
-   - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
-   - ./logs:/logs
-  depends_on:
-   - router
+    filebeat:
+        image: docker.elastic.co/beats/filebeat:8.12.0
+        container_name: filebeat
+        user: root
+        ports:
+            - "5066:5066"
+        volumes:
+            - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+            - ./logs:/logs
+        depends_on:
+            - router
 ```
 
 1. Logstash 설정
@@ -134,7 +134,7 @@ done
 
 방법 A: iptables 기반 silent drop (권장)
 
-1) 정상 동작 확인
+1. 정상 동작 확인
 
 ```bash
 docker-compose up
@@ -142,13 +142,13 @@ docker-compose up
 
 - Logstash stdout에 이벤트가 지속적으로 출력되는지 확인
 
-1) TCP 연결 상태 확인
+1. TCP 연결 상태 확인
 
 ss -tanp | grep 5044
 
 Filebeat -> Logstash 연결이 ESTABLISHED 상태인지 확인
 
-1) 중간에서 패킷 drop 시작
+1. 중간에서 패킷 drop 시작
 
 ```bash
 iptables -A OUTPUT -p tcp --dport 5044 -j DROP
@@ -159,18 +159,18 @@ iptables -A OUTPUT -p tcp --dport 5044 -j DROP
 • TCP 세션은 커널 기준 ESTABLISHED 유지
 • ACK 미수신 상태 유도
 
-1) 관찰 포인트
-  Filebeat
-  • 명시적 network error 로그 없음
-  • backoff / timeout 로그 반복 가능
-  • 이벤트 전송 중단
+1. 관찰 포인트
+   Filebeat
+   • 명시적 network error 로그 없음
+   • backoff / timeout 로그 반복 가능
+   • 이벤트 전송 중단
 
 Logstash
 • stdout 이벤트 수신 중단
 
-1) queue 증가 확인
-  • Filebeat 내부 queue 지속 증가
-  • acked_events 증가 없음
+1. queue 증가 확인
+   • Filebeat 내부 queue 지속 증가
+   • acked_events 증가 없음
 
 방법 B: tc(netem) 기반 blackhole (선택)
 
@@ -187,13 +187,13 @@ tc qdisc add dev eth0 root netem loss 100%
 • 네트워크 장비 패치/재시작처럼 짧은 기간 통신이 끊겼다가 복구되는 상황 재현
 • 복구 이후에도 Filebeat가 자동으로 재연결하지 않는 상태 입증
 
-1) 정상 동작 확인
+1. 정상 동작 확인
 
 ```bash
 docker-compose up
 ```
 
-1) NAT 기반 중간장비(라우터)에서 일시 드롭 추가 (20초)
+1. NAT 기반 중간장비(라우터)에서 일시 드롭 추가 (20초)
 
 ```bash
 docker exec logstash-router iptables -I FORWARD -p tcp --dport 5044 -j DROP
@@ -207,7 +207,7 @@ docker exec logstash-router iptables -D FORWARD -p tcp --sport 5044 -j DROP
 • FIN / RST 전송 없음
 • 짧은 기간 동안 패킷만 드롭되어 half-open 상태 유도
 
-1) 복구 이후에도 기존 세션만 blackhole 유지
+1. 복구 이후에도 기존 세션만 blackhole 유지
 
 ```bash
 # 세션 상태를 제거해 middlebox가 idle-timeout으로 상태를 잊은 상황을 모사
@@ -219,11 +219,11 @@ docker exec logstash-router iptables -I FORWARD -p tcp --dport 5044 -m conntrack
 docker exec logstash-router iptables -I FORWARD -p tcp --sport 5044 -m conntrack --ctstate NEW -m tcp ! --syn -j DROP
 ```
 
-1) 복구 이후 관찰 포인트
-  Filebeat
-  • 이벤트 전송이 재개되지 않음
-  • acked_events 증가 없음
-  • queue depth 증가 지속
+1. 복구 이후 관찰 포인트
+   Filebeat
+   • 이벤트 전송이 재개되지 않음
+   • acked_events 증가 없음
+   • queue depth 증가 지속
 
 Logstash
 • stdout 이벤트 수신 재개되지 않음
@@ -263,7 +263,7 @@ Logstash
 
 iptables 버전 (권장)
 
-1) 일시 단절 (20초)
+1. 일시 단절 (20초)
 
 ```bash
 iptables -I DOCKER-USER -p tcp --dport 5044 -j DROP
@@ -271,26 +271,26 @@ sleep 20
 iptables -D DOCKER-USER -p tcp --dport 5044 -j DROP
 ```
 
-1) conntrack 상태 소거
+1. conntrack 상태 소거
 
 ```bash
 conntrack -D -p tcp --dport 5044 || true
 conntrack -D -p tcp --sport 5044 || true
 ```
 
-1) old-flow 패킷 drop (half-open 고착)
+1. old-flow 패킷 drop (half-open 고착)
 
 ```bash
 iptables -I DOCKER-USER -p tcp --dport 5044 -m conntrack --ctstate NEW -m tcp ! --syn -j DROP
 iptables -I DOCKER-USER -p tcp --sport 5044 -m conntrack --ctstate NEW -m tcp ! --syn -j DROP
 ```
 
-1) 관찰 포인트
-• Filebeat acked 증가 멈춤, queue depth 증가
-• Logstash stdout 수신 중단
-• TCP 상태는 ESTABLISHED 유지 가능
+1. 관찰 포인트
+   • Filebeat acked 증가 멈춤, queue depth 증가
+   • Logstash stdout 수신 중단
+   • TCP 상태는 ESTABLISHED 유지 가능
 
-2) 정리
+2. 정리
 
 ```bash
 iptables -D DOCKER-USER -p tcp --dport 5044 -m conntrack --ctstate NEW -m tcp ! --syn -j DROP
@@ -299,14 +299,14 @@ iptables -D DOCKER-USER -p tcp --sport 5044 -m conntrack --ctstate NEW -m tcp ! 
 
 nftables 버전
 
-1) 테이블/체인 준비
+1. 테이블/체인 준비
 
 ```bash
 nft add table inet filter
 nft add chain inet filter forward { type filter hook forward priority 0 \; }
 ```
 
-1) 일시 단절 (20초)
+1. 일시 단절 (20초)
 
 ```bash
 nft add rule inet filter forward tcp dport 5044 drop
@@ -314,21 +314,21 @@ sleep 20
 nft delete rule inet filter forward tcp dport 5044 drop
 ```
 
-1) conntrack 상태 소거
+1. conntrack 상태 소거
 
 ```bash
 conntrack -D -p tcp --dport 5044 || true
 conntrack -D -p tcp --sport 5044 || true
 ```
 
-1) old-flow 패킷 drop (half-open 고착)
+1. old-flow 패킷 drop (half-open 고착)
 
 ```bash
 nft add rule inet filter forward tcp dport 5044 ct state new tcp flags != syn drop
 nft add rule inet filter forward tcp sport 5044 ct state new tcp flags != syn drop
 ```
 
-1) 정리
+1. 정리
 
 ```bash
 nft delete rule inet filter forward tcp dport 5044 ct state new tcp flags != syn drop
@@ -355,21 +355,21 @@ nft delete rule inet filter forward tcp sport 5044 ct state new tcp flags != syn
 
 증거 수집 방식 예시
 
-1) Filebeat/Logstash 로그 저장을 위한 호스트 볼륨 마운트
+1. Filebeat/Logstash 로그 저장을 위한 호스트 볼륨 마운트
 
 docker-compose.yml에 다음을 추가해 컨테이너 로그를 호스트로 수집
 
 ```yaml
 services:
- logstash:
-  volumes:
-   - ./evidence/logstash:/usr/share/logstash/logs
- filebeat:
-  volumes:
-   - ./evidence/filebeat:/usr/share/filebeat/logs
+    logstash:
+        volumes:
+            - ./evidence/logstash:/usr/share/logstash/logs
+    filebeat:
+        volumes:
+            - ./evidence/filebeat:/usr/share/filebeat/logs
 ```
 
-1) 단절 시점 기록
+1. 단절 시점 기록
 
 ```bash
 date
@@ -379,19 +379,19 @@ iptables -D DOCKER-USER -p tcp --dport 5044 -j DROP
 date
 ```
 
-1) TCP 상태 스냅샷
+1. TCP 상태 스냅샷
 
 ```bash
 ss -tanp | grep 5044
 ```
 
-1) Logstash stdout 확인
+1. Logstash stdout 확인
 
 ```bash
 docker-compose logs -f logstash
 ```
 
-1) Filebeat 로그 확인
+1. Filebeat 로그 확인
 
 ```bash
 docker-compose logs -f filebeat
@@ -421,21 +421,21 @@ stalled 판단 기준 예시
 
 기대 동작
 
-1) detection-only 모드
-  • WARN 로그 출력
-  • metric 노출
+1. detection-only 모드
+   • WARN 로그 출력
+   • metric 노출
 
 ```text
 libbeat.output.stalled = 1
 ```
 
-1) opt-in reconnect 모드
-  • stalled 조건 충족 시
-  • 해당 output client socket close
-  • 다음 flush 시 신규 TCP 연결 생성
-  • Logstash 이벤트 수신 재개
+1. opt-in reconnect 모드
+   • stalled 조건 충족 시
+   • 해당 output client socket close
+   • 다음 flush 시 신규 TCP 연결 생성
+   • Logstash 이벤트 수신 재개
 
-1. 환경 초기화
+1) 환경 초기화
 
 ```bash
 iptables -F
@@ -444,9 +444,9 @@ docker-compose down
 ```
 
 1. 참고 사항
-  • 본 재연은 LB / NAT / FW idle-timeout 환경을 로컬에서 모사하기 위함임
-  • 실제 클라우드 환경(AWS ELB/NLB, GCP LB, 사내 FW)에서 동일 패턴 다수 보고됨
-  • 본 문서 기반으로 다음 작업 가능
-  • libbeat stalled detection 로직 구현
-  • metric 추가
-  • opt-in reconnect 옵션 검증
+   • 본 재연은 LB / NAT / FW idle-timeout 환경을 로컬에서 모사하기 위함임
+   • 실제 클라우드 환경(AWS ELB/NLB, GCP LB, 사내 FW)에서 동일 패턴 다수 보고됨
+   • 본 문서 기반으로 다음 작업 가능
+   • libbeat stalled detection 로직 구현
+   • metric 추가
+   • opt-in reconnect 옵션 검증

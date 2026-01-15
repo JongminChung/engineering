@@ -24,7 +24,7 @@ src/
  */
 
 // 1) configuration 쪽은 이름 충돌 위험이 커서 alias로 고정하는 편이 안전함
-export {Configuration as OpenAPIConfiguration} from './gen/configuration'
+export { Configuration as OpenAPIConfiguration } from "./gen/configuration";
 
 // 2) API 클래스/팩토리만 명시적으로 re-export
 export {
@@ -32,24 +32,24 @@ export {
     PetApi,
     StoreApi,
     UserApi,
-} from './gen/api'
+} from "./gen/api";
 
 // 3) (선택) base에서 공개해도 되는 타입/헬퍼만 선별 export (필요할때만)
 export type {
     // 예시: 실제 생성물에 맞게
     AxiosPromise,
     RequestArgs,
-} from './gen/base'
+} from "./gen/base";
 ```
 
 ## tsdown 설정
 
 ```ts
 // tsdown.config.ts
-import {defineConfig} from 'tsdown'
+import { defineConfig } from "tsdown";
 
 export default defineConfig({
-    entry: 'src/index.ts',
+    entry: "src/index.ts",
 
     // tsdown이 exports/main/module/types를 산출물 기반으로 맞춰줌
     exports: true,
@@ -60,14 +60,14 @@ export default defineConfig({
     // 실무에서 자주 같이 켜는 것들
     clean: true,
     sourcemap: true,
-})
+});
 ```
 
 **src/models.ts(모델만 모으는 엔트리)**
 
 ```ts
 // src/models.ts
-export * from './gen/model' // 생성 옵션에 따라 경로 다를 수 있음 (model, models 등)
+export * from "./gen/model"; // 생성 옵션에 따라 경로 다를 수 있음 (model, models 등)
 ```
 
 ## package.json
@@ -78,9 +78,7 @@ export * from './gen/model' // 생성 옵션에 따라 경로 다를 수 있음 
     "version": "0.1.0",
     "private": false,
     "type": "module",
-    "files": [
-        "dist"
-    ],
+    "files": ["dist"],
     "sideEffects": false,
     "scripts": {
         "gen": "openapi-generator-cli generate -g typescript-axios -i openapi.yaml -o src/gen",
@@ -129,15 +127,14 @@ export * from './gen/model' // 생성 옵션에 따라 경로 다를 수 있음 
 수동 관리의 문제는 “산출물 파일명/구조 바뀌면 exports 깨짐”이라서, 그래서 tsdown이 exports 자동 갱신 기능을 제공하는
 쪽으로 가는 흐름임.
 
-
 ## CI Pack verify
 
 ```json
 {
-  "scripts": {
-    "build": "tsdown",
-    "pack:verify": "node ./scripts/pack-verify.mjs"
-  }
+    "scripts": {
+        "build": "tsdown",
+        "pack:verify": "node ./scripts/pack-verify.mjs"
+    }
 }
 ```
 
@@ -175,7 +172,7 @@ writeFileSync(
     `
 import { PetApi } from "${process.env.PKG_NAME || "@package-scope/package-sdk"}";
 console.log("esm ok", typeof PetApi);
-`.trim()
+`.trim(),
 );
 
 // 5) CJS test
@@ -184,7 +181,7 @@ writeFileSync(
     `
 const sdk = require("${process.env.PKG_NAME || "@package-scope/package-sdk"}");
 console.log("cjs ok", typeof sdk.PetApi);
-`.trim()
+`.trim(),
 );
 
 // 6) TS typecheck test
@@ -197,12 +194,12 @@ writeFileSync(
                 module: "NodeNext",
                 moduleResolution: "NodeNext",
                 strict: true,
-                noEmit: true
-            }
+                noEmit: true,
+            },
         },
         null,
-        2
-    )
+        2,
+    ),
 );
 
 writeFileSync(
@@ -211,7 +208,7 @@ writeFileSync(
 import type { Pet } from "${process.env.PKG_NAME || "@package-scope/package-sdk/models"}";
 const x: Pet | undefined = undefined;
 console.log(x);
-`.trim()
+`.trim(),
 );
 
 sh("node esm.mjs", dir);

@@ -1,10 +1,9 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: ''
-labels: ''
-assignees: 'jongminchung'
-
+title: ""
+labels: ""
+assignees: "jongminchung"
 ---
 
 **Is your feature request related to a problem? Please describe.**

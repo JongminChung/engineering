@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   kafka:
@@ -67,7 +67,8 @@ services:
     networks:
       - kafka-network
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      test:
+        ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 3

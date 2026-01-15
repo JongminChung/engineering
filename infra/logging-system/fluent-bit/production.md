@@ -5,11 +5,11 @@
 <!-- TOC -->
 
 - [운영](#운영)
-  - [backlog](#backlog)
-    - [backolog 상한은 "시간 기준"으로 산정](#backolog-상한은-시간-기준으로-산정)
-    - [모니터링](#모니터링)
-  - [ES 복구 후 ingest가 느린 경우 베스트 프랙티스](#es-복구-후-ingest가-느린-경우-베스트-프랙티스)
-  - [docker json-file rotate](#docker-json-file-rotate)
+    - [backlog](#backlog)
+        - [backolog 상한은 "시간 기준"으로 산정](#backolog-상한은-시간-기준으로-산정)
+        - [모니터링](#모니터링)
+    - [ES 복구 후 ingest가 느린 경우 베스트 프랙티스](#es-복구-후-ingest가-느린-경우-베스트-프랙티스)
+    - [docker json-file rotate](#docker-json-file-rotate)
 
 <!-- TOC -->
 
@@ -24,18 +24,18 @@
 **ES 단절 발생 시**
 
 - Fluent Bit은
-  - ES 전송 실패 감지
-  - **전송 못한 로그 chunk를 디스크(storage.path)에 저장**
-  - retry 상태로 대기함
+    - ES 전송 실패 감지
+    - **전송 못한 로그 chunk를 디스크(storage.path)에 저장**
+    - retry 상태로 대기함
 - 이 동안에도
-  - 컨테이너 로그 파일은 계속 증가
-  - Fluent Bit은 계속 tail 해서 새 chunk를 디스크에 적재
+    - 컨테이너 로그 파일은 계속 증가
+    - Fluent Bit은 계속 tail 해서 새 chunk를 디스크에 적재
 
 **ES 복구 시**
 
 - Fluent Bit이
-  - 디스크에 쌓여 있던 chunk부터 순서대로 재전송
-  - 성공하면 chunk 삭제
+    - 디스크에 쌓여 있던 chunk부터 순서대로 재전송
+    - 성공하면 chunk 삭제
 - 별도 조치 필요 없음
 
 ## backlog
@@ -43,13 +43,13 @@
 - **무한 backlog 금지**
 - 로그는 버려도 되지만 **서버는 죽으면 안 됨**
 - /fluent-bit/state는
-  - 루트 디스크와 분리된 파티션 또는 볼륨 사용 권장
+    - 루트 디스크와 분리된 파티션 또는 볼륨 사용 권장
 - 이유
-  - 로그 backlogs로 OS 전체가 마비되는 상태 방지
+    - 로그 backlogs로 OS 전체가 마비되는 상태 방지
 
 ### backolog 상한은 "시간 기준"으로 산정
 
-허용 단절 시간 * 평균 로그 유입량 = 필요 디스크
+허용 단절 시간 \* 평균 로그 유입량 = 필요 디스크
 
 예시
 

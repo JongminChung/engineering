@@ -4,13 +4,13 @@
 
 - 분산 락 라이브러리와 Spring 통합, Spring Boot 스타터로 구성됩니다.
 - 서브모듈:
-  - `distributed-lock/core` — 코어 API, 정책, 키 전략
-  - `distributed-lock/provider-jdbc` — JDBC 기반 락 프로바이더
-  - `distributed-lock/provider-redis` — Redisson 기반 락 프로바이더
-  - `distributed-lock/spring` — Spring AOP/SpEL 통합
-  - `distributed-lock/spring-boot-autoconfigure` — 자동 설정
-  - `distributed-lock/spring-boot-starter` 및 `distributed-lock/spring-boot-starter-*` — 스타터
-  - `distributed-lock/test` — 테스트 유틸
+    - `distributed-lock/core` — 코어 API, 정책, 키 전략
+    - `distributed-lock/provider-jdbc` — JDBC 기반 락 프로바이더
+    - `distributed-lock/provider-redis` — Redisson 기반 락 프로바이더
+    - `distributed-lock/spring` — Spring AOP/SpEL 통합
+    - `distributed-lock/spring-boot-autoconfigure` — 자동 설정
+    - `distributed-lock/spring-boot-starter` 및 `distributed-lock/spring-boot-starter-*` — 스타터
+    - `distributed-lock/test` — 테스트 유틸
 - `**/build/` 산출물은 커밋하지 않습니다.
 
 ## 명령어

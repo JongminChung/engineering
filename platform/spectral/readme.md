@@ -103,7 +103,7 @@ get:
 
 예상 출력:
 
-```text
+````text
 [warn] operation-operationId: Operation must have "operationId".
   at: /.../study/spectral/paths/pets.yaml#/get
 
@@ -118,7 +118,7 @@ info:
     description: Minimal PetStore spec for Spectral PoC.
     contact:
         name: Engineering
-```
+````
 
 예상 출력:
 

@@ -3,9 +3,9 @@
 ## 배경
 
 - [ECS Log](https://www.elastic.co/docs/reference/ecs/ecs-log)
- 	- log4j2 format: json
+    - log4j2 format: json
 - 기존 환경
- 	- rsyslog -> 로그 중앙화(파일로 관리) -> (filebeat) -> ES
+    - rsyslog -> 로그 중앙화(파일로 관리) -> (filebeat) -> ES
 
 ## 목표
 

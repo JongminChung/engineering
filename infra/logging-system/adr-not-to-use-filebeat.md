@@ -5,25 +5,25 @@
 <!-- TOC -->
 
 - [왜 filebeat를 사용하지 않았나](#왜-filebeat를-사용하지-않았나)
-  - [배경](#배경)
-  - [“응답이 안 오면 왜 바로 끊지 않는가?”](#응답이-안-오면-왜-바로-끊지-않는가)
-  - [결론 요약](#결론-요약)
-  - [1. 흔한 오해](#1-흔한-오해)
-  - [2. TCP가 연결 종료를 판단하는 경우 (딱 3가지)](#2-tcp가-연결-종료를-판단하는-경우-딱-3가지)
-    - [1) FIN 수신](#1-fin-수신)
-    - [2) RST 수신](#2-rst-수신)
-    - [3) 커널 타임아웃 초과](#3-커널-타임아웃-초과)
-  - [3. 중간 장비(LB/NAT/FW)의 실제 동작](#3-중간-장비lbnatfw의-실제-동작)
-  - [4. half-open 세션이 만들어지는 과정 (타임라인)](#4-half-open-세션이-만들어지는-과정-타임라인)
-    - [(1) 정상 상태](#1-정상-상태)
-    - [(2) 중간 장비가 세션 삭제](#2-중간-장비가-세션-삭제)
-    - [(3) Filebeat가 데이터 전송](#3-filebeat가-데이터-전송)
-  - [5. ACK가 안 와도 왜 바로 끊지 않는가](#5-ack가-안-와도-왜-바로-끊지-않는가)
-  - [6. 그래서 언제까지 살아있나?](#6-그래서-언제까지-살아있나)
-  - [7. “서로 살아있다고 믿는다”는 표현의 의미](#7-서로-살아있다고-믿는다는-표현의-의미)
-  - [8. 재시작하면 왜 즉시 해결되는가](#8-재시작하면-왜-즉시-해결되는가)
-  - [9. 이 문제가 Filebeat에서 특히 체감되는 이유](#9-이-문제가-filebeat에서-특히-체감되는-이유)
-  - [한 줄 요약](#한-줄-요약)
+    - [배경](#배경)
+    - [“응답이 안 오면 왜 바로 끊지 않는가?”](#응답이-안-오면-왜-바로-끊지-않는가)
+    - [결론 요약](#결론-요약)
+    - [1. 흔한 오해](#1-흔한-오해)
+    - [2. TCP가 연결 종료를 판단하는 경우 (딱 3가지)](#2-tcp가-연결-종료를-판단하는-경우-딱-3가지)
+        - [1) FIN 수신](#1-fin-수신)
+        - [2) RST 수신](#2-rst-수신)
+        - [3) 커널 타임아웃 초과](#3-커널-타임아웃-초과)
+    - [3. 중간 장비(LB/NAT/FW)의 실제 동작](#3-중간-장비lbnatfw의-실제-동작)
+    - [4. half-open 세션이 만들어지는 과정 (타임라인)](#4-half-open-세션이-만들어지는-과정-타임라인)
+        - [(1) 정상 상태](#1-정상-상태)
+        - [(2) 중간 장비가 세션 삭제](#2-중간-장비가-세션-삭제)
+        - [(3) Filebeat가 데이터 전송](#3-filebeat가-데이터-전송)
+    - [5. ACK가 안 와도 왜 바로 끊지 않는가](#5-ack가-안-와도-왜-바로-끊지-않는가)
+    - [6. 그래서 언제까지 살아있나?](#6-그래서-언제까지-살아있나)
+    - [7. “서로 살아있다고 믿는다”는 표현의 의미](#7-서로-살아있다고-믿는다는-표현의-의미)
+    - [8. 재시작하면 왜 즉시 해결되는가](#8-재시작하면-왜-즉시-해결되는가)
+    - [9. 이 문제가 Filebeat에서 특히 체감되는 이유](#9-이-문제가-filebeat에서-특히-체감되는-이유)
+    - [한 줄 요약](#한-줄-요약)
 
 <!-- TOC -->
 
@@ -35,9 +35,9 @@ HAProxy Session Data 수집 당시에 Filebeat와 Metricbeat를 활용해 데이
 
 - Processor(Logstash), DataStore(Elasticsearch)는 외부에 존재함. (중간 장비 존재함)
 - <https://github.com/elastic/beats/issues/16335>
-  - Filebeat는 long-lived connection을 기본으로 함
-  - Filebeat는 전송 성공을 **ACK 수신**으로 판단함
-  - LB/NAT가 idle timeout 이후 FIN/RST을 보내지 않고 세션만 제거하는 경우,
+    - Filebeat는 long-lived connection을 기본으로 함
+    - Filebeat는 전송 성공을 **ACK 수신**으로 판단함
+    - LB/NAT가 idle timeout 이후 FIN/RST을 보내지 않고 세션만 제거하는 경우,
       Filebeat는 여전히 ESTABLISHED 상태로 간주함
       → 실제로 데이터가 안 가도 커널은 연결 살아있다고 판단함
 - <https://github.com/elastic/beats/issues/661>
@@ -58,9 +58,9 @@ HAProxy Session Data 수집 당시에 Filebeat와 Metricbeat를 활용해 데이
 - 연결 + 세션 중심
 - “이 연결에서 ACK를 받았는가?”
 - ACK가 안 오면
-  - 연결 유지
-  - backoff
-  - 같은 세션에 묶임
+    - 연결 유지
+    - backoff
+    - 같은 세션에 묶임
 
 👉 **세션이 꼬이면 전체가 막힘**
 
@@ -70,8 +70,8 @@ HAProxy Session Data 수집 당시에 Filebeat와 Metricbeat를 활용해 데이
 - “이번 flush 시도는 성공했는가?”
 
 - 실패하면
-  - 이 chunk를 실패 처리
-  - 다음 flush 주기에 다시 시도
+    - 이 chunk를 실패 처리
+    - 다음 flush 주기에 다시 시도
 
 👉 **연결에 집착하지 않음**
 
@@ -124,7 +124,7 @@ TCP는 아래 경우에만 연결이 종료된다.
 - 재전송 반복 실패
 - keepalive probe 실패
 - **기본값 기준 수 분 ~ 수 시간**
-  - Linux TCP keepalive 기본값: **2시간**
+    - Linux TCP keepalive 기본값: **2시간**
 
 👉 이 외의 경우에는 **연결 유지가 기본 정책**
 
@@ -222,6 +222,7 @@ TCP는 신뢰성 프로토콜이기 때문에
 👉 TCP 관점에서는 **정상 연결**
 
 그래서
+
 > “서로 살아있다고 믿는다”
 > 라고 표현한다.
 
@@ -239,6 +240,7 @@ TCP는 신뢰성 프로토콜이기 때문에
 👉 정상 경로로 통신 재개
 
 그래서
+
 > “재시작하니 바로 로그가 밀린다”
 > 라는 현상이 발생한다.
 
@@ -271,14 +273,14 @@ TCP는 신뢰성 프로토콜이기 때문에
 
 - Filebeat는 Logstash와 **long-lived TCP connection**을 유지함
 - 중간 장비(LB / NAT / FW)가 **idle-timeout으로 FIN/RST 없이 세션을 삭제**하는 경우
-  - Filebeat 커널 상태는 `ESTABLISHED`
-  - ACK는 오지 않음
-  - backoff / timeout만 반복
+    - Filebeat 커널 상태는 `ESTABLISHED`
+    - ACK는 오지 않음
+    - backoff / timeout만 반복
 - 운영 체감상 **Filebeat 재시작 전까지 복구되지 않는 상황**이 발생함
 - 최신 Filebeat 공식 설정에는
-  - half-open 감지
-  - stalled connection 판단
-  - 자동 reconnect
+    - half-open 감지
+    - stalled connection 판단
+    - 자동 reconnect
       를 직접 해결하는 옵션이 없음
 
 ### 2. 기존 설정의 한계
@@ -354,15 +356,15 @@ output.logstash:
 ### 4. 코드
 
 - **libbeat 영역**
-  - publisher/pipeline
-    - ACK 진행 감시
-    - stall 판단 로직
+    - publisher/pipeline
+        - ACK 진행 감시
+        - stall 판단 로직
 
-  - publisher/queue
-    - queue depth 정보 제공
+    - publisher/queue
+        - queue depth 정보 제공
 
 - outputs/logstash
-  - opt-in reconnect 시 client close 트리거
+    - opt-in reconnect 시 client close 트리거
 
 > Filebeat 단일 문제가 아니라
 > Beats 공통 output 구조의 개선 포인트

@@ -3,39 +3,40 @@
 _**Table of Contents**_
 
 <!-- TOC -->
-* [Platform Engineer](#platform-engineer)
-  * [API First](#api-first)
-    * [RESTful API](#restful-api)
-    * [API-First Design](#api-first-design)
-    * [OpenAPI](#openapi)
-    * [버전 관리](#버전-관리)
-    * [API 개발 흐름 구축](#api-개발-흐름-구축)
-      * [API 개발 흐름이 왜 중요한가?](#api-개발-흐름이-왜-중요한가)
-    * [API 표준](#api-표준)
-    * [현대적인 서비스 통신방식(REST, gRPC등)에 대한 이해를 바탕으로 확장성과 성능, 그리고 보안을 고려한 API 설계](#현대적인-서비스-통신방식rest-grpc등에-대한-이해를-바탕으로-확장성과-성능-그리고-보안을-고려한-api-설계)
-  * [SDK, Terraform, CLI 자동 생성할 수 있는 개발 흐름(CI/CD 환경, 시스템 연동)](#sdk-terraform-cli-자동-생성할-수-있는-개발-흐름cicd-환경-시스템-연동)
-    * [AWS Smithy](#aws-smithy)
-    * [OpenAPI Generator](#openapi-generator)
-  * [CLI](#cli)
-    * [설계](#설계)
-      * [전체 아키텍처](#전체-아키텍처)
-  * [gRPC](#grpc)
-    * [Protobuf 방식 통신 HTTP1.1](#protobuf-방식-통신-http11)
-  * [개발자 경험(DX)을 향상시키는 다양한 도구 (Java, Go, Typescript, Python 등 다양한 언어)](#개발자-경험dx을-향상시키는-다양한-도구-java-go-typescript-python-등-다양한-언어)
-  * [Kubernetes API Conventions](#kubernetes-api-conventions)
-    * [`read-modify-write` 왜 GET -> PUT에서 문제가 생기나](#read-modify-write-왜-get---put에서-문제가-생기나)
-      * [낙관적 락으로 해결](#낙관적-락으로-해결)
-    * [PATCH 메서드](#patch-메서드)
-      * [1. JSON Patch (RFC 6902)](#1-json-patch-rfc-6902)
-      * [2. JSON Merge Patch (RFC 7396)](#2-json-merge-patch-rfc-7396)
-      * [3. Strategic Merge Patch](#3-strategic-merge-patch)
-<!-- TOC -->
 
-- OpenAPI 스펙을 기반으로 API를 설계하고,
+- [Platform Engineer](#platform-engineer)
+    - [API First](#api-first)
+        - [RESTful API](#restful-api)
+        - [API-First Design](#api-first-design)
+        - [OpenAPI](#openapi)
+        - [버전 관리](#버전-관리)
+        - [API 개발 흐름 구축](#api-개발-흐름-구축)
+            - [API 개발 흐름이 왜 중요한가?](#api-개발-흐름이-왜-중요한가)
+        - [API 표준](#api-표준)
+        - [현대적인 서비스 통신방식(REST, gRPC등)에 대한 이해를 바탕으로 확장성과 성능, 그리고 보안을 고려한 API 설계](#현대적인-서비스-통신방식rest-grpc등에-대한-이해를-바탕으로-확장성과-성능-그리고-보안을-고려한-api-설계)
+    - [SDK, Terraform, CLI 자동 생성할 수 있는 개발 흐름(CI/CD 환경, 시스템 연동)](#sdk-terraform-cli-자동-생성할-수-있는-개발-흐름cicd-환경-시스템-연동)
+        - [AWS Smithy](#aws-smithy)
+        - [OpenAPI Generator](#openapi-generator)
+    - [CLI](#cli)
+        - [설계](#설계)
+            - [전체 아키텍처](#전체-아키텍처)
+    - [gRPC](#grpc)
+        - [Protobuf 방식 통신 HTTP1.1](#protobuf-방식-통신-http11)
+    - [개발자 경험(DX)을 향상시키는 다양한 도구 (Java, Go, Typescript, Python 등 다양한 언어)](#개발자-경험dx을-향상시키는-다양한-도구-java-go-typescript-python-등-다양한-언어)
+    - [Kubernetes API Conventions](#kubernetes-api-conventions)
+    _ [`read-modify-write` 왜 GET -> PUT에서 문제가 생기나](#read-modify-write-왜-get---put에서-문제가-생기나)
+    _ [낙관적 락으로 해결](#낙관적-락으로-해결)
+    _ [PATCH 메서드](#patch-메서드)
+    _ [1. JSON Patch (RFC 6902)](#1-json-patch-rfc-6902)
+    _ [2. JSON Merge Patch (RFC 7396)](#2-json-merge-patch-rfc-7396)
+    _ [3. Strategic Merge Patch](#3-strategic-merge-patch)
+        <!-- TOC -->
+
+* OpenAPI 스펙을 기반으로 API를 설계하고,
   이를 바탕으로 SDK, Terraform, CLI 등을 자동 생성할 수 있는 개발 흐름(CI/CD 환경, 내부 시스템 연동)
     - API 표준 연구 (OpenAPI Spec 기반으로 아티팩트가 정의됨)
         - [K8s API convention](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md)
-- 개발자 경험(DX)를 향상시키는 다양한 라이브러리 개발
+* 개발자 경험(DX)를 향상시키는 다양한 라이브러리 개발
 
 ---
 
@@ -111,12 +112,12 @@ RESTful 원칙을 엄격히 지켜야 하는 내부 시스템 간 통신에는 H
 - OpenAPISpec -> OpenAPI Generator -> SDK
 
 | 단계             | **AWS Smithy**               | **Google GAPIC**            | **MS TypeSpec**         | **OpenAPI Generator** |
-|----------------|------------------------------|-----------------------------|-------------------------|-----------------------|
-| **스펙 형식**      | Smithy IDL (.smithy)         | Protobuf (.proto)           | TypeSpec (.tsp)         | OpenAPI (yaml/json)   |
-| **1️⃣ Parser** | 자체 파서                        | protoc                      | 자체 TypeSpec 컴파일러        | swagger-parser        |
-| **2️⃣ 중간 표현**  | Semantic Model (Shape Graph) | FileDescriptor → API Schema | TypeSpec Semantic Model | CodegenModel          |
-| **3️⃣ 템플릿**    | 언어별 Codegen 모듈               | Jinja2                      | Emitters (플러그인)         | Mustache/Handlebars   |
-| **확장성**        | Traits로 메타데이터 확장             | Options/Annotations         | Decorators              | x-extensions          |
+| ---------------- | ---------------------------- | --------------------------- | ----------------------- | --------------------- |
+| **스펙 형식**    | Smithy IDL (.smithy)         | Protobuf (.proto)           | TypeSpec (.tsp)         | OpenAPI (yaml/json)   |
+| **1️⃣ Parser**    | 자체 파서                    | protoc                      | 자체 TypeSpec 컴파일러  | swagger-parser        |
+| **2️⃣ 중간 표현** | Semantic Model (Shape Graph) | FileDescriptor → API Schema | TypeSpec Semantic Model | CodegenModel          |
+| **3️⃣ 템플릿**    | 언어별 Codegen 모듈          | Jinja2                      | Emitters (플러그인)     | Mustache/Handlebars   |
+| **확장성**       | Traits로 메타데이터 확장     | Options/Annotations         | Decorators              | x-extensions          |
 
 ### AWS Smithy
 
@@ -292,20 +293,20 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/SearchUsersRequest'
+                            $ref: "#/components/schemas/SearchUsersRequest"
                     application/x-protobuf:
                         schema:
-                            $ref: '#/components/schemas/SearchUsersRequestBinary'
+                            $ref: "#/components/schemas/SearchUsersRequestBinary"
             responses:
-                '200':
+                "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/SearchUsersResponse'
+                                $ref: "#/components/schemas/SearchUsersResponse"
                         application/x-protobuf:
                             schema:
-                                $ref: '#/components/schemas/SearchUsersResponseBinary'
+                                $ref: "#/components/schemas/SearchUsersResponseBinary"
 
 components:
     schemas:
@@ -315,7 +316,7 @@ components:
                 keyword: { type: string }
                 page: { type: integer, format: int32 }
                 page_size: { type: integer, format: int32 }
-            required: [ keyword ]
+            required: [keyword]
 
         # Protobuf binary 자체는 OpenAPI가 구조를 알 수 없으므로 "binary"로밖에 못 적음
         SearchUsersRequestBinary:
@@ -356,7 +357,7 @@ components:
 ```http
 PUT /resource/1
 If-Match: "v1"
- ```
+```
 
 서버 로직:
 
@@ -402,8 +403,8 @@ Kubernetes와 같은 현대적인 API 설계에서는 리소스의 전체 교체
 - **예시**:
     ```json
     [
-      { "op": "replace", "path": "/spec/replicas", "value": 3 },
-      { "op": "add", "path": "/metadata/labels/env", "value": "prod" }
+        { "op": "replace", "path": "/spec/replicas", "value": 3 },
+        { "op": "add", "path": "/metadata/labels/env", "value": "prod" }
     ]
     ```
 
@@ -416,14 +417,14 @@ Kubernetes와 같은 현대적인 API 설계에서는 리소스의 전체 교체
 - **예시**:
     ```json
     {
-      "spec": {
-        "replicas": 3
-      },
-      "metadata": {
-        "labels": {
-          "env": "prod"
+        "spec": {
+            "replicas": 3
+        },
+        "metadata": {
+            "labels": {
+                "env": "prod"
+            }
         }
-      }
     }
     ```
 
@@ -438,9 +439,9 @@ Kubernetes와 같은 현대적인 API 설계에서는 리소스의 전체 교체
     ```yaml
     # containers 리스트 전체를 갈아끼우는 게 아니라 name이 "nginx"인 요소만 찾아 수정
     spec:
-      template:
-        spec:
-          containers:
-          - name: nginx
-            image: nginx:1.14.2
+        template:
+            spec:
+                containers:
+                    - name: nginx
+                      image: nginx:1.14.2
     ```

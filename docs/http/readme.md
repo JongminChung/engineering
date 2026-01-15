@@ -3,24 +3,25 @@
 **_Table of Contents_**
 
 <!-- TOC -->
-* [HTTP](#http)
-  * [Chunked responses](#chunked-responses)
-  * [Chunked를 무조건 써야 하는 거 아니야?](#chunked를-무조건-써야-하는-거-아니야)
-  * [HTTP/1.1 파이프라이닝이 제공된다 했는데 진짜로?](#http11-파이프라이닝이-제공된다-했는데-진짜로)
-    * [왜 파이프라이닝을 안 쓸까?](#왜-파이프라이닝을-안-쓸까)
-    * [브라우저의 대안: 연결 병렬화 (Parallel Connections)](#브라우저의-대안-연결-병렬화-parallel-connections)
-  * [Keep-Alive는 항상 지켜져야 되는거 아니야?](#keep-alive는-항상-지켜져야-되는거-아니야)
-    * [브라우저나 React에서 커넥션을 자동으로 재사용하나?](#브라우저나-react에서-커넥션을-자동으로-재사용하나)
-    * [서버 사이드에서의 커넥션 Keep-Alive 자동을 재사용하나?](#서버-사이드에서의-커넥션-keep-alive-자동을-재사용하나)
-      * [1. 커넥션 풀을 사용하지 않을 때의 문제 (Short-lived Connections)](#1-커넥션-풀을-사용하지-않을-때의-문제-short-lived-connections)
-      * [2. 왜 서버 사이드에서는 "자동"이 아닌가?](#2-왜-서버-사이드에서는-자동이-아닌가)
-      * [3. 주요 환경별 커넥션 풀 설정](#3-주요-환경별-커넥션-풀-설정)
-    * [애플리케이션 레벨의 연결 관리 및 재시도 전략](#애플리케이션-레벨의-연결-관리-및-재시도-전략)
-      * [1. 왜 애플리케이션 레벨 검증이 필요한가?](#1-왜-애플리케이션-레벨-검증이-필요한가)
-      * [2. DB vs HTTP의 검증 방식 차이](#2-db-vs-http의-검증-방식-차이)
-      * [3. 재시도 전략 (Retry Strategy)](#3-재시도-전략-retry-strategy)
-      * [4. Retry 패턴과 지수 백오프 (Exponential Backoff)](#4-retry-패턴과-지수-백오프-exponential-backoff)
-<!-- TOC -->
+
+- [HTTP](#http)
+    - [Chunked responses](#chunked-responses)
+    - [Chunked를 무조건 써야 하는 거 아니야?](#chunked를-무조건-써야-하는-거-아니야)
+    - [HTTP/1.1 파이프라이닝이 제공된다 했는데 진짜로?](#http11-파이프라이닝이-제공된다-했는데-진짜로)
+        - [왜 파이프라이닝을 안 쓸까?](#왜-파이프라이닝을-안-쓸까)
+        - [브라우저의 대안: 연결 병렬화 (Parallel Connections)](#브라우저의-대안-연결-병렬화-parallel-connections)
+    - [Keep-Alive는 항상 지켜져야 되는거 아니야?](#keep-alive는-항상-지켜져야-되는거-아니야)
+    _ [브라우저나 React에서 커넥션을 자동으로 재사용하나?](#브라우저나-react에서-커넥션을-자동으로-재사용하나)
+    _ [서버 사이드에서의 커넥션 Keep-Alive 자동을 재사용하나?](#서버-사이드에서의-커넥션-keep-alive-자동을-재사용하나)
+    _ [1. 커넥션 풀을 사용하지 않을 때의 문제 (Short-lived Connections)](#1-커넥션-풀을-사용하지-않을-때의-문제-short-lived-connections)
+    _ [2. 왜 서버 사이드에서는 "자동"이 아닌가?](#2-왜-서버-사이드에서는-자동이-아닌가)
+    _ [3. 주요 환경별 커넥션 풀 설정](#3-주요-환경별-커넥션-풀-설정)
+    _ [애플리케이션 레벨의 연결 관리 및 재시도 전략](#애플리케이션-레벨의-연결-관리-및-재시도-전략)
+    _ [1. 왜 애플리케이션 레벨 검증이 필요한가?](#1-왜-애플리케이션-레벨-검증이-필요한가)
+    _ [2. DB vs HTTP의 검증 방식 차이](#2-db-vs-http의-검증-방식-차이)
+    _ [3. 재시도 전략 (Retry Strategy)](#3-재시도-전략-retry-strategy)
+    _ [4. Retry 패턴과 지수 백오프 (Exponential Backoff)](#4-retry-패턴과-지수-백오프-exponential-backoff)
+        <!-- TOC -->
 
 ## Chunked responses
 

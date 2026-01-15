@@ -29,14 +29,14 @@ dependencies {
 
 ```yaml
 distributed-lock:
-  provider: redis # redis | jdbc
-  wait-time: 5s
-  lease-time: 30s
-  fair: false
-  redis:
-    key-prefix: "lock:"
-  jdbc:
-    table-name: "distributed_locks"
+    provider: redis # redis | jdbc
+    wait-time: 5s
+    lease-time: 30s
+    fair: false
+    redis:
+        key-prefix: "lock:"
+    jdbc:
+        table-name: "distributed_locks"
 ```
 
 ## JDBC 스키마
