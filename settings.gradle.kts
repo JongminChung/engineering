@@ -33,16 +33,16 @@ include(
     "backend:distributed-lock:dependencies",
     "backend:distributed-lock:test",
     "backend:distributed-lock:redis-integration-test",
-    "backend:distributed-lock:jdbc-integration-test"
+    "backend:distributed-lock:jdbc-integration-test",
 )
 
 include(
-    "coding-test"
+    "coding-test",
 )
 
 buildCache {
     local {
-        directory = file("${rootDir}/.gradle/build-cache")
+        directory = file("$rootDir/.gradle/build-cache")
     }
 }
 
