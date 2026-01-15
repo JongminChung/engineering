@@ -14,13 +14,13 @@ import javax.sql.DataSource;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.testcontainers.mysql.MySQLContainer;
-
-import com.mysql.cj.jdbc.MysqlDataSource;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import io.github.jongminchung.distributedlock.autoconfigure.configuration.DistributedLockAutoConfiguration;
 import io.github.jongminchung.distributedlock.autoconfigure.configuration.JdbcLockAutoConfiguration;
@@ -31,7 +31,7 @@ import io.github.jongminchung.distributedlock.core.exception.LockTimeoutExceptio
 import io.github.jongminchung.distributedlock.core.key.LockKey;
 
 class JdbcStarterIntegrationTest {
-    private static final MySQLContainer MYSQL = new MySQLContainer("mysql:8.4.0");
+    private static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("postgres:18");
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withConfiguration(
@@ -40,18 +40,26 @@ class JdbcStarterIntegrationTest {
             .withBean(DataSource.class, JdbcStarterIntegrationTest::createDataSource);
 
     @BeforeAll
-    static void startMysql() throws Exception {
-        MYSQL.start();
+    static void startPostgres() throws Exception {
+        POSTGRES.start();
         createSchema();
     }
 
     @AfterAll
-    static void stopMysql() {
-        MYSQL.stop();
+    static void stopPostgres() {
+        POSTGRES.stop();
     }
 
     @Nested
-    class WhenMysqlIsAvailable {
+    class WhenPostgresIsAvailable {
+        @BeforeEach
+        void clearLocks() throws Exception {
+            try (Connection connection = createDataSource().getConnection();
+                    Statement statement = connection.createStatement()) {
+                statement.executeUpdate("delete from distributed_locks");
+            }
+        }
+
         @Test
         void acquiresAndReacquiresLock() {
             contextRunner.run(context -> {
@@ -145,10 +153,10 @@ class JdbcStarterIntegrationTest {
     }
 
     private static DataSource createDataSource() {
-        MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setUrl(MYSQL.getJdbcUrl());
-        dataSource.setUser(MYSQL.getUsername());
-        dataSource.setPassword(MYSQL.getPassword());
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        dataSource.setUrl(POSTGRES.getJdbcUrl());
+        dataSource.setUser(POSTGRES.getUsername());
+        dataSource.setPassword(POSTGRES.getPassword());
         return dataSource;
     }
 }

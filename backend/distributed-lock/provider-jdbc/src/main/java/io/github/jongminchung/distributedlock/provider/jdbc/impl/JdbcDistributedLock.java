@@ -3,6 +3,7 @@ package io.github.jongminchung.distributedlock.provider.jdbc.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
@@ -86,7 +87,7 @@ public class JdbcDistributedLock implements DistributedLock {
             statement.setTimestamp(4, Timestamp.from(lockedAt));
             return statement.executeUpdate() == 1;
         } catch (SQLException ex) {
-            if ("23000".equals(ex.getSQLState())) {
+            if (isDuplicateKey(ex)) {
                 return false;
             }
             throw ex;
@@ -146,6 +147,14 @@ public class JdbcDistributedLock implements DistributedLock {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    private boolean isDuplicateKey(SQLException ex) {
+        if (ex instanceof SQLIntegrityConstraintViolationException) {
+            return true;
+        }
+        String sqlState = ex.getSQLState();
+        return "23505".equals(sqlState) || "23000".equals(sqlState);
     }
 
     private class JdbcLockHandle implements LockHandle {

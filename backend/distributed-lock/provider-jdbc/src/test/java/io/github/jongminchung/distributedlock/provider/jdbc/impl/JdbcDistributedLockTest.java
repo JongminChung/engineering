@@ -9,10 +9,10 @@ import javax.sql.DataSource;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.mysql.MySQLContainer;
-
-import com.mysql.cj.jdbc.MysqlDataSource;
+import org.postgresql.ds.PGSimpleDataSource;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import io.github.jongminchung.distributedlock.core.api.LockHandle;
 import io.github.jongminchung.distributedlock.core.api.LockRequest;
@@ -20,11 +20,11 @@ import io.github.jongminchung.distributedlock.core.key.LockKey;
 import io.github.jongminchung.distributedlock.provider.jdbc.config.JdbcLockProviderConfig;
 
 class JdbcDistributedLockTest {
-    private static final MySQLContainer MYSQL = new MySQLContainer("mysql:8.4.0");
+    private static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("postgres:18");
 
     @BeforeAll
     static void setUpSchema() throws Exception {
-        MYSQL.start();
+        POSTGRES.start();
         try (Connection connection = createDataSource().getConnection();
                 Statement statement = connection.createStatement()) {
             statement.executeUpdate("create table if not exists distributed_locks ("
@@ -38,7 +38,15 @@ class JdbcDistributedLockTest {
 
     @AfterAll
     static void tearDown() {
-        MYSQL.stop();
+        POSTGRES.stop();
+    }
+
+    @BeforeEach
+    void clearLocks() throws Exception {
+        try (Connection connection = createDataSource().getConnection();
+                Statement statement = connection.createStatement()) {
+            statement.executeUpdate("delete from distributed_locks");
+        }
     }
 
     @Test
@@ -62,10 +70,10 @@ class JdbcDistributedLockTest {
     }
 
     private static DataSource createDataSource() {
-        MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setUrl(MYSQL.getJdbcUrl());
-        dataSource.setUser(MYSQL.getUsername());
-        dataSource.setPassword(MYSQL.getPassword());
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        dataSource.setUrl(POSTGRES.getJdbcUrl());
+        dataSource.setUser(POSTGRES.getUsername());
+        dataSource.setPassword(POSTGRES.getPassword());
         return dataSource;
     }
 }
