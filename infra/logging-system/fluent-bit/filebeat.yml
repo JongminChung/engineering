@@ -17,7 +17,6 @@ filebeat.inputs:
       # 너무 오래된 파일은 스캔 대상에서 제외(선택)
       # ignore_older: 72h
 
-
 # =========================
 # Registry: 반드시 영속 경로
 # =========================
@@ -32,7 +31,6 @@ queue.disk:
   path: /var/lib/filebeat/diskqueue
   max_size: 20GB
   segment_size: 100MB
-
 
 # =========================
 # Output: Logstash (자동복구 핵심 튜닝)

@@ -20,17 +20,17 @@
 ### 검증 절차 (최소)
 
 - journald appender 기록 확인
-  - `docker exec -it <log4j2-app 컨테이너> journalctl -u log4j2-app.service --no-pager | tail -n 5`
+    - `docker exec -it <log4j2-app 컨테이너> journalctl -u log4j2-app.service --no-pager | tail -n 5`
 - proxy 파일 저장 확인
-  - `poc/data/proxy` 경로에 `proxy-log*` 파일 생성 확인
+    - `poc/data/proxy` 경로에 `proxy-log*` 파일 생성 확인
 
 ### 추가 검증 (선택)
 
 - ES 연동 확인
-  - `docker-compose -f docker-compose.option1.yml up --build`
-  - `curl http://localhost:9200/_cat/indices?v` 결과에 `log4j2-poc` 존재 확인
+    - `docker-compose -f docker-compose.option1.yml up --build`
+    - `curl http://localhost:9200/_cat/indices?v` 결과에 `log4j2-poc` 존재 확인
 - ES 장애 시 파일 유실 여부
-  - ES 컨테이너 중지 후에도 `poc/data/proxy` 파일이 계속 생성되는지 확인
+    - ES 컨테이너 중지 후에도 `poc/data/proxy` 파일이 계속 생성되는지 확인
 
 ### 실패 시 확인 항목
 
@@ -47,11 +47,11 @@
 ### 검증 절차 (선택)
 
 - 파일 생성 확인
-  - `app-logs` 볼륨에 `app.log` 생성 여부 확인
+    - `app-logs` 볼륨에 `app.log` 생성 여부 확인
 - 중앙 스토리지 복사 확인
-  - `central-storage` 볼륨에 파일 복사 여부 확인
+    - `central-storage` 볼륨에 파일 복사 여부 확인
 - ES 적재 확인
-  - `curl http://localhost:9200/_cat/indices?v` 결과에 `log4j2-poc` 존재 확인
+    - `curl http://localhost:9200/_cat/indices?v` 결과에 `log4j2-poc` 존재 확인
 
 ### 실패 시 확인 항목
 
@@ -67,13 +67,13 @@
 ### 검증 절차 (최소)
 
 - 중앙 보관 파일 확인
-  - `central-storage` 볼륨에 `journal-export.log` 생성 여부 확인
+    - `central-storage` 볼륨에 `journal-export.log` 생성 여부 확인
 
 ### 추가 검증 (선택)
 
 - ES 연동 확인
-  - `docker-compose -f docker-compose.option3.yml up --build`
-  - `curl http://localhost:9200/_cat/indices?v` 결과에 `log4j2-poc` 존재 확인
+    - `docker-compose -f docker-compose.option3.yml up --build`
+    - `curl http://localhost:9200/_cat/indices?v` 결과에 `log4j2-poc` 존재 확인
 
 ### 실패 시 확인 항목
 

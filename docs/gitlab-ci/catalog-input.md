@@ -13,10 +13,10 @@ Gitlab 17부터 CI/CD Catalog GA와 Structured Inputs 기반의 Modular pipeline
 
 ```yaml
 include:
-  - component: gitlab.example.com/ci/build@1.2.0
-    inputs:
-      image: docker:26
-      push: true
+    - component: gitlab.example.com/ci/build@1.2.0
+      inputs:
+          image: docker:26
+          push: true
 ```
 
 ## GitLab 18 관점에서 본 "좋은 CI/CD 설계"
@@ -38,4 +38,3 @@ Modular pipelines
 - 파이프라인을 컴포넌트 조합으로 바라보는 설계 방식
 
 ---
-

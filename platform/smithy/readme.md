@@ -148,7 +148,7 @@ message GetOrderResponse { string id = 1; string status = 2; }
 - `study/smithy/full-stack-application/smithy/build/smithy/source/typescript-client-codegen/package.json`
 
 - 코드 생성 산출물을 bun 스크립트로 보정하는 스크립트를 추가했다.
-  - `study/smithy/full-stack-application/scripts/postprocess-codegen-bun.js`
+    - `study/smithy/full-stack-application/scripts/postprocess-codegen-bun.js`
 - `build-smithy`에서 코드 생성 직후 보정 스크립트를 실행하도록 변경했다.
 - bun 워크스페이스로 인한 충돌을 피하려고 `bun install --ignore-workspace`를 사용했다.
 - 클라이언트 SDK 타입 빌드 오류(TS2742)는 `bun install --config.node-linker=hoisted`로 해결하고,

@@ -4,7 +4,10 @@
 # Ignore Gradle build output directory
 build
 
-.idea
+### Intellij
+.idea/**
+!.idea/prettier.xml
+!.idea/biome.xml
 
 ### node
 node_modules/

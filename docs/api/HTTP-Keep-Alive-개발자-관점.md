@@ -82,7 +82,7 @@ keep-alive는 한 번 맺은 TCP 커넥션을 여러 HTTP 요청에 재사용한
 ### 3.2 Retry를 하면 안 되는 경우
 
 - 대부분의 `4xx` 에러
-  - `400`, `401`, `403`, `404`, `422`
+    - `400`, `401`, `403`, `404`, `422`
 - 인증/권한/검증 오류
 - **POST 요청에서 멱등성이 보장되지 않은 경우**
 
@@ -122,8 +122,8 @@ Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
 
 - (Idempotency-Key + API Path + Method) 기준으로 요청을 식별
 - 이미 처리된 요청이면:
-  - 같은 응답을 그대로 반환
-  - 비즈니스 로직 재실행 금지
+    - 같은 응답을 그대로 반환
+    - 비즈니스 로직 재실행 금지
 - 보통 Redis / DB에 결과를 저장하고 TTL을 둠
 
 이렇게 하면:
@@ -144,9 +144,9 @@ Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
 ### 6.2 구현 옵션
 
 - Resilience4j
-  - Retry + CircuitBreaker + RateLimiter 조합에 적합
+    - Retry + CircuitBreaker + RateLimiter 조합에 적합
 - Spring Retry
-  - 간단한 어노테이션 기반 구성 가능
+    - 간단한 어노테이션 기반 구성 가능
 - Reactive 환경에서는 WebClient Filter로 중앙화
 
 ### 6.3 권장 정책 예시
@@ -175,18 +175,18 @@ Node.js는 keep-alive 사용 시 Agent 설정이 매우 중요하다.
 
 - 클라이언트: Idempotency-Key 전송
 - Express 서버:
-  - 요청 수신 시 키 검증
-  - 중복이면 저장된 응답 반환
+    - 요청 수신 시 키 검증
+    - 중복이면 저장된 응답 반환
 
 ## 8. 실무에서 바로 쓰는 Retry 규칙 요약
 
 ### HTTP Method 기준
 
-| Method       | Retry 조건                      |
-|--------------|-------------------------------|
-| GET / HEAD   | 네트워크 오류, 502/503/504, 429     |
-| PUT / DELETE | 서버가 멱등하게 구현된 경우에 한해 허용        |
-| POST         | **Idempotency-Key가 있을 때만 허용** |
+| Method       | Retry 조건                              |
+| ------------ | --------------------------------------- |
+| GET / HEAD   | 네트워크 오류, 502/503/504, 429         |
+| PUT / DELETE | 서버가 멱등하게 구현된 경우에 한해 허용 |
+| POST         | **Idempotency-Key가 있을 때만 허용**    |
 
 ### Retry 정책
 
@@ -203,9 +203,9 @@ Retry가 들어간 순간부터, 추적 가능성이 없으면 운영이 불가�
 
 - Request-ID / X-Request-Id / traceparent 전파
 - 재시도 시:
-  - attempt 번호
-  - 에러 유형
-  - 최종 성공/실패 여부
+    - attempt 번호
+    - 에러 유형
+    - 최종 성공/실패 여부
 - OpenTelemetry 등 분산 트레이싱 연동 권장
 
 ---
@@ -221,4 +221,3 @@ keep-alive 환경에서의 네트워크 오류는 피할 수 없다.
 
 > Retry는 단순한 “재시도”가 아니라
 > 분산 시스템 안정성의 핵심 설계 요소다.
-

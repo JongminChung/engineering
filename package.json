@@ -10,7 +10,7 @@
   "scripts": {
     "prepare": "husky",
     "check": "biome check --write --unsafe",
-    "check:markdown": "markdownlint-cli2 --fix **/*.md"
+    "check:prettier": "prettier --write **/*.{md,yml,yaml}"
   },
   "engines": {
     "bun": ">=1.0.0",
@@ -23,10 +23,11 @@
     "@types/bun": "^1.3.5",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
-    "markdownlint-cli2": "^0.20.0"
+    "prettier": "^3.8.0"
   },
   "lint-staged": {
-    "**/*.md": "markdownlint-cli2 --fix",
+    "**/*.{md,yml,yaml}": "prettier --write",
+    "**/*.{js,jsx,ts,tsx,json,html,css}": "biome check --write --unsafe",
     "**/*.java": "sh -c './gradlew spotlessApply'"
   }
 }

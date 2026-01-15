@@ -7,19 +7,19 @@ Service가 공유하도록 설계되어, 프로토콜이 달라도 어떻게 동
 
 - **보안**: API Key 기반 멀티 테넌트 인증(`ApiKeyAuthFilter`, `GrpcApiKeyServerInterceptor`)과 Trace ID 전파.
 - **확장성 & 성능**:
-  - 슬라이딩 윈도우 레이트 리미터(`SlidingWindowRateLimiter`)로 테넌트/클라이언트별 요청 제어
-  - 읽기 모델 캐시(`OrderReadModelCache`)로 HOT 데이터 재사용
-  - 요청 메트릭(`RequestMetrics`)으로 성공/실패/캐시 적중률/평균 지연 관찰
+    - 슬라이딩 윈도우 레이트 리미터(`SlidingWindowRateLimiter`)로 테넌트/클라이언트별 요청 제어
+    - 읽기 모델 캐시(`OrderReadModelCache`)로 HOT 데이터 재사용
+    - 요청 메트릭(`RequestMetrics`)으로 성공/실패/캐시 적중률/평균 지연 관찰
 - **프로토콜 비교**: REST(`OrderController`)와 gRPC(`OrderGrpcService`) 엔드포인트를 비교하면서, 헤더/메타데이터 처리와 예외 매핑 차이를 학습
 
 ## API 개요
 
 ### REST (JSON)
 
-| 메서드    | 경로                    | 설명       |
-|--------|-----------------------|----------|
-| `POST` | `/api/v1/orders`      | 주문 생성    |
-| `GET` | `/api/v1/orders/{id}` | 주문 단건 조회 |
+| 메서드 | 경로                  | 설명           |
+| ------ | --------------------- | -------------- |
+| `POST` | `/api/v1/orders`      | 주문 생성      |
+| `GET`  | `/api/v1/orders/{id}` | 주문 단건 조회 |
 
 필수 헤더
 
@@ -46,17 +46,17 @@ JSON 대신 Proto를 쓰더라도 REST 호출 경로, API Key 인증, 레이트 
 
 ```yaml
 app:
-  security:
-    clients:
-      - tenant-id: tenant-alpha
-        client-id: web-client
-        hashed-api-key: 024f6c9525465fbec0047e2686f02a413c52241fde8af273148c419fa18fb312
-  study:
-    rate-limit:
-      max-requests: 5
-      window: 1m
-    cache:
-      ttl: 45s
+    security:
+        clients:
+            - tenant-id: tenant-alpha
+              client-id: web-client
+              hashed-api-key: 024f6c9525465fbec0047e2686f02a413c52241fde8af273148c419fa18fb312
+    study:
+        rate-limit:
+            max-requests: 5
+            window: 1m
+        cache:
+            ttl: 45s
 ```
 
 - `hashed-api-key`에는 실제 API Key를 SHA-256으로 해싱한 값을 넣어야 합니다. 기본 값은 학습용 `local-api-key`입니다.
@@ -64,12 +64,12 @@ app:
 
 ## 테스트
 
-| 테스트 클래스                               | 설명                                           |
-|:--------------------------------------|:---------------------------------------------|
-| `orders/api/OrderControllerTest`      | Spring MVC + Security 필터 + Rate Limit 플로우 검증 |
-| `orders/api/OrderProtoControllerTest` | REST에서 Proto 본문 통신 및 캐시/보안 흐름 검증             |
-| `grpc/OrderGrpcServiceTest`           | InProcess gRPC 서버를 띄워 Metadata 인증과 응답 검증     |
-| `orders/service/OrderServiceTest`     | 캐시 적중, 레이트 리밋, 메트릭 동작 검증                     |
+| 테스트 클래스                         | 설명                                                 |
+| :------------------------------------ | :--------------------------------------------------- |
+| `orders/api/OrderControllerTest`      | Spring MVC + Security 필터 + Rate Limit 플로우 검증  |
+| `orders/api/OrderProtoControllerTest` | REST에서 Proto 본문 통신 및 캐시/보안 흐름 검증      |
+| `grpc/OrderGrpcServiceTest`           | InProcess gRPC 서버를 띄워 Metadata 인증과 응답 검증 |
+| `orders/service/OrderServiceTest`     | 캐시 적중, 레이트 리밋, 메트릭 동작 검증             |
 
 실행 명령:
 
