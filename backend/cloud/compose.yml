@@ -2,11 +2,10 @@ version: "3.8"
 
 services:
   kafka:
-    image: bitnami/kafka:3.6.1
+    image: apache/kafka:latest
     container_name: kafka
     ports:
       - "9092:9092"
-      - "9094:9094"
     environment:
       # KRaft 모드 설정
       - KAFKA_ENABLE_KRAFT=yes

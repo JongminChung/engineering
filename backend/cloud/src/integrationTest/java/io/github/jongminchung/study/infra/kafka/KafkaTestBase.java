@@ -1,29 +1,29 @@
 package io.github.jongminchung.study.infra.kafka;
 
+import java.util.Map;
 import java.util.Properties;
 
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.testcontainers.kafka.ConfluentKafkaContainer;
+import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
-/** Kafka 학습을 위한 Base Test 클래스 - TestContainers를 이용한 Kafka 통합 테스트 환경 제공 - Producer/Consumer 설정을 위한 유틸리티 메서드 제공 */
+/** Kafka 학습을 위한 Base Test 클래스 - TestContainers 기반 Kafka 통합 테스트 환경 제공 */
 public abstract class KafkaTestBase {
 
-    private static final DockerImageName KAFKA_IMAGE = DockerImageName.parse("confluentinc/cp-kafka:7.6.0");
+    private static final DockerImageName KAFKA_IMAGE = DockerImageName.parse("apache/kafka:3.8.0");
 
-    protected static final ConfluentKafkaContainer kafka = new ConfluentKafkaContainer(KAFKA_IMAGE).withReuse(false);
+    protected static final KafkaContainer kafka = new KafkaContainer(KAFKA_IMAGE).withReuse(true);
 
     protected String bootstrapServers;
 
-    @BeforeAll
-    static void startKafka() {
+    static {
         if (!kafka.isRunning()) {
             kafka.start();
         }
@@ -34,16 +34,27 @@ public abstract class KafkaTestBase {
         bootstrapServers = kafka.getBootstrapServers();
     }
 
-    @AfterAll
-    static void stopKafka() {
-        if (kafka.isRunning()) {
-            kafka.stop();
-        }
+    protected static String getBootstrapServers() {
+        return kafka.getBootstrapServers();
     }
 
-    @AfterEach
-    void tearDown() {
-        // 필요시 정리 작업
+    protected void createTopic(String name, int partitions) {
+        createTopic(name, partitions, Map.of());
+    }
+
+    protected void createTopic(String name, int partitions, Map<String, String> configs) {
+        try (AdminClient adminClient =
+                AdminClient.create(Map.of(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers))) {
+            NewTopic topic = new NewTopic(name, partitions, (short) 1);
+            if (!configs.isEmpty()) {
+                topic.configs(configs);
+            }
+            adminClient.createTopics(java.util.List.of(topic)).all().get();
+        } catch (org.apache.kafka.common.errors.TopicExistsException ignored) {
+            // ignore
+        } catch (Exception ex) {
+            throw new IllegalStateException("Failed to create topic: " + name, ex);
+        }
     }
 
     /** Producer 기본 설정 생성 */
