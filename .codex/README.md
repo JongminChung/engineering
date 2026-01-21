@@ -1,0 +1,3 @@
+# .codex
+
+- https://skillsmp.com/
