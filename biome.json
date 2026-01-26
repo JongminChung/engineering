@@ -13,7 +13,8 @@
       "!.next",
       "!dist",
       "!build",
-      "!.source"
+      "!.source",
+      "!routeTree.gen.ts"
     ]
   },
   "formatter": {
