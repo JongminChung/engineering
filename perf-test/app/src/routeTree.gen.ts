@@ -10,6 +10,12 @@
 
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as ApiAuthSplatRouteImport } from "./routes/api/auth/$";
+import { Route as ApiPerfTestsRouteImport } from "./routes/api/perf-tests";
+import { Route as ApiPerfTestsTestIdRouteImport } from "./routes/api/perf-tests/$testId";
+import { Route as ApiPerfTestsTestIdRunsRouteImport } from "./routes/api/perf-tests/$testId/runs";
+import { Route as ApiTestRunsRunIdRouteImport } from "./routes/api/test-runs/$runId";
+import { Route as ApiTestTemplatesRouteImport } from "./routes/api/test-templates";
+import { Route as ApiTestTemplatesTemplateIdRouteImport } from "./routes/api/test-templates/$templateId";
 import { Route as DemoApiNamesRouteImport } from "./routes/demo/api.names";
 import { Route as DemoApiTqTodosRouteImport } from "./routes/demo/api.tq-todos";
 import { Route as DemoBetterAuthRouteImport } from "./routes/demo/better-auth";
@@ -22,7 +28,13 @@ import { Route as DemoStartSsrIndexRouteImport } from "./routes/demo/start.ssr.i
 import { Route as DemoStartSsrSpaModeRouteImport } from "./routes/demo/start.ssr.spa-mode";
 import { Route as DemoTanstackQueryRouteImport } from "./routes/demo/tanstack-query";
 import { Route as IndexRouteImport } from "./routes/index";
+import { Route as PerfTestsRouteImport } from "./routes/perf-tests";
 
+const PerfTestsRoute = PerfTestsRouteImport.update({
+  id: "/perf-tests",
+  path: "/perf-tests",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
@@ -41,6 +53,16 @@ const DemoDrizzleRoute = DemoDrizzleRouteImport.update({
 const DemoBetterAuthRoute = DemoBetterAuthRouteImport.update({
   id: "/demo/better-auth",
   path: "/demo/better-auth",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const ApiTestTemplatesRoute = ApiTestTemplatesRouteImport.update({
+  id: "/api/test-templates",
+  path: "/api/test-templates",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const ApiPerfTestsRoute = ApiPerfTestsRouteImport.update({
+  id: "/api/perf-tests",
+  path: "/api/perf-tests",
   getParentRoute: () => rootRouteImport,
 } as any);
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
@@ -62,6 +84,22 @@ const DemoApiNamesRoute = DemoApiNamesRouteImport.update({
   id: "/demo/api/names",
   path: "/demo/api/names",
   getParentRoute: () => rootRouteImport,
+} as any);
+const ApiTestTemplatesTemplateIdRoute =
+  ApiTestTemplatesTemplateIdRouteImport.update({
+    id: "/$templateId",
+    path: "/$templateId",
+    getParentRoute: () => ApiTestTemplatesRoute,
+  } as any);
+const ApiTestRunsRunIdRoute = ApiTestRunsRunIdRouteImport.update({
+  id: "/api/test-runs/$runId",
+  path: "/api/test-runs/$runId",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const ApiPerfTestsTestIdRoute = ApiPerfTestsTestIdRouteImport.update({
+  id: "/$testId",
+  path: "/$testId",
+  getParentRoute: () => ApiPerfTestsRoute,
 } as any);
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: "/api/auth/$",
@@ -88,17 +126,29 @@ const DemoStartSsrDataOnlyRoute = DemoStartSsrDataOnlyRouteImport.update({
   path: "/demo/start/ssr/data-only",
   getParentRoute: () => rootRouteImport,
 } as any);
+const ApiPerfTestsTestIdRunsRoute = ApiPerfTestsTestIdRunsRouteImport.update({
+  id: "/runs",
+  path: "/runs",
+  getParentRoute: () => ApiPerfTestsTestIdRoute,
+} as any);
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
+  "/perf-tests": typeof PerfTestsRoute;
+  "/api/perf-tests": typeof ApiPerfTestsRouteWithChildren;
+  "/api/test-templates": typeof ApiTestTemplatesRouteWithChildren;
   "/demo/better-auth": typeof DemoBetterAuthRoute;
   "/demo/drizzle": typeof DemoDrizzleRoute;
   "/demo/tanstack-query": typeof DemoTanstackQueryRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
+  "/api/perf-tests/$testId": typeof ApiPerfTestsTestIdRouteWithChildren;
+  "/api/test-runs/$runId": typeof ApiTestRunsRunIdRoute;
+  "/api/test-templates/$templateId": typeof ApiTestTemplatesTemplateIdRoute;
   "/demo/api/names": typeof DemoApiNamesRoute;
   "/demo/api/tq-todos": typeof DemoApiTqTodosRoute;
   "/demo/start/api-request": typeof DemoStartApiRequestRoute;
   "/demo/start/server-funcs": typeof DemoStartServerFuncsRoute;
+  "/api/perf-tests/$testId/runs": typeof ApiPerfTestsTestIdRunsRoute;
   "/demo/start/ssr/data-only": typeof DemoStartSsrDataOnlyRoute;
   "/demo/start/ssr/full-ssr": typeof DemoStartSsrFullSsrRoute;
   "/demo/start/ssr/spa-mode": typeof DemoStartSsrSpaModeRoute;
@@ -106,14 +156,21 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
+  "/perf-tests": typeof PerfTestsRoute;
+  "/api/perf-tests": typeof ApiPerfTestsRouteWithChildren;
+  "/api/test-templates": typeof ApiTestTemplatesRouteWithChildren;
   "/demo/better-auth": typeof DemoBetterAuthRoute;
   "/demo/drizzle": typeof DemoDrizzleRoute;
   "/demo/tanstack-query": typeof DemoTanstackQueryRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
+  "/api/perf-tests/$testId": typeof ApiPerfTestsTestIdRouteWithChildren;
+  "/api/test-runs/$runId": typeof ApiTestRunsRunIdRoute;
+  "/api/test-templates/$templateId": typeof ApiTestTemplatesTemplateIdRoute;
   "/demo/api/names": typeof DemoApiNamesRoute;
   "/demo/api/tq-todos": typeof DemoApiTqTodosRoute;
   "/demo/start/api-request": typeof DemoStartApiRequestRoute;
   "/demo/start/server-funcs": typeof DemoStartServerFuncsRoute;
+  "/api/perf-tests/$testId/runs": typeof ApiPerfTestsTestIdRunsRoute;
   "/demo/start/ssr/data-only": typeof DemoStartSsrDataOnlyRoute;
   "/demo/start/ssr/full-ssr": typeof DemoStartSsrFullSsrRoute;
   "/demo/start/ssr/spa-mode": typeof DemoStartSsrSpaModeRoute;
@@ -122,14 +179,21 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
+  "/perf-tests": typeof PerfTestsRoute;
+  "/api/perf-tests": typeof ApiPerfTestsRouteWithChildren;
+  "/api/test-templates": typeof ApiTestTemplatesRouteWithChildren;
   "/demo/better-auth": typeof DemoBetterAuthRoute;
   "/demo/drizzle": typeof DemoDrizzleRoute;
   "/demo/tanstack-query": typeof DemoTanstackQueryRoute;
   "/api/auth/$": typeof ApiAuthSplatRoute;
+  "/api/perf-tests/$testId": typeof ApiPerfTestsTestIdRouteWithChildren;
+  "/api/test-runs/$runId": typeof ApiTestRunsRunIdRoute;
+  "/api/test-templates/$templateId": typeof ApiTestTemplatesTemplateIdRoute;
   "/demo/api/names": typeof DemoApiNamesRoute;
   "/demo/api/tq-todos": typeof DemoApiTqTodosRoute;
   "/demo/start/api-request": typeof DemoStartApiRequestRoute;
   "/demo/start/server-funcs": typeof DemoStartServerFuncsRoute;
+  "/api/perf-tests/$testId/runs": typeof ApiPerfTestsTestIdRunsRoute;
   "/demo/start/ssr/data-only": typeof DemoStartSsrDataOnlyRoute;
   "/demo/start/ssr/full-ssr": typeof DemoStartSsrFullSsrRoute;
   "/demo/start/ssr/spa-mode": typeof DemoStartSsrSpaModeRoute;
@@ -139,14 +203,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | "/"
+    | "/perf-tests"
+    | "/api/perf-tests"
+    | "/api/test-templates"
     | "/demo/better-auth"
     | "/demo/drizzle"
     | "/demo/tanstack-query"
     | "/api/auth/$"
+    | "/api/perf-tests/$testId"
+    | "/api/test-runs/$runId"
+    | "/api/test-templates/$templateId"
     | "/demo/api/names"
     | "/demo/api/tq-todos"
     | "/demo/start/api-request"
     | "/demo/start/server-funcs"
+    | "/api/perf-tests/$testId/runs"
     | "/demo/start/ssr/data-only"
     | "/demo/start/ssr/full-ssr"
     | "/demo/start/ssr/spa-mode"
@@ -154,14 +225,21 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo;
   to:
     | "/"
+    | "/perf-tests"
+    | "/api/perf-tests"
+    | "/api/test-templates"
     | "/demo/better-auth"
     | "/demo/drizzle"
     | "/demo/tanstack-query"
     | "/api/auth/$"
+    | "/api/perf-tests/$testId"
+    | "/api/test-runs/$runId"
+    | "/api/test-templates/$templateId"
     | "/demo/api/names"
     | "/demo/api/tq-todos"
     | "/demo/start/api-request"
     | "/demo/start/server-funcs"
+    | "/api/perf-tests/$testId/runs"
     | "/demo/start/ssr/data-only"
     | "/demo/start/ssr/full-ssr"
     | "/demo/start/ssr/spa-mode"
@@ -169,14 +247,21 @@ export interface FileRouteTypes {
   id:
     | "__root__"
     | "/"
+    | "/perf-tests"
+    | "/api/perf-tests"
+    | "/api/test-templates"
     | "/demo/better-auth"
     | "/demo/drizzle"
     | "/demo/tanstack-query"
     | "/api/auth/$"
+    | "/api/perf-tests/$testId"
+    | "/api/test-runs/$runId"
+    | "/api/test-templates/$templateId"
     | "/demo/api/names"
     | "/demo/api/tq-todos"
     | "/demo/start/api-request"
     | "/demo/start/server-funcs"
+    | "/api/perf-tests/$testId/runs"
     | "/demo/start/ssr/data-only"
     | "/demo/start/ssr/full-ssr"
     | "/demo/start/ssr/spa-mode"
@@ -185,10 +270,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
+  PerfTestsRoute: typeof PerfTestsRoute;
+  ApiPerfTestsRoute: typeof ApiPerfTestsRouteWithChildren;
+  ApiTestTemplatesRoute: typeof ApiTestTemplatesRouteWithChildren;
   DemoBetterAuthRoute: typeof DemoBetterAuthRoute;
   DemoDrizzleRoute: typeof DemoDrizzleRoute;
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute;
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute;
+  ApiTestRunsRunIdRoute: typeof ApiTestRunsRunIdRoute;
   DemoApiNamesRoute: typeof DemoApiNamesRoute;
   DemoApiTqTodosRoute: typeof DemoApiTqTodosRoute;
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute;
@@ -201,6 +290,13 @@ export interface RootRouteChildren {
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
+    "/perf-tests": {
+      id: "/perf-tests";
+      path: "/perf-tests";
+      fullPath: "/perf-tests";
+      preLoaderRoute: typeof PerfTestsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     "/": {
       id: "/";
       path: "/";
@@ -227,6 +323,20 @@ declare module "@tanstack/react-router" {
       path: "/demo/better-auth";
       fullPath: "/demo/better-auth";
       preLoaderRoute: typeof DemoBetterAuthRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/test-templates": {
+      id: "/api/test-templates";
+      path: "/api/test-templates";
+      fullPath: "/api/test-templates";
+      preLoaderRoute: typeof ApiTestTemplatesRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/perf-tests": {
+      id: "/api/perf-tests";
+      path: "/api/perf-tests";
+      fullPath: "/api/perf-tests";
+      preLoaderRoute: typeof ApiPerfTestsRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/demo/start/server-funcs": {
@@ -256,6 +366,27 @@ declare module "@tanstack/react-router" {
       fullPath: "/demo/api/names";
       preLoaderRoute: typeof DemoApiNamesRouteImport;
       parentRoute: typeof rootRouteImport;
+    };
+    "/api/test-templates/$templateId": {
+      id: "/api/test-templates/$templateId";
+      path: "/$templateId";
+      fullPath: "/api/test-templates/$templateId";
+      preLoaderRoute: typeof ApiTestTemplatesTemplateIdRouteImport;
+      parentRoute: typeof ApiTestTemplatesRoute;
+    };
+    "/api/test-runs/$runId": {
+      id: "/api/test-runs/$runId";
+      path: "/api/test-runs/$runId";
+      fullPath: "/api/test-runs/$runId";
+      preLoaderRoute: typeof ApiTestRunsRunIdRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/perf-tests/$testId": {
+      id: "/api/perf-tests/$testId";
+      path: "/$testId";
+      fullPath: "/api/perf-tests/$testId";
+      preLoaderRoute: typeof ApiPerfTestsTestIdRouteImport;
+      parentRoute: typeof ApiPerfTestsRoute;
     };
     "/api/auth/$": {
       id: "/api/auth/$";
@@ -292,15 +423,60 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof DemoStartSsrDataOnlyRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    "/api/perf-tests/$testId/runs": {
+      id: "/api/perf-tests/$testId/runs";
+      path: "/runs";
+      fullPath: "/api/perf-tests/$testId/runs";
+      preLoaderRoute: typeof ApiPerfTestsTestIdRunsRouteImport;
+      parentRoute: typeof ApiPerfTestsTestIdRoute;
+    };
   }
 }
 
+interface ApiPerfTestsTestIdRouteChildren {
+  ApiPerfTestsTestIdRunsRoute: typeof ApiPerfTestsTestIdRunsRoute;
+}
+
+const ApiPerfTestsTestIdRouteChildren: ApiPerfTestsTestIdRouteChildren = {
+  ApiPerfTestsTestIdRunsRoute: ApiPerfTestsTestIdRunsRoute,
+};
+
+const ApiPerfTestsTestIdRouteWithChildren =
+  ApiPerfTestsTestIdRoute._addFileChildren(ApiPerfTestsTestIdRouteChildren);
+
+interface ApiPerfTestsRouteChildren {
+  ApiPerfTestsTestIdRoute: typeof ApiPerfTestsTestIdRouteWithChildren;
+}
+
+const ApiPerfTestsRouteChildren: ApiPerfTestsRouteChildren = {
+  ApiPerfTestsTestIdRoute: ApiPerfTestsTestIdRouteWithChildren,
+};
+
+const ApiPerfTestsRouteWithChildren = ApiPerfTestsRoute._addFileChildren(
+  ApiPerfTestsRouteChildren,
+);
+
+interface ApiTestTemplatesRouteChildren {
+  ApiTestTemplatesTemplateIdRoute: typeof ApiTestTemplatesTemplateIdRoute;
+}
+
+const ApiTestTemplatesRouteChildren: ApiTestTemplatesRouteChildren = {
+  ApiTestTemplatesTemplateIdRoute: ApiTestTemplatesTemplateIdRoute,
+};
+
+const ApiTestTemplatesRouteWithChildren =
+  ApiTestTemplatesRoute._addFileChildren(ApiTestTemplatesRouteChildren);
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PerfTestsRoute: PerfTestsRoute,
+  ApiPerfTestsRoute: ApiPerfTestsRouteWithChildren,
+  ApiTestTemplatesRoute: ApiTestTemplatesRouteWithChildren,
   DemoBetterAuthRoute: DemoBetterAuthRoute,
   DemoDrizzleRoute: DemoDrizzleRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiTestRunsRunIdRoute: ApiTestRunsRunIdRoute,
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoApiTqTodosRoute: DemoApiTqTodosRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,

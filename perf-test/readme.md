@@ -90,21 +90,20 @@ k6 부하 테스트와 Prometheus/Grafana 관측을 결합해 API/웹/DB 성능�
     - 실시간 진행 상황 모니터링 (k6 Pod 상태)
     - 테스트 이력 조회 및 비교
     - 템플릿 관리 인터페이스
+- **구현 방식**:
+    - k6-operator CRD를 직접 호출해 실행/중지 트리거
+    - 실행 요청과 결과 메타데이터를 DB에 저장
+- **API 경로**:
+    - `GET /api/test-templates` / `POST /api/test-templates`
+    - `GET /api/test-templates/:templateId` / `PUT /api/test-templates/:templateId` / `DELETE /api/test-templates/:templateId`
+    - `GET /api/perf-tests` / `POST /api/perf-tests`
+    - `GET /api/perf-tests/:testId` / `PUT /api/perf-tests/:testId` / `DELETE /api/perf-tests/:testId`
+    - `GET /api/perf-tests/:testId/runs` / `POST /api/perf-tests/:testId/runs`
+    - `GET /api/test-runs/:runId` / `DELETE /api/test-runs/:runId`
 - **기술 스택**:
     - Fullstack: Bun + TanStack start
     - WebSocket: 실시간 로그 스트리밍
 - **배포**: `perftest.jamie.kr` → nginx-service → UI 서비스
-- **운용 보완 체크리스트(k6-operator 직접 트리거)**:
-    - 인증/권한: 네임스페이스 단위 RBAC 최소 권한 설계 (추후 고도화)
-    - 입력 검증: VUs, duration, thresholds, 대상 URL 검증
-    - 리소스 한도: Pod requests/limits, 동시 실행 수 제한, ResourceQuota
-    - 실행 상태 모델: 시작/종료/실패/타임아웃, 중복 실행 방지
-    - 감사 로그: 실행자/시각/파라미터 변경 이력 보관
-    - 스크립트 관리: 버전 관리, 업로드 크기 제한, 롤백 지원
-    - 모니터링/알림: 실패/리소스 부족/과부하 알림 연계
-    - 시크릿 처리: 토큰/키는 Secret 또는 외부 Vault로 주입
-    - 실행 격리: 허용 대상 화이트리스트로 오발 실행 방지
-    - 결과 정합성: 강제 종료/실패 시 요약 저장 보장
 
 ##### 4.3 결과 분석 대시보드
 
