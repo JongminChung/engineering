@@ -1,0 +1,35 @@
+# 프로덕션 환경 설정 파일
+app:
+  name: demo-app
+  replicas: 3  # 고가용성을 위해 3개
+  image: nginx:alpine
+  port: 80
+
+gateway:
+  name: demo-gateway
+  gatewayClassName: envoy-gateway
+  namespace: envoy-gateway-system
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Same  # 같은 네임스페이스만 허용
+    - name: https
+      protocol: HTTPS
+      port: 443
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+routes:
+  - name: demo-route
+    hostnames:
+      - demo.example.com
+      - api.example.com
+    rules:
+      - path: /
+        pathType: PathPrefix
+        backendService: demo-app
+        backendPort: 80
