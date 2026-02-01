@@ -10,7 +10,7 @@ Java 9에서 도입된 모듈 시스템(Project Jigsaw)은 자바 플랫폼의 �
 ### 등장 배경
 
 - **Classpath 지옥(Jar Hell)**: 클래스패스에 중복된 클래스가 있거나 필요한 클래스가 없는 경우 런타임에 에러가 발생하는
-	문제.
+  문제.
 - **부족한 캡슐화**: `public` 클래스는 어디서든 접근 가능하여 내부 구현을 숨기기 어려웠음.
 - **JVM 비대화**: `rt.jar`와 같은 거대 라이브러리로 인해 작은 디바이스에서도 전체 자바 런타임이 필요했음.
 
@@ -29,11 +29,11 @@ Java 9에서 도입된 모듈 시스템(Project Jigsaw)은 자바 플랫폼의 �
 ## 2. 모듈 시스템의 장점
 
 1. **강력한 캡슐화**: `exports` 되지 않은 패키지는 외부에서 절대 접근할 수 없습니다. 심지어 리플렉션으로도 기본적으로
-	 차단됩니다.
+   차단됩니다.
 2. **신뢰할 수 있는 구성**: 컴파일 타임 및 애플리케이션 시작 시점에 누락된 의존성을 확인하여 `NoClassDefFoundError`를
-	 조기에 방지합니다.
+   조기에 방지합니다.
 3. **확장성 및 경량화**: `jlink` 도구를 사용하여 애플리케이션 실행에 필요한 모듈만 포함하는 커스텀 런타임 이미지를 생성할 수
-	 있습니다.
+   있습니다.
 
 ---
 
@@ -44,10 +44,10 @@ Java 23(Preview)에서 도입된 기능으로, 개별 클래스가 아닌 **모�
 ### 주요 특징
 
 - **편의성**: `import module java.base;` 한 줄로 해당 모듈이 익스포트하는 모든 public 클래스를 사용할 수
-	있습니다.
+  있습니다.
 - **가독성**: 수십 개의 개별 `import` 문을 획기적으로 줄여줍니다.
 - **암시적 사용**: `java.base` 모듈은 모든 Java 프로그램에서 기본적으로 사용되므로, 향후 스크립팅이나 초보자 학습 시
-	유용하게 활용됩니다.
+  유용하게 활용됩니다.
 
 ### 코드 예시
 
@@ -63,9 +63,9 @@ import java.util.stream.Collectors;
 import module java.base;
 
 public class ModuleImportExample {
-	public static void main(String[] args) {
+	static void main(String[] args) {
 		List<String> list = new ArrayList<>(); // java.util.List 자동 포함
-		list.stream().collect(Collectors.toList()); // java.util.stream.Collectors 자동 포함
+		list.stream().toList(); // java.util.stream.Collectors 자동 포함
 	}
 }
 ```
