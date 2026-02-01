@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pacman-kikd
+  namespace: pacman
+  labels:
+    app.kubernetes.io/name: pacman-kikd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pacman-kikd
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pacman-kikd
+    spec:
+      containers:
+        - image: lordoftherjars/pacman-kikd:1.0.0
+          imagePullPolicy: Always
+          name: pacman-kikd
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
