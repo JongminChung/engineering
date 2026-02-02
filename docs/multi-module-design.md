@@ -58,3 +58,9 @@ API를 제공해줄 수도 있고, 통계 또는 일괄 처리를 위해 배치 
 
 예를 들어 AppStore에 등록된 앱의 사용량을 측정하는 메소드가 있다고 하자. 앱을 만드는 사람은 사용량을 바탕으로 사용 금액을 계산해서 비용을 청구하고 있다.
 앱을 관리하는 사람은 사용량을 바탕으로 사용 시간을 보고하고 있다. 이런 상황에서 앱의 사용량을 측정하는 메소드는 2명의 액터를 책임지기 때문에 SRP를 위반하는 것이다.
+
+---
+
+## gradle multi module with. spring modulith
+
+- https://docs.spring.io/spring-modulith/reference/
