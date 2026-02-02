@@ -2,6 +2,8 @@
 
 - https://mangkyu.tistory.com/304
 - https://docs.google.com/presentation/d/1TSs-w9WW7Bz0qtu9byVR7UnHYNAYYWYt/edit
+- [youtube](https://youtu.be/uvG-amw2u2s?si=ixOIJ9IeU1hcBXsZ)
+- [java-spring-boot-template](https://github.com/MangKyu/java-spring-boot-template)
 
 **모듈을 나누는 기준**
 
