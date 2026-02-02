@@ -1,7 +1,0 @@
-# k apply --dry-run=client -o yaml -k .
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - ns.yml
-  - deploy.yml
-  - svc.yml

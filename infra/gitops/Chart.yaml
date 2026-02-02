@@ -1,0 +1,9 @@
+apiVersion: v2
+name: pacman
+description: A Helm chart for Pacman
+
+type: application
+
+version: 0.1.0 # 차트 버전. 차트 정의가 바뀌면 업데이트 한다.
+
+appVersion: 1.0.0 # 애플리케이션 버전

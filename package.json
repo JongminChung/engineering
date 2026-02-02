@@ -20,7 +20,7 @@
   "scripts": {
     "prepare": "husky",
     "check": "biome check --write --unsafe",
-    "check:prettier": "prettier --write **/*.{md,yml,yaml}"
+    "check:prettier": "prettier --write **/*.md"
   },
   "engines": {
     "bun": ">=1.0.0"
@@ -36,7 +36,7 @@
     "typescript": "catalog:"
   },
   "lint-staged": {
-    "**/*.{md,yml,yaml}": "prettier --write",
+    "**/*.md": "prettier --write",
     "**/*.{js,jsx,ts,tsx,json,html,css}": "biome check --write --unsafe",
     "**/*.java": "sh -c './gradlew spotlessApply'"
   }

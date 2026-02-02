@@ -123,6 +123,51 @@ images:
 
 ---
 
+## ConfigMap 생성 (configMapGenerator)
+
+`configMapGenerator`로 설정 파일이나 리터럴을 ConfigMap으로 생성할 수 있습니다.
+
+```yaml
+configMapGenerator:
+    - name: app-config
+      files:
+          - config/app.json
+      literals:
+          - LOG_LEVEL=info
+```
+
+JSON 파일은 `//` 주석을 허용합니다.
+
+---
+
+## ConfigMap 변경 및 배포 흐름
+
+`configMapGenerator`는 내용 해시를 이름에 포함하므로, 파일/리터럴이 바뀌면 새로운 ConfigMap이 생성되고 참조 리소스(Deployment 등)가 자동으로 갱신되어 롤링 업데이트가 트리거됩니다.
+
+### 변경 방법
+
+1. **원본 수정**: `files`에 지정한 파일 또는 `literals` 값을 수정합니다.
+2. **결과 확인**:
+
+```bash
+kustomize build .
+```
+
+### 적용 및 배포
+
+로컬 적용:
+
+```bash
+kubectl apply -k .
+```
+
+GitOps(Argo CD) 적용:
+
+1. 변경 사항 커밋/푸시
+2. Argo CD가 자동 동기화하거나, 수동 동기화 실행
+
+---
+
 ## 패치 (Patches)
 
 `patches`를 사용하여 임의의 쿠버네티스 필드를 업데이트할 수 있습니다.
