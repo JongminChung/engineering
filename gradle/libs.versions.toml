@@ -20,6 +20,16 @@ redisson = "4.0.0"
 # Infra
 mysql = "8.4.0"
 
+# OpenTelemetry
+opentelemetry = "1.44.1"
+opentelemetryJavaagent = "2.11.0"
+shadowPlugin = "9.3.1"
+
+# Logging
+slf4j = "2.0.17"
+logback = "1.5.28"
+lombok = "1.18.42"
+
 [libraries]
 spring-boot-gradle-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "springBoot" }
 spring-dependency-management-plugin = { module = "io.spring.gradle:dependency-management-plugin", version.ref = "springDependencyManagement" }
@@ -42,3 +52,16 @@ jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 
 # Redis
 redisson = { module = "org.redisson:redisson", version.ref = "redisson" }
+
+# OpenTelemetry
+opentelemetry-sdk = { module = "io.opentelemetry:opentelemetry-sdk", version.ref = "opentelemetry" }
+opentelemetry-sdk-autoconfigure-spi = { module = "io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi", version.ref = "opentelemetry" }
+opentelemetry-javaagent = { module = "io.opentelemetry.javaagent:opentelemetry-javaagent", version.ref = "opentelemetryJavaagent" }
+
+# Logging
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadowPlugin" }

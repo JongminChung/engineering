@@ -18,6 +18,6 @@ tasks.register("bunInstall", Exec::class.java) {
 
 idea.project.settings {
     taskTriggers {
-        afterSync(tasks.getByName("bunInstall"))
+//        afterSync(tasks.getByName("bunInstall"))
     }
 }

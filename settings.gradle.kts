@@ -19,6 +19,7 @@ rootProject.name = "engineering"
 include(
     "backend:cloud",
     "backend:grpc",
+    "backend:otel-extension",
 )
 
 include(
