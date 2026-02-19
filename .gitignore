@@ -13,3 +13,6 @@ build
 node_modules/
 dist/
 .next/
+
+### env
+.env
