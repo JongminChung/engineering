@@ -1,3 +1,3 @@
-# .codex
+# skills
 
 - https://skillsmp.com/
