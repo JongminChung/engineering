@@ -21,52 +21,52 @@ clean: ## Clean all build artifacts of this project
 build-smithy: ## Build the smithy model and code-generate the client and server
 	@echo Building smithy models...
 	cd smithy; smithy format model/; smithy build
-	@node scripts/postprocess-codegen-bun.cjs
+	@node scripts/postprocess-codegen-pnpm.cjs
 	@echo Finished building models.
 
 build-ssdk: build-smithy ## Set up and build the generated server-sdk (`ssdk`)
 	@echo Building server-sdk...
 	cd server; ln -fs ../smithy/build/smithy/source/typescript-ssdk-codegen ssdk
-	cd server/ssdk; bun install && bun run build
+	cd server/ssdk; pnpm install && pnpm run build
 	@echo Finished building server-sdk.
 
 build-server: build-ssdk ## Build the server implementation
 	@echo Building server...
-	cd server; bun install && bun run build
+	cd server; pnpm install && pnpm run build
 	@echo Finished building server.
 
 build-client: build-smithy ## Set up and build the generated client
 	@echo Building client...
 	cd client; ln -fs ../smithy/build/smithy/source/typescript-client-codegen sdk
-	cd client/sdk; bun install && bun run build
+	cd client/sdk; pnpm install && pnpm run build
 	@echo Finished building client.
 
 build-app: build-client ## Build the web application
 	@echo Building app...
-	cd app; bun install && bun run build
+	cd app; pnpm install && pnpm run build
 	@echo Finished building app.
 
 build: build-server build-client build-app ## Build the entire project
 
 dev-server: build-ssdk ## Run the server in development-mode
-	cd server; bun install && bun run dev
+	cd server; pnpm install && pnpm run dev
 
 dev-app: build-client ## Run the web application in development-mode
-	cd app; bun install && bun run dev
+	cd app; pnpm install && pnpm run dev
 
 dev: # Run the server and web application in development-mode in the same session
 	$(MAKE) -j 2 dev-server dev-app
 
 run-server: build-server ## Run the server
-	cd server; bun run start
+	cd server; pnpm run start
 
 run-app: build-app ## Run the web application
-	cd app; bun run start
+	cd app; pnpm run start
 
 run: ## Run the server and web application in the same session
 	$(MAKE) -j 2 run-server run-app
 
 repl-client: build-client ## Start a REPL with in the client installed
-	cd client; bun install && bun run start
+	cd client; pnpm install && pnpm run start
 
 test-all: build

@@ -26,13 +26,13 @@
 ## 설치
 
 ```bash
-bun install
+pnpm install
 ```
 
 ## 실행 (workspace script)
 
 ```bash
-bun --filter spectral-poc run spectral:check
+pnpm --filter spectral-poc run spectral:check
 ```
 
 ## Node 버전 주의
@@ -41,7 +41,7 @@ bun --filter spectral-poc run spectral:check
 - Node 24가 아니면 아래처럼 실행할 때만 예외 처리 가능
 
 ```bash
-bun --config.engine-strict=false --filter spectral-poc run spectral:check
+pnpm --config.engine-strict=false --filter spectral-poc run spectral:check
 ```
 
 ## 동작 요약

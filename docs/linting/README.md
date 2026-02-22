@@ -101,7 +101,7 @@ proseWrap: preserve
 ## 실행 커맨드
 
 - Markdown/YAML 포맷: `prettier --write **/*.{md,yml,yaml}`
-- 스크립트: `bun run check:markdown`
+- 스크립트: `pnpm run check:markdown`
 
 ## 태스크 세분화
 
@@ -112,7 +112,7 @@ proseWrap: preserve
 3. IDE 가이드 구체화
     - IntelliJ/VSCode에서 프로젝트 기준을 따르는 설정 예시 추가.
 4. 실행 커맨드 문서화
-    - 문서에 명시할 실행 커맨드와 스크립트(예: `bun run check`, `./gradlew spotlessApply`) 확정.
+    - 문서에 명시할 실행 커맨드와 스크립트(예: `pnpm run check`, `./gradlew spotlessApply`) 확정.
 5. CI 연동
     - 변경 범위에 맞는 최소 검사 파이프라인 정의.
 

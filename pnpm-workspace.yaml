@@ -1,0 +1,12 @@
+packages:
+  - "frontend/*"
+  - "platform/*"
+  - "me/*"
+  - "perf-test/*"
+
+catalog:
+  react: "^19.2.3"
+  react-dom: "^19.2.3"
+  "@types/react": "^19.2.3"
+  "@types/react-dom": "^19.2.3"
+  typescript: "^5.9.3"

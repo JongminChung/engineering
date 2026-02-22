@@ -10,8 +10,8 @@ const targets = [
 ];
 
 const replacements = {
-    build: "concurrently 'bun run build:cjs' 'bun run build:es' 'bun run build:types'",
-    prepack: "bun run clean && bun run build",
+    build: "concurrently 'pnpm run build:cjs' 'pnpm run build:es' 'pnpm run build:types'",
+    prepack: "pnpm run clean && pnpm run build",
 };
 
 let updated = 0;
@@ -45,9 +45,9 @@ for (const relPath of targets) {
 }
 
 if (updated === 0) {
-    console.log("postprocess-codegen-bun: no changes needed.");
+    console.log("postprocess-codegen-pnpm: no changes needed.");
 } else {
     console.log(
-        `postprocess-codegen-bun: updated ${updated} package.json file(s).`,
+        `postprocess-codegen-pnpm: updated ${updated} package.json file(s).`,
     );
 }
