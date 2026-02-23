@@ -27,10 +27,6 @@ docs/의 문서를 빠르게 찾기 위한 인덱스입니다. 폴더는 주제�
 
 - [http/readme.md](http/readme.md)
 
-## infra
-
-- (없음)
-
 ## jacoco
 
 - [jacoco/고민.md](jacoco/고민.md)
@@ -81,7 +77,9 @@ docs/의 문서를 빠르게 찾기 위한 인덱스입니다. 폴더는 주제�
 ## observability
 
 - [observability/infra.md](observability/infra.md)
+- [observability/otel-java-instrumentation.md](observability/otel-java-instrumentation.md)
 - [observability/otel.md](observability/otel.md)
+- [observability/system-architecture-design.md](observability/system-architecture-design.md)
 
 ## openclaw
 
@@ -91,10 +89,6 @@ docs/의 문서를 빠르게 찾기 위한 인덱스입니다. 폴더는 주제�
 ## openstack
 
 - [openstack/readme.md](openstack/readme.md)
-
-## otel
-
-- [otel/otel-java-instrumentation.md](otel/otel-java-instrumentation.md)
 
 ## platform-engineer
 
@@ -126,6 +120,7 @@ docs/의 문서를 빠르게 찾기 위한 인덱스입니다. 폴더는 주제�
 ## 루트 문서
 
 - [api-standard-research.md](api-standard-research.md)
+- [best-system-arch-design.md](best-system-arch-design.md)
 - [Fat*JAR와\_Classpath의*관계*Classpath가*사라진\_걸까.md](Fat_JAR와_Classpath의_관계_Classpath가_사라진_걸까.md)
 - [Gradle과*Java*애플리케이션*실행*시*사용되는\_3가지\_OPTS의*차이.md](Gradle과_Java_애플리케이션_실행_시_사용되는_3가지_OPTS의_차이.md)
 - [multi-module-design.md](multi-module-design.md)
