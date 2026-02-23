@@ -1,5 +1,5 @@
 [tools]
-codex = "latest"
 java = "temurin-25"
 node = "latest"
 pnpm = "latest"
+python = "latest"
