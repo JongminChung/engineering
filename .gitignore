@@ -13,9 +13,3 @@ build
 node_modules/
 dist/
 .next/
-
-### codex eclipse
-.project
-org.eclipse.buildship.core.prefs
-org.eclipse.jdt.core.prefs
-bin/**
