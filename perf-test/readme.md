@@ -101,7 +101,7 @@ k6 부하 테스트와 Prometheus/Grafana 관측을 결합해 API/웹/DB 성능�
     - `GET /api/perf-tests/:testId/runs` / `POST /api/perf-tests/:testId/runs`
     - `GET /api/test-runs/:runId` / `DELETE /api/test-runs/:runId`
 - **기술 스택**:
-    - Fullstack: pnpm + TanStack start
+    - Fullstack: Bun + TanStack start
     - WebSocket: 실시간 로그 스트리밍
 - **배포**: `perftest.jamie.kr` → nginx-service → UI 서비스
 

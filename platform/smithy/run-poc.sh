@@ -59,7 +59,7 @@ cd "${APP_DIR}"
 
 echo "==> start app"
 cd "${APP_DIR}/app"
-pnpm start > "${APP_LOG}" 2>&1 &
+bun start > "${APP_LOG}" 2>&1 &
 APP_PID=$!
 sleep 2
 

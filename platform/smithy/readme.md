@@ -135,23 +135,23 @@ message GetOrderResponse { string id = 1; string status = 2; }
 
 ### 0) init 이후 로컬 수정 사항
 
-- `Makefile`에서 yarn 호출을 pnpm으로 변경했다.
+- `Makefile`에서 yarn 호출을 bun으로 변경했다.
   `study/smithy/full-stack-application/Makefile`
-- 서버 start 스크립트의 yarn 호출을 pnpm으로 변경했다.
+- 서버 start 스크립트의 yarn 호출을 bun으로 변경했다.
   `study/smithy/full-stack-application/server/package.json`
 - 포트 리스닝 제약 때문에 서버를 `127.0.0.1`로 바인딩하도록 변경했다.
   `study/smithy/full-stack-application/server/src/index.ts`
 
-- 코드 생성 산출물의 `yarn:` 스크립트를 pnpm으로 임시 변경했다. (`smithy build`를 다시 실행하면 덮어써짐)
+- 코드 생성 산출물의 `yarn:` 스크립트를 bun으로 임시 변경했다. (`smithy build`를 다시 실행하면 덮어써짐)
 
 - `study/smithy/full-stack-application/smithy/build/smithy/source/typescript-ssdk-codegen/package.json`
 - `study/smithy/full-stack-application/smithy/build/smithy/source/typescript-client-codegen/package.json`
 
-- 코드 생성 산출물을 pnpm 스크립트로 보정하는 스크립트를 추가했다.
-    - `study/smithy/full-stack-application/scripts/postprocess-codegen-pnpm.cjs`
+- 코드 생성 산출물을 bun 스크립트로 보정하는 스크립트를 추가했다.
+    - `study/smithy/full-stack-application/scripts/postprocess-codegen-bun.js`
 - `build-smithy`에서 코드 생성 직후 보정 스크립트를 실행하도록 변경했다.
-- pnpm 워크스페이스로 인한 충돌을 피하려고 설치 시 워크스페이스 루트 체크를 비활성화해 사용했다.
-- 클라이언트 SDK 타입 빌드 오류(TS2742)는 `pnpm install --config.node-linker=hoisted`로 해결하고,
+- bun 워크스페이스로 인한 충돌을 피하려고 `bun install --ignore-workspace`를 사용했다.
+- 클라이언트 SDK 타입 빌드 오류(TS2742)는 `bun install --config.node-linker=hoisted`로 해결하고,
   `build-client`에 반영했다.
 
 ### 1) 프로젝트 생성
@@ -180,17 +180,17 @@ smithy build
 
 ### 3) 서버 SDK(SSDK)와 서버 빌드
 
-- Makefile은 yarn 대신 pnpm으로 교체.
-- 코드 생성 산출물(package.json)의 `yarn:` 스크립트를 `pnpm run`으로 임시 변경 필요.
+- Makefile은 yarn 대신 bun으로 교체.
+- 코드 생성 산출물(package.json)의 `yarn:` 스크립트를 `bun run`으로 임시 변경 필요.
 
 ```sh
 cd server/ssdk
-pnpm install --ignore-workspace
-pnpm run build
+bun install --ignore-workspace
+bun build
 
 cd ../
-pnpm install --ignore-workspace
-pnpm run build
+bun install --ignore-workspace
+bun build
 ```
 
 서버 실행은 로컬 포트 리스닝 권한 이슈로 `127.0.0.1` 바인딩이 필요해 `server/src/index.ts`를 조정했다.
@@ -236,19 +236,19 @@ client.getMenu()
 
 ```sh
 cd app
-pnpm install --ignore-workspace
-pnpm run build
-pnpm run start
+bun install --ignore-workspace
+bun build
+bun start
 ```
 
-- `pnpm run build` 시 Google Fonts 다운로드가 필요하여 네트워크 접근 허용 필요.
+- `bun build` 시 Google Fonts 다운로드가 필요하여 네트워크 접근 허용 필요.
 - `curl http://127.0.0.1:3000`로 HTML 반환 확인.
 
 ## PoC 중 확인된 환경 제약
 
 - 로컬 포트 리스닝/접속에 샌드박스 제한이 있어, 실행/요청 시 권한 해제가 필요했다.
-- 코드 생성 패키지의 `yarn:` 스크립트는 pnpm 환경에서 수동 조정이 필요했다.
-- 클라이언트 SDK 타입 빌드 시 pnpm의 기본 node-linker에서 TS2742 오류가 발생해 `node-linker=hoisted`로
+- 코드 생성 패키지의 `yarn:` 스크립트는 bun 환경에서 수동 조정이 필요했다.
+- 클라이언트 SDK 타입 빌드 시 bun의 기본 node-linker에서 TS2742 오류가 발생해 `node-linker=hoisted`로
   재설치해 해결했다.
 
 ## 재현 스크립트

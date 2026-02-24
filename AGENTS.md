@@ -35,6 +35,6 @@
 
 - `./gradlew build` — 전체 모듈 빌드 및 테스트 실행.
 - `./gradlew test` — 전체 테스트 실행.
-- `pnpm install` — 문서/포맷팅 도구 설치.
-- `pnpm run check` — Biome 포맷/린트.
-- `pnpm run check:markdown` — Markdown 자동 정리.
+- `bun install` — 문서/포맷팅 도구 설치.
+- `bun run check` — Biome 포맷/린트.
+- `bun run check:markdown` — Markdown 자동 정리.

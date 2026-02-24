@@ -7,18 +7,17 @@ plugins {
     id("org.jetbrains.gradle.plugin.idea-ext") version "1.3"
 }
 
-tasks.register("pnpmInstall", Exec::class.java) {
+tasks.register("bunInstall", Exec::class.java) {
     group = "build"
-    description = "Install dependencies using pnpm"
+    description = "Install dependencies using bun"
 
     inputs.file("package.json")
-    inputs.file("pnpm-lock.yaml")
-    commandLine = listOf("bash", "-lc", "pnpm install --frozen-lockfile")
+    commandLine = listOf("bash", "-lc", "bun install")
     outputs.dir("node_modules")
 }
 
 idea.project.settings {
     taskTriggers {
-//        afterSync(tasks.getByName("pnpmInstall"))
+       afterSync(tasks.getByName("bunInstall"))
     }
 }

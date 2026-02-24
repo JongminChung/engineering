@@ -27,5 +27,5 @@
 
 ## 검증
 
-- 큰 수정 전에는 `pnpm run check:markdown` 실행을 고려합니다.
+- 큰 수정 전에는 `bun run check:markdown` 실행을 고려합니다.
 - 링크는 문서 위치 기준으로 간단히 점검합니다.
