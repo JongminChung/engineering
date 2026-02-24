@@ -82,14 +82,12 @@ tasks.named<BootRun>("bootRun") {
     environment("OTEL_EXPORTER_OTLP_PROTOCOL", "grpc")
 }
 
-/**
- * distributions {
- *   val main by getting {
- *       contents {
- *           from(otelAgent) {
- *               into("lib")
- *           }
- *       }
- *   }
- *}
- */
+// distributions {
+//   val main by getting {
+//       contents {
+//           from(otelAgent) {
+//               into("lib")
+//           }
+//       }
+//   }
+// }
