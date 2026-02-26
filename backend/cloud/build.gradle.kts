@@ -35,23 +35,21 @@ dependencies {
     otelAgent(libs.opentelemetry.javaagent)
 
     otelExtension(project(path = ":backend:otel-extension", configuration = "extensionJarElements"))
+}
 
-    testImplementation(
-        "org.springframework.boot:spring-boot-starter-webmvc-test",
-    )
-    testImplementation(
-        "org.springframework.boot:spring-boot-starter-security-test",
-    )
-    testImplementation(
-        "org.springframework.boot:spring-boot-starter-validation-test",
-    )
-    testImplementation(
-        "org.springframework.boot:spring-boot-starter-data-jpa-test",
-    )
-
-    testImplementation(
-        "org.springframework.modulith:spring-modulith-starter-test",
-    )
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            dependencies {
+                implementation("org.springframework.boot:spring-boot-starter-test")
+                implementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+                implementation("org.springframework.boot:spring-boot-starter-security-test")
+                implementation("org.springframework.boot:spring-boot-starter-validation-test")
+                implementation("org.springframework.security:spring-security-test")
+                implementation("org.springframework.modulith:spring-modulith-starter-test")
+            }
+        }
+    }
 }
 
 dependencyManagement {

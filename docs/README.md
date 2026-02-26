@@ -2,14 +2,6 @@
 
 docs/의 문서를 빠르게 찾기 위한 인덱스입니다. 폴더는 주제별 모음, 루트는 공통 문서입니다.
 
-## api
-
-- [api/HTTP-Keep-Alive-개발자-관점.md](api/HTTP-Keep-Alive-개발자-관점.md)
-- [api/HTTP-Keep-Alive-어떻게-써야-하는가.md](api/HTTP-Keep-Alive-어떻게-써야-하는가.md)
-- [api/HTTP*프로토콜*발전사.md](api/HTTP_프로토콜_발전사.md)
-- [api/RFC-9110-HTTP-Semantics.md](api/RFC-9110-HTTP-Semantics.md)
-- [api/표준화.md](api/표준화.md)
-
 ## code-cli
 
 - [code-cli/readme.md](code-cli/readme.md)
@@ -27,6 +19,10 @@ docs/의 문서를 빠르게 찾기 위한 인덱스입니다. 폴더는 주제�
 
 - [http/readme.md](http/readme.md)
 
+## infra
+
+- (없음)
+
 ## jacoco
 
 - [jacoco/고민.md](jacoco/고민.md)
@@ -41,6 +37,7 @@ docs/의 문서를 빠르게 찾기 위한 인덱스입니다. 폴더는 주제�
 - [kubernetes/aws-dbaas-infra-rationale.md](kubernetes/aws-dbaas-infra-rationale.md)
 - [kubernetes/cncf-k8s-roadmap.md](kubernetes/cncf-k8s-roadmap.md)
 - [kubernetes/csp-managed-k8s-traffic-gateway-local.md](kubernetes/csp-managed-k8s-traffic-gateway-local.md)
+- [kubernetes/kubestronaut/kcna.md](kubernetes/kubestronaut/kcna.md)
 
 ## language
 
@@ -76,9 +73,7 @@ docs/의 문서를 빠르게 찾기 위한 인덱스입니다. 폴더는 주제�
 
 ## observability
 
-- [observability/infra.md](observability/infra.md)
-- [observability/otel-java-instrumentation.md](observability/otel-java-instrumentation.md)
-- [observability/otel.md](observability/otel.md)
+- [observability/fluentbit_vs_otel_collector.md](observability/fluentbit_vs_otel_collector.md)
 - [observability/system-architecture-design.md](observability/system-architecture-design.md)
 
 ## openclaw
@@ -86,13 +81,17 @@ docs/의 문서를 빠르게 찾기 위한 인덱스입니다. 폴더는 주제�
 - [openclaw/DEPLOYMENT_RUNBOOK.md](openclaw/DEPLOYMENT_RUNBOOK.md)
 - [openclaw/README.md](openclaw/README.md)
 
+## opensearch
+
+- [opensearch/data-prepper.md](opensearch/data-prepper.md)
+- [opensearch/index.md](opensearch/index.md)
+
 ## openstack
 
 - [openstack/readme.md](openstack/readme.md)
 
 ## platform-engineer
 
-- [platform-engineer/plugin.md](platform-engineer/plugin.md)
 - [platform-engineer/readme.md](platform-engineer/readme.md)
 
 ## pragmatic
@@ -119,8 +118,6 @@ docs/의 문서를 빠르게 찾기 위한 인덱스입니다. 폴더는 주제�
 
 ## 루트 문서
 
-- [api-standard-research.md](api-standard-research.md)
-- [best-system-arch-design.md](best-system-arch-design.md)
 - [Fat*JAR와\_Classpath의*관계*Classpath가*사라진\_걸까.md](Fat_JAR와_Classpath의_관계_Classpath가_사라진_걸까.md)
 - [Gradle과*Java*애플리케이션*실행*시*사용되는\_3가지\_OPTS의*차이.md](Gradle과_Java_애플리케이션_실행_시_사용되는_3가지_OPTS의_차이.md)
 - [multi-module-design.md](multi-module-design.md)

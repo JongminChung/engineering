@@ -5,7 +5,6 @@ import java.sql.Statement;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -63,9 +62,8 @@ class JdbcStarterIntegrationTest {
         @Test
         void acquiresAndReacquiresLock() {
             contextRunner.run(context -> {
-                DistributedLock distributedLock = context.getBean(DistributedLock.class);
-                LockRequest request =
-                        LockRequest.of(LockKey.of("jdbc:1"), Duration.ofSeconds(1), Duration.ofSeconds(2), false);
+                var distributedLock = context.getBean(DistributedLock.class);
+                var request = LockRequest.of(LockKey.of("jdbc:1"), Duration.ofSeconds(1), Duration.ofSeconds(2), false);
 
                 LockHandle handle = distributedLock.acquire(request);
                 Optional<LockHandle> secondAttempt = distributedLock.tryAcquire(request);
@@ -81,11 +79,11 @@ class JdbcStarterIntegrationTest {
         @Test
         void timesOutWhenLockHeld() {
             contextRunner.run(context -> {
-                DistributedLock distributedLock = context.getBean(DistributedLock.class);
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                CountDownLatch entered = new CountDownLatch(1);
-                CountDownLatch release = new CountDownLatch(1);
-                LockRequest holderRequest =
+                var distributedLock = context.getBean(DistributedLock.class);
+                var executor = Executors.newSingleThreadExecutor();
+                var entered = new CountDownLatch(1);
+                var release = new CountDownLatch(1);
+                var holderRequest =
                         LockRequest.of(LockKey.of("jdbc:timeout"), Duration.ofSeconds(1), Duration.ofSeconds(5), false);
 
                 try {
@@ -141,8 +139,8 @@ class JdbcStarterIntegrationTest {
     }
 
     private static void createSchema() throws Exception {
-        try (Connection connection = createDataSource().getConnection();
-                Statement statement = connection.createStatement()) {
+        try (var connection = createDataSource().getConnection();
+                var statement = connection.createStatement()) {
             statement.executeUpdate("create table if not exists distributed_locks ("
                     + "lock_key varchar(255) primary key,"
                     + "owner varchar(255) not null,"
