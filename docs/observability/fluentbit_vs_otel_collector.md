@@ -14,14 +14,14 @@
 
 ## Fluent Bit v4 vs. OTel Collector 비교
 
-| 비교 항목       | Fluent Bit v4 (Agent)               | OTel Collector (Gateway)                  |
-| :-------------- | :---------------------------------- | :---------------------------------------- |
-| **개발 언어**   | C / Zig (Ultra-lightweight)         | Go (Garbage Collected)                    |
-| **리소스 점유** | 극히 낮음 (10~30MB RAM)             | 보통 (100~300MB+ RAM)                     |
-| **처리 로직**   | Lua 스크립트, 단순 필터링           | OTTL (Transform Language), 복합 가공      |
-| **데이터 모델** | 내부 포맷(C-Metrics/Logs) 변환      | OTLP 네이티브 (Native Signal 처리)        |
-| **샘플링**      | Probabilistic, 제한적 Tail-sampling | 고급 Tail-based sampling (전역 상태 관리) |
-| **주요 용도**   | 노드/에지 데이터 수집 및 전달       | 중앙 집중형 데이터 거버넌스 및 라우팅     |
+| 비교 항목       | Fluent Bit v4 (Agent)               | OTel Collector (Agent, Gateway)                                                                                      |
+| :-------------- | :---------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| **개발 언어**   | C / Zig (Ultra-lightweight)         | Go (Garbage Collected)                                                                                               |
+| **리소스 점유** | 극히 낮음 (10~30MB RAM)             | 보통 (100~300MB+ RAM)                                                                                                |
+| **처리 로직**   | Lua 스크립트, 단순 필터링           | OTTL (Transform Language), 복합 가공                                                                                 |
+| **데이터 모델** | 내부 포맷(C-Metrics/Logs) 변환      | OTLP 네이티브 (Native Signal 처리)                                                                                   |
+| **샘플링**      | Probabilistic, 제한적 Tail-sampling | 고급 Tail-based sampling (전역 상태 관리)                                                                            |
+| **주요 용도**   | 노드/에지 데이터 수집 및 전달       | <ul> <li> 노드/에지 데이터 수집 및 전달 (Agent) </li> <li>중앙 집중형 데이터 거버넌스 및 라우팅 (Gateway)</li> </ul> |
 
 ---
 
