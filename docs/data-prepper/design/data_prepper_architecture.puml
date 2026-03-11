@@ -1,0 +1,86 @@
+@startuml
+!theme plain
+skinparam componentStyle rectangle
+
+title Data Prepper Overall Architecture & Dependency Flow
+
+' 1. 계층 정의
+package "Main Module Layer" #E1F5FE {
+    component [data-prepper-main] as Main <<Assembler>>
+}
+
+package "Core Engine Layer" #F3E5F5 {
+    component [data-prepper-core] as Core <<Orchestrator>>
+    component [data-prepper-pipeline-parser] as Parser
+    component [data-prepper-expression] as Expression
+}
+
+package "Plugin Framework Layer" #FFF9C4 {
+    component [data-prepper-plugin-framework] as Framework <<Infrastructure>>
+    note right of Framework
+        - Plugin Discovery (@DataPrepperPlugin)
+        - Hierarchical Spring Context Isolation
+        - Dependency Injection
+    end note
+}
+
+package "API & Model Layer" #E8F5E9 {
+    interface "Source Interface" as ISrc
+    interface "Buffer Interface" as IBuf
+    interface "Processor Interface" as IProc
+    interface "Sink Interface" as ISink
+    component [data-prepper-api] as API <<Contract>>
+    component [data-prepper-event] as Event <<Data Model>>
+    
+    API -- ISrc
+    API -- IBuf
+    API -- IProc
+    API -- ISink
+}
+
+package "Plugin Implementation Layer" #FFEBEE {
+    component [data-prepper-plugins] as PluginAggregator <<Aggregator>>
+    
+    package "Individual Plugins" {
+        component [S3 Source] as S3Src
+        component [Kafka Source] as KafkaSrc
+        component [Grok Processor] as GrokProc
+        component [OpenSearch Sink] as OSSink
+    }
+    
+    PluginAggregator ..> S3Src
+    PluginAggregator ..> KafkaSrc
+    PluginAggregator ..> GrokProc
+    PluginAggregator ..> OSSink
+}
+
+' 2. 의존성 흐름 (Dependency Flow)
+Main --> Core : "Initializes"
+Main --> PluginAggregator : "Includes All"
+Core --> Framework : "Uses for Loading"
+Core --> API : "Orchestrates via"
+Framework --> API : "References Interfaces"
+IndividualPlugins --> API : "Implements & Uses"
+
+' 3. 파이프라인 실행 흐름 (Runtime Data Flow)
+cloud "External Sources" as ExtSrc
+database "OpenSearch / S3" as ExtDest
+
+ExtSrc --> S3Src : "Ingest"
+S3Src ..> Event : "Creates"
+Event --> IBuf : "Stored in"
+IBuf --> GrokProc : "Consumed by"
+GrokProc --> OSSink : "Enriched Data"
+OSSink --> ExtDest : "Indexes"
+
+' 4. 주석 및 설명
+legend bottom right
+  | 색상 | 계층 설명 |
+  | <#E1F5FE> | Main (Entry Point) |
+  | <#F3E5F5> | Core (Business Logic) |
+  | <#FFF9C4> | Framework (Infrastructure) |
+  | <#E8F5E9> | API & Event (Interface/Model) |
+  | <#FFEBEE> | Plugins (Implementation) |
+endlegend
+
+@enduml
