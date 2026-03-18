@@ -1,0 +1,40 @@
+@startuml
+skinparam handwritten true
+skinparam defaultTextAlignment center
+skinparam backgroundColor #FFFFFF
+
+title OpenSearch Dashboards - Observability Layout Plan
+
+package "Dashboard Layout" {
+  node "[Section 1] Service Overview (RED Metrics)" as S1 {
+    rectangle "Success Rate\n(Gauge)" as G1
+    rectangle "Requests Per Second (RPS)\n(Stacked Area Chart)" as AC1
+    rectangle "Top 5 P99 Latency\n(Bar Chart)" as BC1
+
+    G1 -right- AC1
+    AC1 -right- BC1
+  }
+
+  node "[Section 2] Trace & Log Analysis (Root Cause)" as S2 {
+    rectangle "Error Log Summary by TraceID\n(Table)" as T1
+    rectangle "Status vs Latency Correlation\n(Scatter Plot)" as SP1
+
+    T1 -right- SP1
+  }
+
+  node "[Section 3] Infrastructure Health (USE Method)" as S3 {
+    rectangle "CPU/MEM/Disk by Host\n(Metric Cards Grid)" as MC1
+    rectangle "Network Traffic In/Out\n(Line Chart)" as LC1
+
+    MC1 -down- LC1
+  }
+}
+
+S1 -down- S2
+S2 -down- S3
+
+note right of S1 : Monitor User Experience\n(Throughput, Error, Latency)
+note right of S2 : Debug Specific Issues\n(Correlate Logs & Traces)
+note right of S3 : Check System Bottlenecks\n(CPU Saturation, Disk Errors)
+
+@enduml
