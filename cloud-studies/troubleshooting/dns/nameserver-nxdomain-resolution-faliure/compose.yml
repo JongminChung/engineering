@@ -1,0 +1,46 @@
+services:
+  dns1:
+    image: coredns/coredns:latest
+    container_name: dns1
+    command: -conf /Corefile
+    volumes:
+      - ./dns1/Corefile:/Corefile:ro
+    networks:
+      dns_test_net:
+        ipv4_address: 172.18.0.2
+    ports:
+      - "5353:53/udp"
+      - "5353:53/tcp"
+
+  dns2:
+    image: coredns/coredns:latest
+    container_name: dns2
+    command: -conf /Corefile
+    volumes:
+      - ./dns2/Corefile:/Corefile:ro
+    networks:
+      dns_test_net:
+        ipv4_address: 172.18.0.3
+    ports:
+      - "5354:53/udp"
+      - "5354:53/tcp"
+
+  client:
+    image: rockylinux:9
+    container_name: client
+    entrypoint: ["sh", "-c", "dnf install -y bind-utils && exec sh"]
+    networks:
+      dns_test_net:
+        ipv4_address: 172.18.0.10
+    dns:
+      - 172.18.0.2
+      - 172.18.0.3
+    tty: true
+    stdin_open: true
+
+networks:
+  dns_test_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16

@@ -1,0 +1,7 @@
+.:53 {
+  any {
+    nxdomain
+  }
+  log
+}
+
