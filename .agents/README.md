@@ -1,3 +1,0 @@
-# skills
-
-- https://skillsmp.com/
