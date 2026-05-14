@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          ports:
+            - containerPort: 80
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  annotations:
+    loadbalancer.openstack.org/flavor-id: adc12270-f56a-4ef1-bb00-429aad71ef6e
+    loadbalancer.openstack.org/availability-zone: KR1-Zone1-LB
+    loadbalancer.openstack.org/enable-health-monitor: "true"
+    service.beta.kubernetes.io/openstack-internal-load-balancer: "false"
+    # SSL 인증서 콘솔에서 등록이 필요함.
+    loadbalancer.openstack.org/default-tls-container-ref: "https://external.gabiacloud.com:9311/v1/secrets/88750a57-9a44-41d5-bc89-602ab2b131f8"
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 80
